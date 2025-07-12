@@ -8,6 +8,7 @@
 
 \typeout{NT FILE chapter2.tex}%
 
+
 \chapter{Methodology}
 \label{cha:methodology}
 
@@ -86,7 +87,7 @@ Similar to the \glsxtrshort{CLF}, from \glsxtrshort{CBF} \(h\) and an adequate t
 \end{equation}
 
 
-The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system safe ( relative to the formulation of the function \(h\) ). The controller by defenition is able to evolve the closed-loop system~\ref{} more freely when \(\dot{h}( \mathbf{x} ) > 0\) and more cautly as \(h( \mathbf{x} ) \) shortens and \(\dot{h}( \mathbf{x} ) < 0\), if \(h( \mathbf{x} ) < 0\) it means is in the unsafe region so \(\dot{h}( \mathbf{x}) > 0\) converging continuosly to the safe set \(\mathcal{C}\). 
+The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system safe ( relative to the formulation of the function \(h\) ). The controller by defenition is able to evolve the closed-loop system~\ref{} more freely when \(\dot{h}( \mathbf{x} ) > 0\) and more cautiously as \(h( \mathbf{x} ) \) shortens and \(\dot{h}( \mathbf{x} ) < 0\), if \(h( \mathbf{x} ) < 0\) it means is in the unsafe region so \(\dot{h}( \mathbf{x}) > 0\) converging continuosly to the safe set \(\mathcal{C}\). 
 
 
 
@@ -94,16 +95,34 @@ The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \
 \subsubsection{Quadratic Program Formulation}
 \label{subsub:quadratic_program_formulation}
 
-Now having the objective of not only achieve safety but also assymptotically stability through the usage of \glsxtrshort{CLF} and \glsxtrshort{CBF} it renders a set of control inputs able to achieve the respective purposes.
+Now having the objective of not only achieve safety but also assymptotically stability through the usage of \glsxtrshort{CLF} and \glsxtrshort{CBF} it renders a set of control inputs able to achieve the respective purposes.  
 
-Using the conditions imposed by \glsxtrshort{CLF} and \glsxtrshort{CBF} as constraints, is presented an optimization problem  via \glsxtrfull{QP}:
+Using the conditions imposed by \glsxtrshort{CLF} and \glsxtrshort{CBF} as constraints, is presented an optimization problem  via \glsxtrfull{QP}, given a locally Lipschitz continuos\footnote{Outra explicação AQUI} controller \(k: \mathbb{R}^n \rightarrow \mathbb{R}^m \):
 
-%meter formula
+\begin{equation}
+    \begin{array}{l}
+        k(\xVec) = \underset{\uVec \in \mathbb{R}^m }{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec) \vspace{1em} \\  
+        \quad \hspace{0.5em}  st. \hspace{0.5em} L_fV(\mathbf{x}) + L_GV(\mathbf{x})\mathbf{u} \leq -\gamma(V(\mathbf{x})) \vspace{0.25em} \\ 
+        \quad \quad \hspace{1em} L_fh(\mathbf{x}) + L_Gh(\mathbf{x})\mathbf{u} \geq -\alpha(h(\mathbf{x}))
+    \end{array}
+ \label{eq:CLF-CBF-QP}
+\end{equation}
 
+The sets of control inputs restricted to the optimization problem are given by \(K_{CLF-CBF}(\xVec) = K_{CLF}(\xVec) \cap  K_{CBF}(\xVec)\) hopefully non-empty which can happen if the conditions are in conflict. \par
 
-%Meter aqui no final uma nota com uma caixinha azul a dizer que se  pode arbitrariamente não usar as CLF ou CBF se nao se pretende uobter establidade ou segurança e que a formulação continua sendo igual fora a remoção da condição
-%, and hopefully non-empty which can happen if in conflict with other conditions.
-%Slack variable
+In case of conditions' conflict, in order to the closed loop system~\ref{} controller have a solution from the \glsxtrshort{QP}, since safety is critical, using a slack variable \(\delta\)  allows to relax the stability condition imposed by the \glsxtrshort{CLF} and highly contribute to obtaining a solution while keeping system safe:
+
+\begin{equation}
+    \begin{array}{l}
+        k(\xVec) = \underset{\uVec \in \mathbb{R}^m, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
+        \quad \hspace{0.5em}  st. \hspace{0.5em} L_fV(\mathbf{x}) + L_GV(\mathbf{x})\mathbf{u} \leq -\gamma(V(\mathbf{x})) + \delta \vspace{0.25em}\\
+        \quad \quad \hspace{1em} L_fh(\mathbf{x}) + L_Gh(\mathbf{x})\mathbf{u} \geq -\alpha(h(\mathbf{x}))
+    \end{array}
+ \label{eq:CLF-CBF-QP-relaxed}
+\end{equation}
+
+Having \(\delta\) as an optimization variable not only allows to balance between the input values and the level of relaxation but also to not have a fixed \(\delta\) value which would result for all states not so faster and convergence to the neighborhood of the equilibrium point. 
+
 %tikz daquele esquema
 
 
