@@ -121,11 +121,11 @@ In case of conditions' conflict, in order to the closed loop system~\ref{} contr
  \label{eq:CLF-CBF-QP-relaxed}
 \end{equation}
 
-Having \(\delta\) as an optimization variable not only allows to balance between the input values exceed usage and the level of relaxation but also to not have a fixed \(\delta\) value which would result for all states not so faster and convergence to the neighborhood of the equilibrium point. 
+Having \(\delta\) as an optimization variable not only allows to balance between the input values exceed usage and the level of relaxation but also to not have a fixed \(\delta\) value which would result for all states not so faster convergence and to the neighborhood of the equilibrium point instead of the actual target point. 
 
 %tikz daquele esquema
 
-%fazer caixinha azul dizendo que se pode retirar as respetivas constraints se não se pretende com o controlador obtido ter safety ou stability
+%fazer caixinha azul dizendo que se pode retirar as respetivas constraints se não se pretende com o controlador obtido ter safety ou stability. E que o p\delta costuma ser com os inputs e p e uma triz quadrada de largira e comprimento igual ao numero de CLFs mas so se esta a assumir pois ao se obter closed-form o fazer permite uma soluçao mais simples e visto que a principio ter mais que uma CLF implica ter defenicoes de establidades apartir de certo ponto paradoxais ou que podem entrar em conflito para o sistema, relativamente as CBF, pode as unificar obtendo uma unica CBF como se pode ver na sua secção
 
 \subsection{Backstepping}
 \label{sub:backstepping}
@@ -154,8 +154,8 @@ Usually control systems are governed by higher-order systems, such as some secon
     \end{align}
 \end{subequations}
 
-with \(\mathbf{x} \in \mathcal{R}^n \), \(\mathbf{\xi} \in \mathcal{R}^p \), and \(\mathbf{u} \in \mathcal{R}^m \), and functions \(f_0: \mathcal{R}^n \to \mathcal{R}^n \), \(g_0: \mathcal{R}^n \to \mathcal{R}^{n \times p} \), \(f_1: \mathcal{R}^n \times \mathcal{R}^p \to \mathcal{R}^p \) and \(g_1: \mathcal{R}^n \times \mathcal{R}^p \to \mathcal{R}^{ p \times m} \) locally Lipschitz continuos on their respective domains. \par
-Given a locally Lipschitz continuos feedback controller \(\mathbf{k}: \mathcal{R}^n \times \mathcal{R}^p \to \mathcal{R}^m  \) the closed-loop system is:
+with \(\mathbf{x} \in \mathbb{R}^n \), \(\mathbf{\xi} \in \mathbb{R}^p \), and \(\mathbf{u} \in \mathbb{R}^m \), and functions \(f_0: \mathbb{R}^n \to \mathbb{R}^n \), \(g_0: \mathbb{R}^n \to \mathbb{R}^{n \times p} \), \(f_1: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^p \) and \(g_1: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^{ p \times m} \) locally Lipschitz continuos on their respective domains. \par
+Given a locally Lipschitz continuos feedback controller \(\mathbf{k}: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m  \) the closed-loop system is:
 
 \begin{equation}
     \begin{array}{l}
@@ -165,13 +165,13 @@ Given a locally Lipschitz continuos feedback controller \(\mathbf{k}: \mathcal{R
  \label{eq:HH-NL-CL-System}
 \end{equation}
 
-for any initial states \((\xVec_0, \mathbf{\xi}_0) \in \mathcal{R}^n \times \mathcal{R}^p\) exists a maximum time interval \(I(\xVec_0, \mathbf{\xi}_0) \subseteq \mathcal{R}_{\geq 0}  \) and a unique solution \( \varphi = (\varphi_{\mathbf{x}}, \varphi_{\mathbf{\xi}}) \) satisfying \ref{} \(\forall t \in I(\xVec_0, \mathbf{\xi}_0) \). \\
+for any initial states \((\xVec_0, \mathbf{\xi}_0) \in \mathbb{R}^n \times \mathbb{R}^p\) exists a maximum time interval \(I(\xVec_0, \mathbf{\xi}_0) \subseteq \mathbb{R}_{\geq 0}  \) and a unique solution \( \varphi = (\varphi_{\mathbf{x}}, \varphi_{\mathbf{\xi}}) \) satisfying \ref{} \(\forall t \in I(\xVec_0, \mathbf{\xi}_0) \). \\
 
 
 \subsubsection{Purposal  Solution Obtaining}
 \label{subsub:quadratic_program_formulation}
 
-Since having a second order system~\ref{eq:HH-NL-System} the access to \(\mathbf{\xi}\) is not direct, we must "backstepp" in order to be able to control \(\uVec\), affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\). The strategy passes by obtaining the solution if it was a first order system~\ref{} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input), so given a differentiable and locally Lipschitz continuos \(k_0(\xVec):\mathcal{R}^n \to \mathcal{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
+Since having a second order system~\ref{eq:HH-NL-System} the access to \(\mathbf{\xi}\) is not direct, we must "backstepp" in order to be able to control \(\uVec\), affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\). The strategy passes by obtaining the solution if it was a first order system~\ref{} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input), so given a differentiable and locally Lipschitz continuos \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
 
 \begin{equation}
     \dot{\xVec} = f_0(\xVec) + g_0(\xVec) k_0(\xVec)\\ 
@@ -190,7 +190,7 @@ That beeing said, the first order solution could be obtained via \glsxtrshort{QP
 \end{equation}
 
 
-The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability not only to the first-order system~\ref{eq:NL-CL-System-0Backstep} but also to the actual second-order system. Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order trying to converge to the first order solution. Supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathcal{R}^n \times \mathcal{R}^p \rightarrow \mathcal{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
+The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability not only to the first-order system~\ref{eq:NL-CL-System-0Backstep} but also to the actual second-order system. Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order trying to converge to the first order solution. Supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
 
 \begin{align*}
     V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) = \frac{1}{2}|| \mathbf{\xi} -  k_0(\xVec) ||^2 \\
@@ -198,13 +198,13 @@ The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal 
     h(\xVec, \mathbf{\xi}) = h_0(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})
 \end{align*}
 
-Finally, via \glsxtrshort{QP}, given a differentiable and locally Lipschitz continuos \(k(\xVec, \mathbf{\xi}):\mathcal{R}^n \times \mathcal{R}^p \to \mathcal{R}^m\):
+Finally, via \glsxtrshort{QP}, given a differentiable and locally Lipschitz continuos \(k(\xVec, \mathbf{\xi}):\mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m\):
 
 \begin{equation}
     \begin{array}{l}
         k(\xVec, \mathbf{\xi}) = \underset{\uVec \in \mathbb{R}^p, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
         \quad \hspace{0.5em}  st. \hspace{0.5em} L_fV(\xVec, \mathbf{\xi}) + L_GV(\xVec, \mathbf{\xi})\mathbf{u} \leq -\gamma(V_0(\mathbf{x})) -\gamma'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi})) + \delta \vspace{0.25em}\\
-        \quad \quad \hspace{1em}                 L_fh(\xVec, \mathbf{\xi}) + L_Gh(\xVec, \mathbf{\xi})\mathbf{u} \geq -\alpha(h_0(\mathbf{x})) + \gamma'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))
+        \quad \quad \hspace{1em}                 L_fh(\xVec, \mathbf{\xi}) + L_Gh(\xVec, \mathbf{\xi})\mathbf{u} \geq -\alpha(h_0(\mathbf{x})) + \alpha'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))
     \end{array}
  \label{eq:CLF-CBF-QP-relaxed-1Backstep}
 \end{equation}
@@ -226,14 +226,86 @@ It's expected that  \( \gamma << \gamma'\)  contributing to a faster convergence
 \subsection{Closed Form}
 \label{sub:closed_form}
 
+The objective of this thesis is to purpose a set of low computational effort techniques suitable to spacecrafts. Aiming a faster computation of the optimization problems solutions, any of the previous \glsxtrshort{QP}s (\ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) have a closed-form\footnote{Explicar o que e closed form} solution which allows to calculate directly the respective solution instead of depending of a numerical solver. Given the \glsxtrshort{QP} optimization problem and a controller \(k(\xVec, \mathcolor{purple}{\mathbf{\xi}}): \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p} \to \mathbb{R}^m\) \textcolor{purple}{(if it is a second-order system)}:
+
+\begin{equation}
+    \begin{array}{l}
+        k(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = \underset{\uVec \in \mathbb{R}^m, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
+        \quad \hspace{0.5em}  st. \hspace{0.5em} \underbrace{\underbrace{L_fV(\xVec \mathcolor{purple}{, \mathbf{\xi}}) + \gamma(\mathcolor{orange}{V_0(\mathbf{x})}) \mathcolor{purple}{+ \gamma'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))}}_{F_V(\mathbf{x} \mathcolor{purple}{, \mathbf{\xi}})} + L_GV(\xVec \mathcolor{purple}{, \mathbf{\xi}})\mathbf{u} - \delta }_{g_1(\xVec \mathcolor{purple}{, \mathbf{\xi}})}\leq  0 \vspace{0.25em}\\
+        \quad \quad \hspace{1em}                 \underbrace{\underbrace{L_fh(\xVec \mathcolor{purple}{, \mathbf{\xi}}) + \alpha(\mathcolor{orange}{h_0(\mathbf{x})}) \mathcolor{purple}{- \alpha'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))}}_{F_h(\mathbf{x} \mathcolor{purple}{, \mathbf{\xi}})} + L_Gh(\xVec \mathcolor{purple}{, \mathbf{\xi}})\mathbf{u}}_{-g_2(\xVec \mathcolor{purple}{, \mathbf{\xi}})} \geq 0 
+    \end{array}
+ \label{eq:CLF-CBF-QP-relaxed-generic}
+\end{equation}
+
+With a \glsxtrshort{CLF} \(V\), \glsxtrshort{CBF} \(h\), \(\mathbb{x}\in\mathbb{R}^n\), \textcolor{orange}{the first-order system \glsxtrshort{CLF}} \(\mathcolor{orange}{V_0} ( = V\) like in \ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed} and \ref{eq:CLF-CBF-QP-relaxed-0Backstep}) \textcolor{purple}{, and if it is a second-order system with} \(\mathcolor{purple}{\mathbf{\xi}\in\mathbb{R}^p}\) \textcolor{purple}{(equivalent to the \glsxtrshort{QP} seen while doing Backstepping~\ref{eq:CLF-CBF-QP-relaxed-1Backstep})}. \\
+
+
+Assuming equal control input wheights relative to each other (\(R = \mathbf{I}_{m \times m}\)) and just one \glsxtrshort{CLF} and \glsxtrshort{CBF} each, according to the \glsxtrfull{KKT} conditions\footnote{\href{https://en.wikipedia.org/wiki/Karush-Kuhn-Tucker_conditions}{KKT Conditions Wikipedia \cite{} (Click here to be Redirected)}} (to see the full deduction \ref{}):
+
+\begin{equation}
+    \mathbf{k}(\xVec \mathcolor{purple}{, \mathbf{\xi}}) =
+    \begin{cases}
+        \mathbf{k}_1(\xVec \mathcolor{purple}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{purple}{, \mathbf{\xi}}) \in \mathcal{S}_1 \\
+        \mathbf{k}_2(\xVec \mathcolor{purple}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{purple}{, \mathbf{\xi}}) \in \mathcal{S}_2 \\
+        \mathbf{k}_3(\xVec \mathcolor{purple}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{purple}{, \mathbf{\xi}}) \in \mathcal{S}_3 \\
+        \mathbf{0}_{m \times 1 } \quad  \hspace{0.25em}, \quad (\xVec \mathcolor{purple}{, \mathbf{\xi}}) \in \mathcal{S}_4
+    \end{cases}
+    \label{eq:closed-form_controller}
+\end{equation}
+
+
+Where each controller \(\mathbf{k}_i\), for \( i = 1, ..., 4 \), corresponds to the closed-form equation depending which constraints (\glsxtrshort{CLF} or \glsxtrshort{CBF}) are active what can be inferred by \(\mathcal{S}_i\), for \( i = 1, ..., 4 \). Via \glsxtrshort{KKT} conditions the respectives controllers and domains are obtained due to the \glsxtrshort{KKT} multipliers.\\
+
+Auxiliary Variables:
+
+\begin{align*}
+    & L \sOrderArgB = L_GV \sOrderArgB \hspace{0.2em} L_Gh\sOrderArgB^{\top} \\
+    & \Delta = L \sOrderArgB^2 (p^{-1} + ||L_Gh\sOrderArgB||^2)  \hspace{0.2em} || L_Gh\sOrderArgB||^2
+\end{align*}
+
+\glsxtrshort{KKT} multipliers:
+
+\begin{align}
+    & \lambda_1(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = \Delta^{-1} (L \sOrderArgB \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} - ||L_Gh\sOrderArgB||^2  \hspace{0.2em}F_V \sOrderArgB)
+    \notag\\
+    & \lambda_2(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = \Delta^{-1} (L \sOrderArgB F_V \sOrderArgB \hspace{0.2em} - (p^{-1} + ||L_Gh\sOrderArgB||^2)  \hspace{0.2em}F_h \sOrderArgB) 
+    \label{eq:KKT-Multipliers_formulas}
+\end{align}
+
+Controller \(\mathbf{k}_i\) closed-form equation:
+
+\begin{equation}
+    \begin{array}{l}
+    \mathbf{k}_1(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = -(p^{-1} + ||L_GV \sOrderArgB||^2)^{-1} \hspace{0.2em} F_V\sOrderArgB \hspace{0.2em} L_GV\sOrderArgB^{\top} \vspace{0.5em} \\ 
+    \mathbf{k}_2(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = -||L_Gh \sOrderArgB||^{-2} \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} L_Gh \sOrderArgB^{\top} \vspace{0.5em} \\ 
+    \mathbf{k}_3(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = -\lambda_1\sOrderArgB L_GV \sOrderArgB^{\top} + \lambda_2\sOrderArgB L_Gh \sOrderArgB^{\top} \vspace{0.5em}
+    \label{eq:closed-form_controller_formulas}
+    \end{array} 
+\end{equation}
 
 
 
+Constraint Activation Subdomains \(\mathcal{S}_i\) ( based on the dual feasibilitie condition \href{https://en.wikipedia.org/wiki/Karush-Kuhn-Tucker_conditions}{\cite{}} ):
+
+\begin{align}
+    \intertext{If CLF is active }
+    \mathcal{S}_1 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p}: \lambda_1 \geq 0 \cap \lambda_2 < 0 \}
+    \notag \\
+    \intertext{If CBF is active}
+    \mathcal{S}_2 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p}: \lambda_1 < 0 \cap \lambda_2 \geq 0 \}
+    \notag \\
+    \label{eq:Constraints_Activation_Subdomains}
+    \intertext{If CLF and CBF is active}
+    \mathcal{S}_3 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p}: \lambda_1 \geq 0 \cap \lambda_2 \geq 0 \}
+    \notag\\
+    \intertext{If Any is active}
+    \mathcal{S}_4\sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p}: \lambda_1 < 0 \cap \lambda_2 < 0 \}
+    \notag
+\end{align}
 
 
-
-
-
+\subsection{Unifying \glsxtrshort{CBF}}
+\label{sub:unifying_CBF}
 
 
 
