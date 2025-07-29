@@ -21,6 +21,17 @@
 \section{\glsxtrshort{CLF-CBF}}
 \label{sec:clf_cbf}
 
+Considering a nonlinear control-affine system:
+
+\begin{equation}
+    \dot{\xVec} = f(\xVec) + g(\xVec)\uVec
+    \label{eq:Nonlinear-First-Order-System} 
+\end{equation}
+
+with stet \(\xVec \in \mathbb{R}^n\), control input \(\uVec \in \mathbb{R}^m\), and locally Lipschitz continuos\footnote{Explicar o que é Lipschitz continuos} functions \(f: \mathbb{R}^n \to \mathbb{R}^n\) and \(g: \mathbb{R}^n \to \mathbb{R}^{n \times m}\). Given a locally Lipschitz continuos \(k: \mathbb{R}^n \to \mathbb{R}^m\)
+
+
+
 
 \subsection{1st Order Formulation}
 \label{sub:formulation}
@@ -28,7 +39,7 @@
 \subsubsection{\glsxtrfull{CLF}}
 \label{subsub:control_lyapunov_function}
 
-Having the objective of global assymptotically stability of the system~\ref{eq:}, is desired for the system converge to an equilibrium point \( \bar{\mathbf{x}} \). A solution comes by designing a positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0}  \) which converges to zero while the system converges to the respective equilibrium point, and for that, designing a control law that acts in order to achieve specifically the convergence of the function. Consequentially is pretended to the function \( V\mathbf(x) \) to be continuos and differentiable:
+Having the objective of global assymptotically stability of the system~\ref{eq:}, is desired for the system converge to an equilibrium point \( \bar{\mathbf{x}} \). A solution comes by designing a positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0} \) which converges to zero while the system converges to the respective equilibrium point, and for that, designing a control law that acts in order to achieve specifically the convergence of the function. Consequentially is pretended to the function \( V\mathbf(\mathbf{x}) \) to be continuos and differentiable:
 
 \[\dot{V} (\mathbf{x}, \mathbf{u}) = \frac{\partial V}{\partial x}\dot{x} = L_fV(\mathbf{x}) + L_GV(\mathbf{x})\mathbf{u} \]
 
@@ -66,7 +77,7 @@ Now having the objective of garantee safety to system~\ref{}, is aimed to keep t
 \end{equation}
 
 
-In order to mantain \(h( \mathbf{x} )\) positive, there is a need to have a control law and but first to be able to interface with the function which is the case since \(h( \mathbf{x} )\) is differentiable:  
+In order to mantain \(h( \mathbf{x} )\) positive, there is a need to have a control law and but first to be able to interface with the function. Since \(h( \mathbf{x} )\) is differentiable:  
 
 \[\dot{h}(\mathbf{x}, \mathbf{u}) = \frac{\partial h}{\partial x}\dot{x} = L_fh(\mathbf{x}) + L_Gh(\mathbf{x})\mathbf{u} \]
 
@@ -87,7 +98,7 @@ Similar to the \glsxtrshort{CLF}, from \glsxtrshort{CBF} \(h\) and an adequate t
 \end{equation}
 
 
-The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system safe with respect to the set \(\mathcal{C}\). The controller by defenition is able to evolve the closed-loop system~\ref{} more freely when \(\dot{h}( \mathbf{x} ) > 0\) and more cautiously as \(h( \mathbf{x} ) \) shortens and \(\dot{h}( \mathbf{x} ) < 0\), if \(h( \mathbf{x} ) < 0\) it means is in the unsafe region so \(\dot{h}( \mathbf{x}) > 0\) converging continuosly to the safe set \(\mathcal{C}\). 
+The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system~\ref{} safe with respect to the set \(\mathcal{C}\). The controller by defenition is able to evolve the closed-loop system more freely when \(\dot{h}( \mathbf{x} ) > 0\) and more cautiously as \(h( \mathbf{x} ) \) shortens and \(\dot{h}( \mathbf{x} ) < 0\), if \(h( \mathbf{x} ) < 0\) it means is in the unsafe region so \(\dot{h}( \mathbf{x}) > 0\) converging continuosly to the safe set \(\mathcal{C}\). 
 
 
 
@@ -97,7 +108,7 @@ The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \
 
 Now having the objective of not only achieve safety but also assymptotically stability through the usage of \glsxtrshort{CLF} and \glsxtrshort{CBF} it renders a set of control inputs able to achieve the respective purposes.  
 
-Using the conditions imposed by \glsxtrshort{CLF} and \glsxtrshort{CBF} as constraints, is presented an optimization problem  via \glsxtrfull{QP}\footnote{Explicar o que é um QP genericamente}, given a locally Lipschitz continuos\footnote{Outra explicação AQUI} controller \(k: \mathbb{R}^n \rightarrow \mathbb{R}^m \):
+Using the conditions imposed by \glsxtrshort{CLF} and \glsxtrshort{CBF} as constraints, is presented an optimization problem  via \glsxtrfull{QP}~\footnote{Explicar o que é um QP genericamente}, given a locally Lipschitz continuos controller \(k: \mathbb{R}^n \rightarrow \mathbb{R}^m \):
 
 \begin{equation}
     \begin{array}{l}
@@ -130,18 +141,10 @@ Having \(\delta\) as an optimization variable not only allows to balance between
 \subsection{Backstepping}
 \label{sub:backstepping}
 
-\subsubsection{Higher Order Systems}
+\subsubsection{Second-Order Systems}
 \label{subsub:higher_order_systems}
 
-Usually control systems are governed by higher-order systems, such as some seconder-order cyber-physical systems controlling the position by applying some force to manipulate the speed that is felt in the position just an instant after.  Higher order systems' outputs variation is felt by an multiple integrative effect, by an integration of each state affecting the next state dynamic until reach the so wanted output. Considering a non-linear system in strict-feedback form:
-
-% \begin{equation}
-%     \begin{array}{l}
-%         \dot{\xVec} = f_0(\xVec) + g_0(\xVec) \mathbf{\xi}\\ 
-%         \dot{ \mathbf{\xi} } =  f_1(\xVec, \mathbf{\xi}) + g_1(\xVec, \mathbf{\xi}) \uVec
-%     \end{array}
-%  \label{eq:HH-NL-System}
-% \end{equation}
+Usually control systems are governed by higher-order systems, such as some second-order cyber-physical systems controlling the position by applying some force to manipulate the speed that is felt in the position just instants after.  Higher order systems' outputs variation is felt by an multiple integrative effect, by an integration of each state affecting the next state dynamic until reach the so wanted output. Considering a non-linear system in strict-feedback form:
 
 \begin{subequations}
     
@@ -191,12 +194,18 @@ That beeing said, the first order solution could be obtained via \glsxtrshort{QP
 
 
 The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability not only to the first-order system~\ref{eq:NL-CL-System-0Backstep} but also to the actual second-order system. Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order trying to converge to the first order solution. Supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
+\begin{subequations}
+    \label{eq:Backstepp_CF}
+    \begin{align}
+        V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) = \frac{1}{2}|| \mathbf{\xi} -  k_0(\xVec) ||^2 
+        \label{eq:Backstepp_prejudice}\\
+        V(\xVec, \mathbf{\xi}) = V_0(\xVec) + V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) 
+        \label{eq:Backstepp_V}\\
+        h(\xVec, \mathbf{\xi}) = h_0(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})
+        \label{eq:Backstepp_h}
+    \end{align}
+\end{subequations}
 
-\begin{align*}
-    V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) = \frac{1}{2}|| \mathbf{\xi} -  k_0(\xVec) ||^2 \\
-    V(\xVec, \mathbf{\xi}) = V_0(\xVec) + V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) \\
-    h(\xVec, \mathbf{\xi}) = h_0(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})
-\end{align*}
 
 Finally, via \glsxtrshort{QP}, given a differentiable and locally Lipschitz continuos \(k(\xVec, \mathbf{\xi}):\mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m\):
 
@@ -209,46 +218,37 @@ Finally, via \glsxtrshort{QP}, given a differentiable and locally Lipschitz cont
  \label{eq:CLF-CBF-QP-relaxed-1Backstep}
 \end{equation}
 
-It's expected that  \( \gamma << \gamma'\)  contributing to a faster convergence of \(\xi\) and more similar behaviour of the system~\ref{eq:HH-NL-System} relative to the first-order system~\ref{eq:HH-NL-System-1stOrder} and mitigate the chances of the system~\ref{eq:HH-NL-System} not be safe in relation to \(\mathcal{C}_0\).
+It's expected that  \( \gamma << \gamma'\)  contributing to a faster convergence of \(\xi\) and more similar behaviour of the system~\ref{eq:HH-NL-CL-System} relative to the first-order system~\ref{eq:NL-CL-System-0Backstep} and mitigate the chances of the system~\ref{eq:HH-NL-CL-System} not be safe in relation to \(\mathcal{C}_0\).
 %na ciaxinha a azul desta vez alem de falar que se nao se pretende safety ou stability continua a passar não usar as respetivas constraints. Mas agora falar caso fosse ordens maiores era pegar nesta ultima solução e assumir como se agora fosse o novo k0, fazendo "backstepp" ate à higher degree dynamic que influencia o output. 
 
-% \begin{equation}
-%     \begin{array}{l}
-%         k_0(\xVec) = \underset{\uVec \in \mathbb{R}^p, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
-%         \quad \hspace{0.5em}  st. \hspace{0.5em} \underbrace{L_fV_0(\mathbf{x}) + L_GV_0(\mathbf{x})\mathbf{\xi} + L_fV_{\mathbf{\xi}}(\mathbf{x}) }_{L_fV(\xVec, \mathbf{\xi})} + \underbrace{L_GV_{\mathbf{\xi}}(\mathbf{x}) }_{L_GV(\xVec, \mathbf{\xi})}\mathbf{u} \leq -\gamma(V_0(\mathbf{x})) -\gamma'(V_{\mathbf{\xi}}(\mathbf{x})) + \delta \vspace{0.25em}\\
-%         \quad \quad \hspace{1em}                 \underbrace{L_fh_0(\mathbf{x}) + L_Gh_0(\mathbf{x})\mathbf{\xi} - L_fV_{\mathbf{\xi}}(\mathbf{x}) }_{L_fh(\xVec, \mathbf{\xi})} + \underbrace{ - L_GV_{\mathbf{\xi}}(\mathbf{x}) }_{L_Gh(\xVec, \mathbf{\xi})}\mathbf{u} \geq -\alpha(h_0(\mathbf{x})) + \alpha'(V_{\mathbf{\xi}}(\mathbf{x}))
-%     \end{array}
-%  \label{eq:CLF-CBF-QP-relaxed-1Backstep}
-% \end{equation}
 
-% so to tkcche respective CLF and CBF is added a CLF contributing tho the copnvergence of \xi to k0
 
 \subsection{Closed Form}
 \label{sub:closed_form}
 
-The objective of this thesis is to purpose a set of low computational effort techniques suitable to spacecrafts. Aiming a faster computation of the optimization problems solutions, any of the previous \glsxtrshort{QP}s (\ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) have a closed-form\footnote{Explicar o que e closed form} solution which allows to calculate directly the respective solution instead of depending of a numerical solver. Given the \glsxtrshort{QP} optimization problem and a controller \(k(\xVec, \mathcolor{purple}{\mathbf{\xi}}): \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p} \to \mathbb{R}^m\) \textcolor{purple}{(if it is a second-order system)}:
+The objective of this thesis is to purpose a set of low computational effort techniques suitable to spacecrafts. Aiming a faster computation of the optimization problems solutions, any of the previous \glsxtrshort{QP}s (\ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) have a closed-form\footnote{Explicar o que e closed form} solution which allows to calculate directly the respective solution instead of depending of a numerical solver. Given the \glsxtrshort{QP} optimization problem and a controller \(k(\xVec, \mathcolor{gray}{\mathbf{\xi}}): \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p} \to \mathbb{R}^m\) \textcolor{gray}{(if it is a second-order system)}:
 
 \begin{equation}
     \begin{array}{l}
-        k(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = \underset{\uVec \in \mathbb{R}^m, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
-        \quad \hspace{0.5em}  st. \hspace{0.5em} \underbrace{\underbrace{L_fV(\xVec \mathcolor{purple}{, \mathbf{\xi}}) + \gamma(\mathcolor{orange}{V_0(\mathbf{x})}) \mathcolor{purple}{+ \gamma'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))}}_{F_V(\mathbf{x} \mathcolor{purple}{, \mathbf{\xi}})} + L_GV(\xVec \mathcolor{purple}{, \mathbf{\xi}})\mathbf{u} - \delta }_{g_1(\xVec \mathcolor{purple}{, \mathbf{\xi}})}\leq  0 \vspace{0.25em}\\
-        \quad \quad \hspace{1em}                 \underbrace{\underbrace{L_fh(\xVec \mathcolor{purple}{, \mathbf{\xi}}) + \alpha(\mathcolor{orange}{h_0(\mathbf{x})}) \mathcolor{purple}{- \alpha'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))}}_{F_h(\mathbf{x} \mathcolor{purple}{, \mathbf{\xi}})} + L_Gh(\xVec \mathcolor{purple}{, \mathbf{\xi}})\mathbf{u}}_{-g_2(\xVec \mathcolor{purple}{, \mathbf{\xi}})} \geq 0 
+        k(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = \underset{\uVec \in \mathbb{R}^m, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
+        \quad \hspace{0.5em}  st. \hspace{0.5em} \underbrace{\underbrace{L_fV(\xVec \mathcolor{gray}{, \mathbf{\xi}}) + \gamma(\mathcolor{orange}{V_0(\mathbf{x})}) \mathcolor{gray}{+ \gamma'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))}}_{F_V(\mathbf{x} \mathcolor{gray}{, \mathbf{\xi}})} + L_GV(\xVec \mathcolor{gray}{, \mathbf{\xi}})\mathbf{u} - \delta }_{g_1(\xVec \mathcolor{gray}{, \mathbf{\xi}})}\leq  0 \vspace{0.25em}\\
+        \quad \quad \hspace{1em}                 \underbrace{\underbrace{L_fh(\xVec \mathcolor{gray}{, \mathbf{\xi}}) + \alpha(\mathcolor{orange}{h_0(\mathbf{x})}) \mathcolor{gray}{- \alpha'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))}}_{F_h(\mathbf{x} \mathcolor{gray}{, \mathbf{\xi}})} + L_Gh(\xVec \mathcolor{gray}{, \mathbf{\xi}})\mathbf{u}}_{-g_2(\xVec \mathcolor{gray}{, \mathbf{\xi}})} \geq 0 
     \end{array}
  \label{eq:CLF-CBF-QP-relaxed-generic}
 \end{equation}
 
-With a \glsxtrshort{CLF} \(V\), \glsxtrshort{CBF} \(h\), \(\mathbb{x}\in\mathbb{R}^n\), \textcolor{orange}{the first-order system \glsxtrshort{CLF}} \(\mathcolor{orange}{V_0} ( = V\) like in \ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed} and \ref{eq:CLF-CBF-QP-relaxed-0Backstep}) \textcolor{purple}{, and if it is a second-order system with} \(\mathcolor{purple}{\mathbf{\xi}\in\mathbb{R}^p}\) \textcolor{purple}{(equivalent to the \glsxtrshort{QP} seen while doing Backstepping~\ref{eq:CLF-CBF-QP-relaxed-1Backstep})}. \\
+With a \glsxtrshort{CLF} \(V\), \glsxtrshort{CBF} \(h\), \(\mathbf{x}\in\mathbb{R}^n\), \textcolor{orange}{the first-order system \glsxtrshort{CLF}} \(\mathcolor{orange}{V_0} ( = V\) like in \ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed} and \ref{eq:CLF-CBF-QP-relaxed-0Backstep}) \textcolor{gray}{, and if it is a second-order system with} \(\mathcolor{gray}{\mathbf{\xi}\in\mathbb{R}^p}\) \textcolor{gray}{(equivalent to the \glsxtrshort{QP} seen while doing Backstepping~\ref{eq:CLF-CBF-QP-relaxed-1Backstep})}. \\
 
 
-Assuming equal control input wheights relative to each other (\(R = \mathbf{I}_{m \times m}\)) and just one \glsxtrshort{CLF} and \glsxtrshort{CBF} each, according to the \glsxtrfull{KKT} conditions\footnote{\href{https://en.wikipedia.org/wiki/Karush-Kuhn-Tucker_conditions}{KKT Conditions Wikipedia \cite{} (Click here to be Redirected)}} (to see the full deduction \ref{}):
+Using \cite{matias2025hybrid} as a reference, assuming equal control input wheights relative to each other (\(R = \mathbf{I}_{m \times m}\)) and just one \glsxtrshort{CLF} and \glsxtrshort{CBF} each, according to the \glsxtrfull{KKT} conditions\footnote{\href{https://en.wikipedia.org/wiki/Karush-Kuhn-Tucker_conditions}{KKT Conditions Wikipedia (Click here to be Redirected)} \label{foot: KKT_Conditions}} (to see the full deduction \ref{}):
 
 \begin{equation}
-    \mathbf{k}(\xVec \mathcolor{purple}{, \mathbf{\xi}}) =
+    \mathbf{k}(\xVec \mathcolor{gray}{, \mathbf{\xi}}) =
     \begin{cases}
-        \mathbf{k}_1(\xVec \mathcolor{purple}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{purple}{, \mathbf{\xi}}) \in \mathcal{S}_1 \\
-        \mathbf{k}_2(\xVec \mathcolor{purple}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{purple}{, \mathbf{\xi}}) \in \mathcal{S}_2 \\
-        \mathbf{k}_3(\xVec \mathcolor{purple}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{purple}{, \mathbf{\xi}}) \in \mathcal{S}_3 \\
-        \mathbf{0}_{m \times 1 } \quad  \hspace{0.25em}, \quad (\xVec \mathcolor{purple}{, \mathbf{\xi}}) \in \mathcal{S}_4
+        \mathbf{k}_1(\xVec \mathcolor{gray}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{gray}{, \mathbf{\xi}}) \in \mathcal{S}_1 \\
+        \mathbf{k}_2(\xVec \mathcolor{gray}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{gray}{, \mathbf{\xi}}) \in \mathcal{S}_2 \\
+        \mathbf{k}_3(\xVec \mathcolor{gray}{, \mathbf{\xi}}), \quad (\xVec \mathcolor{gray}{, \mathbf{\xi}}) \in \mathcal{S}_3 \\
+        \mathbf{0}_{m \times 1 } \quad  \hspace{0.25em}, \quad (\xVec \mathcolor{gray}{, \mathbf{\xi}}) \in \mathcal{S}_4
     \end{cases}
     \label{eq:closed-form_controller}
 \end{equation}
@@ -266,9 +266,9 @@ Auxiliary Variables:
 \glsxtrshort{KKT} multipliers:
 
 \begin{align}
-    & \lambda_1(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = \Delta^{-1} (L \sOrderArgB \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} - ||L_Gh\sOrderArgB||^2  \hspace{0.2em}F_V \sOrderArgB)
+    & \lambda_1(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = \Delta^{-1} (L \sOrderArgB \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} - ||L_Gh\sOrderArgB||^2  \hspace{0.2em}F_V \sOrderArgB)
     \notag\\
-    & \lambda_2(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = \Delta^{-1} (L \sOrderArgB F_V \sOrderArgB \hspace{0.2em} - (p^{-1} + ||L_Gh\sOrderArgB||^2)  \hspace{0.2em}F_h \sOrderArgB) 
+    & \lambda_2(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = \Delta^{-1} (L \sOrderArgB F_V \sOrderArgB \hspace{0.2em} - (p^{-1} + ||L_Gh\sOrderArgB||^2)  \hspace{0.2em}F_h \sOrderArgB) 
     \label{eq:KKT-Multipliers_formulas}
 \end{align}
 
@@ -276,30 +276,30 @@ Controller \(\mathbf{k}_i\) closed-form equation:
 
 \begin{equation}
     \begin{array}{l}
-    \mathbf{k}_1(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = -(p^{-1} + ||L_GV \sOrderArgB||^2)^{-1} \hspace{0.2em} F_V\sOrderArgB \hspace{0.2em} L_GV\sOrderArgB^{\top} \vspace{0.5em} \\ 
-    \mathbf{k}_2(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = -||L_Gh \sOrderArgB||^{-2} \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} L_Gh \sOrderArgB^{\top} \vspace{0.5em} \\ 
-    \mathbf{k}_3(\xVec \mathcolor{purple}{, \mathbf{\xi}}) = -\lambda_1\sOrderArgB L_GV \sOrderArgB^{\top} + \lambda_2\sOrderArgB L_Gh \sOrderArgB^{\top} \vspace{0.5em}
+    \mathbf{k}_1(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -(p^{-1} + ||L_GV \sOrderArgB||^2)^{-1} \hspace{0.2em} F_V\sOrderArgB \hspace{0.2em} L_GV\sOrderArgB^{\top} \vspace{0.5em} \\ 
+    \mathbf{k}_2(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -||L_Gh \sOrderArgB||^{-2} \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} L_Gh \sOrderArgB^{\top} \vspace{0.5em} \\ 
+    \mathbf{k}_3(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -\lambda_1\sOrderArgB L_GV \sOrderArgB^{\top} + \lambda_2\sOrderArgB L_Gh \sOrderArgB^{\top} \vspace{1.5em}
     \label{eq:closed-form_controller_formulas}
     \end{array} 
 \end{equation}
 
 
 
-Constraint Activation Subdomains \(\mathcal{S}_i\) ( based on the dual feasibilitie condition \href{https://en.wikipedia.org/wiki/Karush-Kuhn-Tucker_conditions}{\cite{}} ):
+Constraint Activation Subdomains \(\mathcal{S}_i\) ( based on the dual feasibilitie condition~\footref{foot: KKT_Conditions}):
 
 \begin{align}
-    \intertext{If CLF is active }
-    \mathcal{S}_1 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p}: \lambda_1 \geq 0 \cap \lambda_2 < 0 \}
+    \intertext{\hspace{4em} If CLF is active: }
+    \mathcal{S}_1 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p}: \lambda_1 \geq 0 \cap \lambda_2 < 0 \}
     \notag \\
-    \intertext{If CBF is active}
-    \mathcal{S}_2 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p}: \lambda_1 < 0 \cap \lambda_2 \geq 0 \}
+    \intertext{\hspace{4em} If CBF is active:}
+    \mathcal{S}_2 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p}: \lambda_1 < 0 \cap \lambda_2 \geq 0 \}
     \notag \\
     \label{eq:Constraints_Activation_Subdomains}
-    \intertext{If CLF and CBF is active}
-    \mathcal{S}_3 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p}: \lambda_1 \geq 0 \cap \lambda_2 \geq 0 \}
+    \intertext{\hspace{4em} If CLF and CBF is active:}
+    \mathcal{S}_3 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p}: \lambda_1 \geq 0 \cap \lambda_2 \geq 0 \}
     \notag\\
-    \intertext{If Any is active}
-    \mathcal{S}_4\sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{purple}{\times \mathbb{R}^p}: \lambda_1 < 0 \cap \lambda_2 < 0 \}
+    \intertext{\hspace{4em} If Any is active:}
+    \mathcal{S}_4\sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p}: \lambda_1 < 0 \cap \lambda_2 < 0 \}
     \notag
 \end{align}
 
@@ -307,20 +307,263 @@ Constraint Activation Subdomains \(\mathcal{S}_i\) ( based on the dual feasibili
 \subsection{Unifying \glsxtrshort{CBF}}
 \label{sub:unifying_CBF}
 
+The previous controllers synthesized control inputs based on just one \glsxtrshort{CBF}, i.e., those controllers garantee safety w.r.t. a single safe set \(\mathcal{C}\), but given diffrent scenarios, it could exist more complex safety specifications and the need to impose more than one safety contraints simultaneously such as \glsxtrshort{CBF} \(h_i(\xVec)\), for \(i \in  \mathcal{I}=\{1,...N\}\):
+
+\begin{align}
+    & \mathcal{C}_i = \{ \xVec \in \mathbb{R}_n: h_i(\xVec) \geq 0\}
+    \label{eq:Multiple_Safe_Sets} \\ 
+    \notag\\
+    & \mathcal{C} = \bigcap_{i \in \mathcal{I}} \mathcal{C}_i 
+    \label{eq:Safe_Set_of_multiple}
+\end{align}
+
+But like it was said before regarding having more than one constraint could leave to conflict problems, empty safe sets (\(\mathcal{C} = \emptyset\)) and an inexistent set of acceptable control inputs (\(\mathbf{k}\sOrderArgB = \emptyset\)). Using \cite{molnar2023composing} as guidance, in order to avoid conflicts, merges all \glsxtrshort{CBF} into a single one that is able to capture all those safety notions and allow for even more complex safety specifications and to the resultant constraint fit the already obtained \glsxtrshort{CLF-CBF} closed-form solution~\ref{eq:closed-form_controller}. \\
+
+
+\subsubsection{First-Order System}
+\label{subsub:uniCBF_firstOrder_system}
+
+The more complex safety specifications are defined via boolean logical operations between 0-superlevel sets of the diffrent \glsxtrshort{CBF}. Those operations are tipically seen in constrained optimization problems, like in \glsxtrshort{QP} of the form:
+
+
+\begin{equation}
+    \begin{array}{l}
+        k(\xVec) = \underset{\uVec \in \mathbb{R}^p, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
+        \quad \hspace{0.5em}  st. \hspace{0.5em} L_fV(\xVec) + L_GV(\xVec)\mathbf{u} \leq -\gamma(V(\mathbf{x})) + \delta \vspace{0.25em}\\
+        \quad \quad \hspace{1em}                 L_fh_i(\xVec) + L_Gh_i(\xVec)\mathbf{u} \geq -\alpha_i(h_i(\mathbf{x}))  \quad \forall i \in \mathcal{I}    
+    \end{array}
+ \label{eq:CLF-MultipleCBF-QP-relaxed-generic}
+\end{equation}
+
+Where the resultant safe set~\ref{eq:Safe_Set_of_multiple} of the system refers to the intersection of all safe sets~\ref{eq:Multiple_Safe_Sets}. More than be propitious to be not solvable, the formulation itself of the optimization problem~\ref{eq:CLF-MultipleCBF-QP-relaxed-generic} is limitated by no other logical operation than AND. \par
+
+Among the the logical operations that could be applied to \glsxtrshort{CBF}s, there are:
+
+\begin{description}
+
+    \item[Identity ( Class-\(\mathcal{K}^e\)):] 
+    \begin{subequations}
+        \begin{align}
+            \mathcal{C}_i &= \{(\xVec, \alpha_i) \in \mathbb{R}^n \times \mathcal{K}^e: \alpha_i(h_i(\xVec) \geq 0)\} = 
+            \label{eq:Indentity_set} \\
+                          &= \{\xVec \in \mathbb{R}^n: h_i(\xVec) \geq 0\}
+            \label{eq:Gen_Safe_set} 
+        \end{align}
+        
+    \end{subequations}
+
+    \item[Complement Set (Negation):] 
+    
+    \begin{equation}
+        \bar{\mathcal{C}_i} = \{\xVec \in \mathbb{R}^n: -h_i(\xVec) \geq 0\} 
+        \label{eq:Negation_set} 
+    \end{equation}
+
+    \item[Intersection of Sets (AND):] 
+
+        \begin{equation}
+            \begin{array}{rl}      
+            \underset{i \in \mathcal{I}}{\bigcap} \mathcal{C}_i &= \{\xVec \in \mathbb{R}^n: h_i(\xVec) \geq 0 \hspace{0.5em} \forall i \in \mathcal{I}\}  \\
+                                                      &= \{\xVec \in \mathbb{R}^n: \underset{i \in \mathcal{I}}{\min}(h_i(\xVec)) \geq 0 \} 
+            \end{array}
+            \label{eq:Intersection_set}
+        \end{equation}
+
+    \item[Union of Sets (OR):] 
+    
+        \begin{equation}
+            \begin{array}{rl}
+                \underset{i \in \mathcal{I}}{\bigcup} \mathcal{C}_i &= \{\xVec \in \mathbb{R}^n: \exists i \in \mathcal{I} \hspace{0.5em} st. \hspace{0.5em} h_i(\xVec) \geq 0 \}  \\
+                                                          &= \{\xVec \in \mathbb{R}^n: \underset{i \in \mathcal{I}}{\max}(h_i(\xVec)) \geq 0 \} 
+            \end{array}
+            \label{eq:Union_set}
+        \end{equation}
+\end{description}
+
+The logical operations identity, complement, intersection and union are represented by respectively, class-\(\mathcal{K}^e\) functions, negation, min and max operations. Although the class-\(\mathcal{K}^e\) (\(\alpha_i(h_i(\xVec))\)) and negation (\(-h_i(\xVec)\)) functions which are continuosly differentiable and valid as \glsxtrshort{CBF}, contrary to the AND and OR functions, \(\min_{ i \in \mathcal{I}} (h_i(\xVec))\) and \(\max_{ i \in \mathcal{I}} (h_i(\xVec))\) that aren't continuosly differentiable and therefore not \glsxtrshort{CBF} candidates.  The \(\max\) and \(\min\) functions capacitate combining safe sets defined by multiple \glsxtrshort{CBF} (accordingly to the operation) and to obtain a new safety specification as is expected to see while merging multiple \glsxtrshort{CBF} into a single one. So, in order to viablize the AND and OR operation and achieve the merge of \glsxtrshort{CBF}s, the \(min\) and \(max\) functions can be replaced via smooth-aproximation, keeping their properties with just a relative small degradation of accuracy, by continuosly differentiable \textbf{log-sum-exp functions}:
+
+
+\begin{description}
+
+    \item[Intersection of Sets \(\setminus\)AND \(\setminus\) Minimum]
+
+    \begin{align}
+        h(\xVec) &= \frac{-1}{k}ln(\sum_{i \in \mathcal{I}} e^{-k \hspace{0.2em} h_i(\xVec)}) 
+        \label{eq:Min_smoothFunc} \\
+                 &\approx \underset{i \in \mathcal{I}}{\min} (h_i(\xVec))
+        \notag  
+    \end{align}
+
+    Beeing \(k \in \mathbb{R}_{>0}\) as smoothing parameter (if \(k<0\) then is equivalent to the smooth-aproximation of \(\max_{i \in \mathcal{I}}(h_i(\xVec))\) ). 
+
+    \begin{subequations}
+        \begin{align}
+            &\dot{h}(\xVec , \uVec) = \underbrace{\sum_{i \in \mathcal{I}} [\lambda_i \hspace{0.2em} L_fh_i(\xVec)]}_{Lfh(\xVec)} + (\underbrace{\sum_{i \in \mathcal{I}} [\lambda_i \hspace{0.2em} L_Gh_i(\xVec)]}_{LGh(\xVec)})\uVec 
+            \label{eq:Min_smooth_derivative} \\ \notag \\
+            &\lambda_i(\xVec) = e^{-k(h_i(\xVec)-h(\xVec))}
+            \label{eq:Min_lambda_smoothFunc}
+        \end{align}
+    \end{subequations}
+
+    With \(\sum_{i \in \mathcal{I}} \lambda_i(\xVec) = 1\) \par
+    Encountering an under-aproximation of \(h\) relative to the \(\min\) function, given the safe set \(\mathcal{C}\) defined based on \ref{eq:safe-set} it verifies:
+
+    \begin{subequations}
+        \begin{align}
+            &\underset{i \in \mathcal{I}}{\min} (h_i(\xVec)) \geq h(\xVec) \quad \forall \xVec \in \mathbb{R}^n 
+            \label{eq:Intersection_CBF_Comparation} \\
+            &\mathcal{C} \subseteq \bigcap_{i \in \mathcal{I}} \mathcal{C}_i
+            \label{eq:Intersection_SafeSet_Comparation}
+        \end{align}
+    \end{subequations}
+
+    But, \(\hspace{0.4em} \lim_{k \to \infty} h(\xVec) = {\min}_{i \in \mathcal{I}} (h_i(\xVec)) \hspace{0.4em}\) and \( \hspace{0.4em} \lim_{k \to \infty} \mathcal{C} = \bigcap_{i \in \mathcal{I}} \mathcal{C}_i\) \par
+
+    On par with that, the new \glsxtrshort{CBF} \(h(\xVec)\) \ref{eq:Min_smoothFunc} could restrain too much the closed-loop system in comparison to theoretical \glsxtrshort{CBF} \( \lim_{k \to \infty} h(\xVec)\). In order to relax the safe set \(\mathcal{C}\) and potentially contain \( \bigcap_{i \in \mathcal{I}} \mathcal{C}_i\): 
+    
+    \begin{equation}
+        h(\xVec) = \frac{-1}{k}ln(\sum_{i \in \mathcal{I}} e^{-k \hspace{0.2em} h_i(\xVec)}) + \frac{b}{k}
+        \label{eq:Min_smoothFunc_tighted} \\  
+    \end{equation}
+
+    Beeing \(b\) a parameter tuned according with the problem needs, knowing that if \(b = ln (N)\):
+
+    \begin{subequations}
+        \begin{align}
+            &\underset{i \in \mathcal{I}}{\min} (h_i(\xVec)) \leq h(\xVec) % \leq \underset{i \in\mathcal{I}}{\max} + \frac{b}{k} \quad \forall \xVec \in \mathbb{R}^n
+            \label{eq:Intersection_CBF_Comparation_tighted} \\
+            &\mathcal{C} \supseteq \bigcap_{i \in \mathcal{I}} \mathcal{C}_i
+            \label{eq:Intersection_SafeSet_Comparation_tighted}
+        \end{align}
+    \end{subequations}
+
+    Making the closed-loop system less constrained but not as safe.
+
+    \item[Union of Sets \(\setminus\) OR \(\setminus\) Maximum]
+
+    \begin{align}
+        h(\xVec) &= \frac{1}{k}ln(\sum_{i \in \mathcal{I}} e^{k \hspace{0.2em} h_i(\xVec)}) 
+        \label{eq:Max_smoothFunc} \\
+                 &\approx \underset{i \in \mathcal{I}}{\max} (h_i(\xVec))
+        \notag  
+    \end{align}
+
+    Beeing \(k \in \mathbb{R}_{>0}\) as smoothing parameter. The derivative of \(h(\xVec)\) is equal to \ref{eq:Min_smooth_derivative} but:
+
+    \begin{equation}
+        \lambda_i(\xVec) = e^{k(h_i(\xVec)-h(\xVec))}
+        \label{eq:Max_lambda_smoothFunc}
+    \end{equation}
+
+    With also \(\sum_{i \in \mathcal{I}} \lambda_i(\xVec) = 1\). \par
+    Due to an over-aproximation of \(h\) relative to the \(\max\) function, given the safe set \(\mathcal{C}\) defined based on \ref{eq:safe-set} it verifies:
+
+    \begin{subequations}
+        \begin{align}
+            &\underset{i \in \mathcal{I}}{\max} (h_i(\xVec)) \leq h(\xVec) \quad \forall \xVec \in \mathbb{R}^n 
+            \label{eq:Union_CBF_Comparation} \\
+            &\mathcal{C} \supseteq \bigcup_{i \in \mathcal{I}} \mathcal{C}_i
+            \label{eq:Union_SafeSet_Comparation}
+        \end{align}
+    \end{subequations}
+
+    But, \(\hspace{0.4em} \lim_{k \to \infty} h(\xVec) = {\max}_{i \in \mathcal{I}} (h_i(\xVec)) \hspace{0.4em}\) and \( \hspace{0.4em} \lim_{k \to \infty} \mathcal{C} = \bigcup_{i \in \mathcal{I}} \mathcal{C}_i\) \par
+
+    Now showing a different point of view, safety is a critical factor, so in order to tight the safe set \(\mathcal{C}\) and potentially be contained within \( \bigcup_{i \in \mathcal{I}} \mathcal{C}_i\): 
+    
+    \begin{equation}
+        h(\xVec) = \frac{1}{k}ln(\sum_{i \in \mathcal{I}} e^{k \hspace{0.2em} h_i(\xVec)}) - \frac{b}{k}
+        \label{eq:Max_smoothFunc_tighted} \\  
+    \end{equation}
+
+    Beeing \(b\) a tunable parameter. Taking \(b = ln (N)\):
+
+    \begin{subequations}
+        \begin{align}
+            &\underset{i \in \mathcal{I}}{\max} (h_i(\xVec)) \geq h(\xVec) % \leq \underset{i \in\mathcal{I}}{\max} + \frac{b}{k} \quad \forall \xVec \in \mathbb{R}^n
+            \label{eq:Union_CBF_Comparation_tighted} \\
+            &\mathcal{C} \subseteq \bigcup_{i \in \mathcal{I}} \mathcal{C}_i
+            \label{eq:Union_SafeSet_Comparation_tighted}
+        \end{align}
+    \end{subequations}
+
+    Therefore the higher \(b\), the safer the system~\ref{eq:NL-CL-System-0Backstep} but possibly too constrained by the new \glsxtrshort{CBF} \(h(\xVec)\) \ref{eq:Max_smoothFunc_tighted}. 
+\end{description}
 
 
 
+\subsubsection{Second-Order System}
+\label{subsub:uniCBF_secondOrder_system}
+
+Following the explanations given in the previous subsubsection~\ref{subsub:uniCBF_firstOrder_system}, now applying for a second-order system~\ref{eq:HH-NL-System}, more precisely, for a Backstepping~\ref{sub:backstepping} situation. \\
+
+Given a \glsxtrshort{CLF} \(V_0(\xVec): \) and multiple \glsxtrshort{CBF} \(h0_i(\xVec) \quad \forall i \in \mathcal{I}\) combined into a \glsxtrshort{CBF} \(h_0(\xVec)\) via \ref{eq:Min_smoothFunc_tighted} or \ref{eq:Max_smoothFunc_tighted} (according it is an AND or OR operation), through the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-0Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}) is obtained a differentiable and locally Lipschitz continuos theoretical controller \(k_0(\xVec): \mathbb{R}^n \to \mathbb{R}\). \\
+
+In order to the second-order system~\ref{eq:HH-NL-CL-System} dynamic converge to \(k_0(\xVec)\) imposed dynamic, given multiple \glsxtrshort{CBF} \(h_i(\xVec) \quad \forall i \in \mathcal{I} \):
+
+\begin{subequations}
+    \label{eq:Backstepp_CF_multipleCBF}
+    \begin{align}
+        &V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) = \frac{1}{2}|| \mathbf{\xi} -  k_0(\xVec) ||^2 
+        \label{eq:Backstepp_prejudice_multipleCBF}\\
+        &V(\xVec, \mathbf{\xi}) = V_0(\xVec) + V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) 
+        \label{eq:Backstepp_V_multipleCBF}\\
+        &h_i(\xVec, \mathbf{\xi}) = h0_i(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) \quad \forall i \in \mathcal{I}
+        \label{eq:Backstepp_h_multipleCBF}
+    \end{align}
+\end{subequations}
+
+The resultant \glsxtrshort{CBF} \(h_i(\xVec, \mathbf{\xi}) \quad \forall i \in \mathcal{I}\), one more time can be merged via \ref{eq:Min_smoothFunc_tighted} or \ref{eq:Max_smoothFunc_tighted} (according it is an AND or OR operation) into a single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\). However there is another way in this case to have the new single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\), so, considering the second-order system~\ref{eq:HH-NL-System} and \(lo \in \{\max, \min\}\):
+
+\begin{align}
+        \underset{ i \in \mathcal{I}}{lo}(h0_i(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})) &= \underset{ i \in \mathcal{I}}{lo}(h0_i(\xVec)) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) \approx 
+                                                                                                \notag\\
+                                                                                               &\approx h_0(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) = 
+                                                                                               \notag\\
+                                                                                               &=h(\xVec, \mathbf{\xi})
+                                                                                               \label{eq:Backstepp_h_multipleCBF2}
+\end{align}
+
+\begin{equation}
+        \dot{h}(\xVec, \mathbf{\xi}) = \underbrace{L_fh_0(\xVec) + L_Gh_0(\xVec)\mathbf{\xi} - L_fV_{\mathbf{\xi}}(\xVec, \mathbf{\xi})}_{L_fh(\xVec, \mathbf{\xi})} + (\underbrace{- L_GV_{\mathbf{\xi}}(\xVec, \mathbf{\xi})}_{L_Gh(\xVec, \mathbf{\xi})}) \uVec
+        \label{eq:Backstepp_h_multipleCBF_derivatives2}
+\end{equation}
 
 
-
-
-
-
-
+Having \glsxtrshort{CBF} \(h\), the second-order solution, a differentiable and locally Lipschitz continuos controller \(k(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}\) is obtained using the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-1Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}). \par
 
 
 
 \endinput
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
