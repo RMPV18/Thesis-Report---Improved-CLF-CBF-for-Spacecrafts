@@ -8,29 +8,248 @@
 
 \typeout{NT FILE appendix1.tex}%
 
-\chapter{\emph{NOVAthesis} covers showcase}
-\label{app:covers_showcase}
+\chapter{Deductions}
+\label{app:deductions}
 
 
-Fazer dedução das soluçoes em formula fechada mostrando os passos e falando de acordo com as KKT connditions particularmente olhando para a parte das necessary conditions.
+\section{Closed-Form \glsxtrshort{QP} given \glsxtrshort{CLF-CBF} Constraints}
+\label{app:CL_QP_CLF-CBF}
+
+Following the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-generic}, suppose there is only one \glsxtrshort{CLF}, given the differentiable quadratic objective function \(f:\mathbb{R}^{m+1} \to \mathbb{R}\):
+
+\begin{equation}
+    f(\uVec, \delta) = \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 )
+    \label{eq:objective_function}
+\end{equation}
+
+where \(\uVec \in \mathbb{R}^m\), \(\delta \in \mathbb{R}\), \( R \in \mathbb{R}^{m \times m}\) and \(p \in \mathbb{R}\). \par
+
+And the optimization problem constrained just by a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\) presented in the respective differentiable functions \(g_i(\xVec, \uVec, \delta): \mathbb{R}^{n+m+1} \to \mathbb{R}, \quad \forall i \in \{1,2\} \):
+
+\begin{equation}
+    \begin{array}{l}
+     \underbrace{F_V(\mathbf{x}) + L_GV(\xVec)\mathbf{u} - \delta }_{g_1(\xVec, \uVec, \delta)}\leq  0 \vspace{0.25em}\\
+     \underbrace{F_h(\mathbf{x}) + L_Gh(\xVec)\mathbf{u}}_{\mathbf{-}g_2(\xVec, \uVec, \delta)} \geq 0   
+    \end{array}
+    \label{eq:constraint_function}
+\end{equation}
+
+whith \(\xVec \in \mathbb{R}^n\) ( corresponding not to an optimzation variable but as a constant, as a current state of the system~\ref{}). \par
+
+The constrained optimization problem can form the Lagrangian function:
+
+\begin{equation}
+    \mathcal{L}(\xVec, \uVec, \delta, \lambda) = f(\uVec, \delta) + \lambda^{\top}g(\xVec, \uVec, \delta)
+    \label{eq:lagrangian_function}
+\end{equation}
+
+where \(\lambda \in \mathbb{R}^2 \) is called the \glsxtrshort{KKT} multiplier. \par
+Aiming to hold the stationarity condition and find the optimal (minimal) solution:
+
+\begin{equation}
+    \nabla(\mathcal{L}(\xVec, \uVec, \delta, \lambda)) = 0
+    \label{eq:lagrangian_gradient_function}
+\end{equation}
+
+Supposing \(g(\xVec, \uVec, \delta) =  \bigl[\begin{smallmatrix} g_1(\xVec, \uVec, \delta) \\ g_2(\xVec, \uVec, \delta) \end{smallmatrix} \bigr]  = F(\xVec) + L_G(\mathbf{x})\uVec + \bigl[\begin{smallmatrix} -\delta \\ 0 \end{smallmatrix} \bigr] \) with \(L_G(\mathbf{x}) = \bigl[\begin{smallmatrix} L_GV(\mathbf{x}) \\ -L_Gh(\mathbf{x}) \end{smallmatrix} \bigr]\) and \(F(\mathbf{x}) = \bigl[\begin{smallmatrix} F_V(\mathbf{x}) \\ -F_h(\mathbf{x}) \end{smallmatrix} \bigr]\):
+
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda)}{\partial \uVec} = 0 &\iff \uVec^{\top}R + \lambda^{\top}L_G = 0  \notag \\
+    &\iff R^{\top}\uVec + L_G^{\top}\lambda = 0 \notag \\
+    &\iff \uVec =- (R^{\top})^{-1}L_G^{\top}\lambda = -L_G^{\top}\lambda \quad (\text{Considering } R = \mathbf{I}_{m \times m}  \label{eq:lagrangian_input_gradient_function} \\
+    & \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{i.e, assuming input consume equally}) \notag
+\end{align}
+
+
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda)}{\partial \delta} = 0 &\iff p\delta +\lambda^{\top}\begin{bmatrix}
+                                                                                                                    -1 \\ 0
+                                                                                                                 \end{bmatrix} = 0  \notag \\
+    &\iff \delta = p^{-1} \begin{bmatrix}
+                                1 & 0
+                            \end{bmatrix} \lambda   \label{eq:lagrangian_delta_gradient_function}                                                                                                           
+\end{align}
 
 
 
-This Appendix shows examples of covers for some of the supported Schools.  When the Schools have very similar covers (e.g., all the schools from Universidade do Minho), just one cover is shown.  If the covers for MSc dissertations and PhD  thesis are considerable different (e.g., for FCT-NOVA and UMinho), then both are shown.
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda)}{\partial \lambda} = 0 &\iff  F(\xVec) + L_G(\mathbf{x})\uVec + \begin{bmatrix} -\delta \\ 0 \end{bmatrix} = 0  \notag \\
+    &\iff    F(\xVec) - \begin{bmatrix}  \delta \\ 0 \end{bmatrix} - L_G(\mathbf{x})L_G^{\top}(\xVec)\lambda = 0    \notag \\                                                                                          
+    &\iff    F(\xVec) - \begin{bmatrix}  p^{-1} \begin{bmatrix} 1 & 0 \end{bmatrix} \lambda \\ 0 \end{bmatrix} - L_G(\mathbf{x})L_G^{\top}(\xVec)\lambda = 0  \notag \\
+    &\iff    F(\xVec) - \left(\begin{bmatrix} p^{-1} & 0 \\ 0 & 0 \end{bmatrix} + L_G(\mathbf{x})L_G(\mathbf{x})^{\top}(\xVec)\right)\lambda = 0  \notag \\     
+    &\iff    \lambda = \left(\begin{bmatrix} p^{-1} & 0 \\ 0 & 0 \end{bmatrix} + L_G(\mathbf{x})L_G(\mathbf{x})^{\top}(\xVec)\right)^{-1}F(\xVec) \label{eq:lagrangian_lambda_gradient_function}   
+\end{align}
 
-\newcommand{\showcasecoversize}{0.3\textwidth}
-\newcommand*{\myhfill}{}
-\newcommand{\myincludeimage}[1]{%
-    \myhfill%
-    \defifundef{\mycvbox}{\newsavebox}%
-    \savebox{\mycvbox}{\includegraphics[width=\showcasecoversize]{#1}}%
-    \defifundef{\mycvboxht}{\newlength}%
-    \setlength{\mycvboxht}{\dimexpr \showcasecoversize*\paperheight/\paperwidth}%
-    \rule{0pt}{1.1\mycvboxht}%
-    \setlength{\fboxsep}{0pt}%
-    \fbox{\includegraphics[width=\showcasecoversize]{#1}}%
-    \renewcommand*{\myhfill}{\hfill}%
-}
+\begin{align}
+\left(\begin{bmatrix} p^{-1} & 0 \\ 0 & 0 \end{bmatrix} + L_G(\mathbf{x})L_G(\mathbf{x})^{\top}(\xVec)\right)^{-1} &= \begin{bmatrix} p^{-1} + L_GV(\mathbf{x}) L_GV^{\top}(\mathbf{x}) & -L_GV(\mathbf{x}) L_Gh^{\top}(\mathbf{x}) \\ -L_Gh(\mathbf{x}) L_GV^{\top}(\mathbf{x}) & L_Gh(\mathbf{x}) L_Gh^{\top}(\mathbf{x}) \end{bmatrix}^{-1} \notag \\
+\notag \\
+&= \frac{adj(.)}{det(.)} = \frac{adj(.)}{\Delta} \label{eq:lagrangian_gradient_auxFunction_inv}  
+\end{align}
+
+
+
+\begin{align}
+adj(.) &= \begin{bmatrix} L_Gh(\mathbf{x}) L_Gh^{\top}(\mathbf{x}) & L_GV(\mathbf{x}) L_Gh^{\top}(\mathbf{x}) \\ L_Gh(\mathbf{x}) L_GV^{\top}(\mathbf{x}) & p^{-1} + L_GV(\mathbf{x}) L_GV^{\top}(\mathbf{x}) \end{bmatrix} \label{eq:lagrangian_gradient_auxFunction_adj} \\
+\notag \\
+\Delta &= L_Gh(\mathbf{x}) L_GV^{\top}(\mathbf{x}) L_GV(\mathbf{x}) L_Gh^{\top}(\mathbf{x}) + (p^{-1} + L_GV(\mathbf{x}) L_GV^{\top}(\mathbf{x}))(L_Gh(\mathbf{x}) L_Gh^{\top}(\mathbf{x})) \notag \\
+       &= ( L_Gh(\mathbf{x}) L_GV^{\top}(\mathbf{x}) )^2 + (p^{-1} + ||L_GV(\mathbf{x})||^2 )||L_Gh(\mathbf{x})||^2 \quad \quad (\text{Since there are just one \glsxtrshort{CLF} and \glsxtrshort{CBF}}) \label{eq:lagrangian_gradient_auxFunction_det}
+\end{align}
+
+
+
+\begin{align}
+\lambda &= \Delta^{-1}adj(.)F(\xVec) \notag \\
+&= \Delta^{-1}  \begin{bmatrix} -L_GV(\xVec) L_Gh(\xVec)^{\top} F_h + ||L_Gh(\mathbf{x})||^2 F_V \\ \\ L_Gh(\xVec) L_GV(\xVec)^{\top}F_V - (p^{-1}+||L_GV(\mathbf{x})||^2)F_h  \end{bmatrix} \notag \\
+&= \begin{bmatrix} \lambda_1 \\ \lambda_2 \end{bmatrix} \label{eq:kkt_multiplier_formula_deduc}
+\end{align}
+
+\begin{align}
+    \uVec &= -L_G^{\top}\lambda \notag \\
+    &= -L_GV(\xVec)\lambda_1 + L_Gh(\xVec)\lambda_2
+    \label{eq:kkt_input_formula_deduc}
+\end{align}
+
+According with the dual feasibility condition the respective constraint is active if \(\lambda_i \geq 0\), for \(i = \{1,2\}\), so given the activation subdomain \(\mathcal{S}_j\), for \(j = \{1,2,3,4\}\): \\
+
+If any is active then:
+
+\begin{align}
+    &\mathcal{S}_4 (\xVec) = \{ (\xVec) \in \mathbb{R}^n: \lambda_1 < 0 \cap \lambda_2 < 0 \}  \label{eq:anyConstraintsActvCond}  \\
+    \notag \\
+    &k_4 = \mathbf{0} \label{eq:anyConstraintsActvController} 
+\end{align}
+
+If both, the \glsxtrshort{CLF} and \glsxtrshort{CBF} is active then:
+
+\begin{align}
+    &\mathcal{S}_3 (\xVec) = \{ (\xVec) \in \mathbb{R}^n: \lambda_1 \geq 0 \cap \lambda_2 \geq 0 \}  \label{eq:bothConstraintsActvCond}\\
+    \notag \\
+    &k_3 = -L_GV(\xVec)\lambda_1 + L_Gh(\xVec)\lambda_2 \label{eq:bothConstraintsActvController} 
+\end{align}
+
+
+If just the \glsxtrshort{CBF} is active:
+
+\begin{align}
+    &\mathcal{S}_2 (\xVec) = \{ (\xVec) \in \mathbb{R}^n: \lambda_1 \geq 0 \cap \lambda_2 < 0 \}  \label{eq:CBFConstraintsActvCond}
+\end{align}
+
+Or just the \glsxtrshort{CLF} is active:
+
+\begin{align}
+    &\mathcal{S}_1 (\xVec) = \{ (\xVec) \in \mathbb{R}^n: \lambda_1 < 0 \cap \lambda_2 \geq 0 \}  \label{eq:CLFConstraintsActvCond}
+\end{align}
+
+The equation~\ref{eq:kkt_input_formula_deduc} is not suitable and doesn't support the \glsxtrshort{KKT} conditions and therefore there is a need to obtain the controller \(k_j(\xVec): \mathbb{R}^n \to \mathbb{R}\), for \(j = \{3,4\}\), by removing from the optimization problem the respective inactive constraint. \\
+
+Considering just the \textbf{\glsxtrshort{CBF} active}, the new Lagrangian function:
+
+\begin{equation}
+    \mathcal{L}(\xVec, \uVec, \delta, \lambda_2) = f(\uVec, \delta) + \lambda_2^{\top}g_2(\xVec, \uVec, \delta)
+    \label{eq:lagrangian_function_CBFactv}
+\end{equation}
+
+One more time, keeping with the stationarity condition:
+
+\begin{equation}
+    \nabla(\mathcal{L}(\xVec, \uVec, \delta, \lambda_2)) = 0
+    \label{eq:lagrangian_gradient_function_CBFactv}
+\end{equation}
+
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda_2)}{\partial \uVec} = 0 &\iff \uVec^{\top}R - \lambda_2^{\top}L_Gh(\xVec)  = 0  \notag \\
+    &\iff R^{\top}\uVec - L_Gh^{\top}(\xVec) \lambda_2 = 0 \notag \\
+    &\iff \uVec = (R^{\top})^{-1}L_Gh^{\top}(\xVec) \lambda_2 = L_Gh^{\top}\lambda_2 \quad ( R = \mathbf{I}_{m \times m} ) \label{eq:lagrangian_input_gradient_function_CBFactv} 
+\end{align}
+
+
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda_2)}{\partial \delta} = 0 &\iff p\delta = 0 \notag \\
+    &\iff \delta = 0 \label{eq:lagrangian_delta_gradient_function_CBFactv}                                                                                                           
+\end{align}
+
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda_2)}{\partial \lambda_2} = 0 &\iff  -F_h(\xVec) - L_Gh(\mathbf{x})\uVec = 0  \notag \\
+    &\iff    F_h(\xVec) + L_Gh(\mathbf{x})L_Gh^{\top}(\xVec)\lambda_2 = 0    \notag \\                                                                                            
+    &\iff    \lambda_2 = - (L_Gh(\mathbf{x})L_Gh^{\top}(\mathbf{x}))^{-1}F_h(\xVec) \notag \\ 
+    &\iff    \lambda_2 = - ||L_Gh(\mathbf{x})||^{-2} F_h(\xVec) \label{eq:lagrangian_lambda_gradient_function_CBFactv}   
+\end{align}
+
+Combinig the input equation~\ref{eq:lagrangian_input_gradient_function_CBFactv} and the \glsxtrshort{KKT} multiplier formula~\ref{eq:lagrangian_lambda_gradient_function_CBFactv}:
+
+\begin{align}
+    k_2(\xVec)  &= L_Gh^{\top}(\xVec) \lambda_2 \notag \\
+    &= - L_Gh^{\top}(\xVec) ||L_Gh(\mathbf{x})||^{-2} F_h(\xVec) \label{eq:CBFConstraintsActvController} 
+\end{align}
+
+Finally just with the \textbf{\glsxtrshort{CLF} active} :
+
+\begin{equation}
+    \mathcal{L}(\xVec, \uVec, \delta, \lambda_1) = f(\uVec, \delta) + \lambda_1^{\top}g_1(\xVec, \uVec, \delta)
+    \label{eq:lagrangian_function_CLFactv}
+\end{equation}
+
+According with the stationarity condition:
+
+\begin{equation}
+    \nabla(\mathcal{L}(\xVec, \uVec, \delta, \lambda_1)) = 0
+    \label{eq:lagrangian_gradient_function_CLFactv}
+\end{equation}
+
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda_1)}{\partial \uVec} = 0 &\iff \uVec^{\top}R + \lambda_1^{\top}L_Gh(\xVec)  = 0  \notag \\
+    &\iff \uVec = -L_GV^{\top}\lambda_1 \quad ( R = \mathbf{I}_{m \times m} ) \label{eq:lagrangian_input_gradient_function_CLFactv} 
+\end{align}
+
+
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda_1)}{\partial \delta} = 0 &\iff p\delta - \lambda_1 = 0 \notag \\
+    &\iff \delta = \frac{\lambda_1}{p} \label{eq:lagrangian_delta_gradient_function_CLFactv}                                                                                                           
+\end{align}
+
+\begin{align}
+    \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda_1)}{\partial \lambda_1} = 0 &\iff  F_V(\xVec) + L_GV(\mathbf{x})\uVec - \delta = 0  \notag \\
+    &\iff    F_V(\xVec) - L_GV(\mathbf{x})L_Gh^{\top}(\xVec)\lambda_1 - \delta = 0    \notag \\           
+    &\iff    F_V(\xVec) - L_GV(\mathbf{x})L_Gh^{\top}(\xVec)\lambda_1 - p^{-1}\lambda_1  = 0    \notag \\                                                                                 
+    &\iff    \lambda_1 = (||L_GV(\mathbf{x})||^2 + p^{-1})^{-1}F_V(\xVec) \label{eq:lagrangian_lambda_gradient_function_CLFactv}   
+\end{align}
+
+Replacing into the input equation~\ref{eq:lagrangian_input_gradient_function_CLFactv} the \glsxtrshort{KKT} multiplier formula~\ref{eq:lagrangian_lambda_gradient_function_CLFactv}:
+
+\begin{align}
+    k_1(\xVec)  &= -L_GV^{\top}(\xVec) \lambda_1 \notag \\
+    &= -L_GV^{\top}(\xVec) (||L_GV(\mathbf{x})||^2 + p^{-1})^{-1} F_V(\xVec) \label{eq:CLFConstraintsActvController} 
+\end{align}
+
+Syntethizing like this the controller \(k(\xVec)\) that complies all the necessary conditions:
+
+\begin{equation}
+    \mathbf{k}(\xVec ) =
+    \begin{cases}
+        \mathbf{k}_1(\xVec ), \quad (\xVec ) \in \mathcal{S}_1 \\
+        \mathbf{k}_2(\xVec ), \quad (\xVec ) \in \mathcal{S}_2 \\
+        \mathbf{k}_3(\xVec ), \quad (\xVec ) \in \mathcal{S}_3 \\
+        \mathbf{0}_{m \times 1 }   \hspace{0.25em}, \quad (\xVec ) \in \mathcal{S}_4
+    \end{cases}
+    \label{eq:closed-form_controller_deduc}
+\end{equation}
+
+
+% This Appendix shows examples of covers for some of the supported Schools.  When the Schools have very similar covers (e.g., all the schools from Universidade do Minho), just one cover is shown.  If the covers for MSc dissertations and PhD  thesis are considerable different (e.g., for FCT-NOVA and UMinho), then both are shown.
+
+% \newcommand{\showcasecoversize}{0.3\textwidth}
+% \newcommand*{\myhfill}{}
+% \newcommand{\myincludeimage}[1]{%
+%     \myhfill%
+%     \defifundef{\mycvbox}{\newsavebox}%
+%     \savebox{\mycvbox}{\includegraphics[width=\showcasecoversize]{#1}}%
+%     \defifundef{\mycvboxht}{\newlength}%
+%     \setlength{\mycvboxht}{\dimexpr \showcasecoversize*\paperheight/\paperwidth}%
+%     \rule{0pt}{1.1\mycvboxht}%
+%     \setlength{\fboxsep}{0pt}%
+%     \fbox{\includegraphics[width=\showcasecoversize]{#1}}%
+%     \renewcommand*{\myhfill}{\hfill}%
+% }
 
 % \noindent\forcsvlist{\myincludeimage}{%
 %   cover-nova-fct-msc,
@@ -54,8 +273,8 @@ This Appendix shows examples of covers for some of the supported Schools.  When 
 %   cover-other-mscgt-msc%
 % }
 
-\lipsum[1-20]
+% \lipsum[1-20]
 
-\section{A section here}
+% \section{A section here}
 
-\lipsum[1-20]
+% \lipsum[1-20]
