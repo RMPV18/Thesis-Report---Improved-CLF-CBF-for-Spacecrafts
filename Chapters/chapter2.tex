@@ -191,7 +191,7 @@ Given a locally Lipschitz continuos feedback controller \(\mathbf{k}: \mathbb{R}
 for any initial states \((\xVec_0, \mathbf{\xi}_0) \in \mathbb{R}^n \times \mathbb{R}^p\) exists a maximum time interval \(I(\xVec_0, \mathbf{\xi}_0) \subseteq \mathbb{R}_{\geq 0}  \) and a unique solution \( \varphi = (\varphi_{\mathbf{x}}, \varphi_{\mathbf{\xi}}) \) satisfying \ref{eq:Nonlinear-First-Order-Closed-Loop-System-UniqueSol} \(\forall t \in I(\xVec_0, \mathbf{\xi}_0) \). \\
 
 
-\subsubsection{Purposal  Solution Obtaining}
+\subsubsection{Purposal Solution Obtaining}
 \label{subsub:quadratic_program_formulation}
 
 Since having a second order system~\ref{eq:HH-NL-System} the access to \(\mathbf{\xi}\) is not direct, we must "backstepp" in order to be able to control \(\uVec\), affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\). The strategy passes by obtaining the solution if it was a first order system~\ref{eq:Nonlinear-First-Order-System} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input), so given a differentiable and locally Lipschitz continuos \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
@@ -573,21 +573,180 @@ Having \glsxtrshort{CBF} \(h\), the second-order solution, a differentiable and 
 
 
 
+\section{Single Parameter Optmization}
+\label{sec:Single_Parameter_Optmization}
+
+
+%The optimization problems such as \ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}, can be processed by making use of solvers able to optimize multiple variables using diffrent methods like the ones presented here, or if it is feasible using the closed-form solution of the optimization problem like \ref{sub:closed_form}. However, the methods shown will just be compreended to one optimization variable, owing to the specifications is pretended to achieve with the  proposed decision algorithms~\ref{sec:Proposed_Propagation_Algorithms}. \par 
+The optimization of the respective parameter is based on minimizing a cost function \(g:\mathbb{R} \to \mathbb{R}\), which in the context of this work expected to be quasi-convex~\footnote{Explicar o que é quasi-convex} along the optimization variable \(x \in \mathbb{R}\), and to do that there are algorithms such as the highly used gradient descent~\ref{subsec:Gradient_Descent} (which support multiple optimization variables) and binary search~\ref{subsec:Binary_Search} method.
+
+
+
+\subsection{Gradient of the Cost Function - Discretization}
+\label{subsec:Gradient_Cost_Function_Discretization}
+
+In both algorithms is make use of \(g(x)\) gradient in order to essentially indicate the direction the optimization variable \(x\) must take in order to minimize the cost. More than that, if \(g(x)\) is a quasi-convex function to quantifie the proximity to a local optimal point. \par
+If the \(\nabla g(x)\) extact equation is not possible to obtain then:
+
+\begin{equation}
+    \nabla g(x) = \lim_{dev \to 0} \frac{g(x + dev) - g(x)}{dev}
+    \label{eq:Gradient_formula}
+\end{equation}
+
+Is approximated by:
+
+\begin{equation}
+    \nabla g(x, dev) = \frac{g(x + dev) - g(x)}{dev}
+    \label{eq:Gradient_Discretization}
+\end{equation}
+
+With \(dev \in \mathbb{R}\) sufficiently close to \(0\). \par
+
+If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g(x)\), it could be needed increase the number of samples (\(nS \in \mathbb{R}\)) in the neighborhood of \(x\) separated by \(devN\) between them, so digitally:
+\SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$\underline{nS}$, $\underline{devN}$, $\underline{dev}$ and $\underline{x}$ }
+    \KwResult{$mean(grad_i)$}
+    $i\gets -1$\;
+    \While{$i < \underline{nS} -1$}{
+        $devN_i \gets  \frac{1}{2} \times (i + (i \hspace{0.2em} mod \hspace{0.2em} 2) ) \times \underline{devN} $ \;
+        $grad_i \gets \nabla g(\underline{x} + (-1)^{i}  \times devN_i, (-1)^i \times \underline{dev})$ \Comment*[r]{Equation \ref{eq:Gradient_Discretization}}
+        $i\gets i + 1$\;    
+        }
+    \caption{Discrete Function Gradient } \label{alg:Discrete_Function_Gradient}
+  \end{algorithm}
+
+
+%\newpage %Só para ajeitar
+
+\subsection{Gradient Descent}
+\label{subsec:Gradient_Descent}
+
+\subsubsection{Different Methods}
+\label{subsubsec:Different_Methods}
+
+This method is characterized by an iterative update of the optimization variable \(x\), based on the current variable value and function \(g(x)\) gradient responsible to indicate the evolution direction of \(x\) in order to minimize the cost:
+
+\begin{equation}
+    x_{k+1} = x_k + \underbrace{(- a \nabla g(x_k))}_{step_{k}}
+    \label{eq:Gradient_Descent_Normal}
+\end{equation}
+
+where \(a\) is an arbitrary constant for the step intensity adjustment . Assuming \(g(x)\) is a quasi-convex function, the closure to local minimum the smaller the gradient (or step) module. \par
+
+However, this method has another variations including adding "\underline{momentum}" where is had in account the previous iteration step applied:
+
+\begin{equation}
+    x_{k+1} = x_k + b \underbrace{(x_k - x_{k-1})}_{step_{k-1}} - a \nabla g(x_k)
+    \label{eq_Gradient_Descent_Momentum}
+\end{equation}
+
+where \(b\) is an argument of this algorithm like \(a\) responsible to tune the previous step intensity. \par
+According to \cite{hao2025analysis} there are also another two methods. Refering to one of them, this expands on the idea of momentum called \underline{Nesterov's Accelerated Gradient}, using a predictive step based on the previous one: 
+
+\begin{equation}
+    \begin{array}{rl}
+      y_k &=  x_k + b (x_k - x_{k-1})  \\
+      x_{k+1} &= y_k + (\underbrace{- a \nabla g(y_k)}_{predictive  \hspace{0.2em}step})
+    \end{array}
+    \label{eq_Gradient_Descent_Nesterov}
+\end{equation}
+
+where \(a\) now tunes the predictive step. \par
+
+Finally the \underline{Triple-Momentum} method which presents an output equation and the parameters applied on the previous step are distinct in all usages of it:
+
+\begin{equation}
+    \begin{array}{rl}
+      z_k &= x_k + d (x_k - x_{k-1}) \\
+      y_k &=  x_k + c (x_k - x_{k-1})  \\
+      x_{k+1} &= x_k + b(x_k - x_{k-1}) - a \nabla g(y_k)
+    \end{array}
+    \label{eq_Gradient_Descent_Nesterov}
+\end{equation}
+
+where \(a, b, c, d\) are the respective steps intensity tuning parameter. \\
+
+%\newpage %Só para ajeitar
+
+
+\subsection{Binary Search}
+\label{subsec:Binary_Search}
+
+This method is composed by two phases, beeing the first one resposible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Explicar o teorema de bolzano} is verified for the quasi-linear gradient funtion (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used an variation of the gradient descent method~\ref{eq:Gradient_Descent_Normal}, with a starting point \(x_0\):
+
+\begin{equation}
+    x_{k+1} = x_k + \underbrace{(- a \nabla g(x_0))}_{step}
+    \label{eq:Binary_Search_Phase1_gradDesc}
+\end{equation}
+
+Where the \(step\) is always equal. That beeing said, the phase 1 algorithm: 
+
+\SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$\underline{nS}$, $\underline{devN}$, $\underline{dev}$ and $\underline{x}$ }
+    \KwResult{$mean(grad_i)$}
+    $i\gets -1$\;
+    \While{$i < \underline{nS} -1$}{
+        $devN_i \gets  \frac{1}{2} \times (i + (i \hspace{0.2em} mod \hspace{0.2em} 2) ) \times \underline{devN} $ \;
+        $grad_i \gets \nabla g(\underline{x} + (-1)^{i}  \times devN_i, (-1)^i \times \underline{dev})$ \Comment*[r]{Equation \ref{eq:Gradient_Discretization}}
+        $i\gets i + 1$\;    
+        }
+    \caption{Discrete Function Gradient } \label{alg:Discrete_Function_Gradient}
+  \end{algorithm}
+
+
+-if there are two points such that the multiplication of the gradient in the respective points is negative then os pontos servem meter isso em codigo
+- no algoritmo é so dizer que x é xI neste equação \ref{eq:Binary_Search_Phase1_gradDesc}
+
+
+
+
+The second phase consists in iteratively taking the extreme points and do a weighted mean obtaining a new delimiter that replace one of the previous points while preserving the application of the Bolzano theorem for next iterations, narrowing the interval and approximating the points to a local minimum.   
 
 
 
 
 
+\newpage %Só para ajeitar
 
 
+\section{Constraint Contour Point}
+\label{sec:OPtmization_Algorithms}
+
+-Falar do porque disto no contexto do trabalho
+
+-falar de que as constraints tipos estrelas podem ser englobadas por uma elipse ou circulo mas que não é o ponto ,mostrar como se faz neste trabalho pelo que so se considera circulos e elipses
+
+-que nos espaço euclidano de 3 dimensoes exige um pouco mais de computação mas os resultados não divergem muito do que se vera em 2d (perguntar ao prof se devo fazer um apontamento como o algoritmo precisa de proceder uma otmização para decidir o ponto ou se desenvolvo este topico)
+
+-Falar doo algoritmo nas secçoes abaixo
 
 
+\subsection{Intersection Vector}
+\label{subsec:Intersection_Vector}
+
+-Falar como se propaga ate ao ponto e qual o vector
+
+-o porque de ser como esta atras porque seria o movimento idela ou vetor ideal ou melhor natural da dinamica /variação naquele plano caso não houve constyraint, pelo que fazendo desta maneira o ponto tera em conta ira forneceer uma referencia que menos perturba ou afasta desse movimento
+
+\subsection{Constraint Contour Point Obtaining}
+\label{subsec:Constraint_Contour_Point_Obtaining}
+
+\newpage %Só para ajeitar
 
 
+\section{Proposed Propagation Algorithms}
+\label{sec:Proposed_Propagation_Algorithms}
 
+\subsection{\glsxtrfull{A-JO}}
+\label{subsec:Just_Optimized_Algorithm}
 
+\subsection{\glsxtrfull{A-CLF-S}}
+\label{subsec:CLFs_Summed_Algorithm}
 
-
+\subsection{\glsxtrfull{A-CLF-U}}
+\label{subsec:CLFs_Unified_Algorithm}
 
 
 
