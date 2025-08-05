@@ -722,7 +722,7 @@ The second phase consists in iteratively taking the extreme points and do a weig
   \begin{algorithm}
     \KwData{$xI$, $xS$, $tI$, $w$}
     \KwResult{$xMid$}
-    \While{$i < tI$}{   
+    \While{$i < tI$ \textbf{AND} Conditions$^*$}{   
         $xMid \gets w \times xI + (1-w) \times xS $ \Comment*[r]{Weighted Mean}
         \eIf{$\nabla g(xMid) > 0$}{
             $xS\gets xMid$\;
@@ -737,126 +737,11 @@ The second phase consists in iteratively taking the extreme points and do a weig
 
 \newpage %Só para ajeitar
 
-\endinput
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \section{Constraint Contour Point}
 \label{sec:Constraint_Contour_Point}
 
-Having the objective of global assympyotically stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain convergence/propagation algorithms, such as \ref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to a better fit of problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\).\\
+Having the objective of global assympyotically stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain decision algorithms, such as \ref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to a better fit of problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\).\\
 
 \subsection{Constraint Fit}
 \label{subsec:Constraint_Fit}
@@ -874,27 +759,79 @@ The program formulated in \ref{subsec:Constraint_Contour_Point_Obtaining} respon
 \(\bar{\mathcal{B}}\) can also be approximated by an ellipsoide:
 
 \begin{align}
-        h_{unkown}(\xVec) \approx h(\xVec) &= \frac{1}{2}((\xVec - p)^{\top}(\xVec - p) - r^2) \label{eq:Ellipsoidal_fit} \\
+        h_{unkown}(\xVec) \approx h(\xVec) &= \frac{1}{2}((\mathbf{O}\xVec - p)^{\top}\mathbf{A_{xis}}(\mathbf{O}\xVec - p) - 1) \label{eq:Ellipsoidal_fit} \\
         &st. \quad \bar{\mathcal{B}} \subseteq \mathcal{C} \label{eq:Ellipsoidal_fit_Condition}
 \end{align}
 
-With \(p\) and \(r\) susceptible to an optimization that tries to minimize the size of the set \(\mathcal{C} \cap \mathcal{B}\) or at least choosing them such that is garanteed \ref{eq:Ellipsoidal_fit_Condition}. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
+With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer, \(\mathbf{A_{xis}} \in \mathbb{R}^{c \times c}_{\succ 0}\) and \(p \in \mathbb{R}^{c}\) susceptible to an optimization that tries to minimize the size of the set \(\mathcal{C} \cap \mathcal{B}\) or at least choosing them such that is garanteed \ref{eq:Ellipsoidal_fit_Condition}. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
 
-\subsection{Intersection Vector}
+
+\subsection{State Propagation Simulation}
+\label{subsub:State_Propagation_Simulation_Algorithm}
+
+Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state convergence. 
+
+\subsubsection{Integration Methods}
+\label{subsub:Integration_Methods}
+
+Euler
+
+Runge Kuta 4 ordem
+
+Runge Kutta 4,5
+
+...
+
+\subsubsection{State Propagation Simulation Algorithm}
+\label{subsub:State_Propagation_Simulation_Algorithm}
+
+Aiming to simulate a system evolution based on a decision algorithm:
+
+  \SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$\xVec_0$, $tI$}
+    \KwResult{$\xVec$, $\uVec$}
+    $i \gets 0$ \;
+    \While{$i < tI$ \textbf{AND} Conditions$^*$}{   
+        $\uVec_i \gets decision(\xVec_i)$ \Comment*[r]{Decision Algorithm}
+        $\xVec_{i+1} \gets integration(\xVec_i, \uVec_i)$ \Comment*[r]{Euler\ref{}, Runge-Kutta \ref{}, \ref{}, \ref{}}
+        $i \gets i +1$ \;
+    }
+    \caption{State Propagation Simulation (SPS)} \label{alg:State_Propagation_Simulation}
+  \end{algorithm}
+
+
+\subsection{Natural Convergence Direction}
 \label{subsec:Intersection_Vector}
 
-Forcing the deactivation of safety constraints, propagating the system's state, at some point there is an intersection with the unsafe set and the derivative correspondent to the natural movement of the affected elements \(\xVec\) 
+In order to preserve as possible the natural state movement provided by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the safety constraint \(h\) (\ref{eq:Polytope_fit} or \ref{eq:Ellipsoidal_fit}) was inactive, the new point is obtained accounting with the natural movement direction of those states when they reach the unsafe zone. 
 
+% \SetKwComment{Comment}{/* }{ */}
+%   \begin{algorithm}
+%     \KwData{$\xVec$}
+%     \KwResult{$dir$}
+%     \While{$h(\xVec) > 0$ \textbf{AND} Conditions$^*$}{   
+%         $\uVec \gets decision(\xVec)$ \Comment*[r]{Decision Algorithm}
+%         $dir \gets \frac{f(\xVec, \uVec)}{||f(\xVec, \uVec)||}$ \Comment*[r]{System Dynamic at (\(\xVec, \uVec\)) Normalized}
+%         $\xVec \gets integration(\xVec, \uVec)$ \Comment*[r]{Euler\ref{}, Runge-Kutta \ref{}, \ref{}, \ref{}}
+%     }
+%     \caption{Natural Convergence Direction Vector} \label{alg:Natural_Convergence_Direction_Vector}
+%   \end{algorithm}
 
--o porque de ser como esta atras porque seria o movimento idela ou vetor ideal ou melhor natural da dinamica /variação naquele plano caso não houve constyraint, pelo que fazendo desta maneira o ponto tera em conta ira forneceer uma referencia que menos perturba ou afasta desse movimento
+%   OR
 
-
--Falar como se propaga ate ao ponto e qual o vector
-
+  \SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$\xVec_0$, $tI$}
+    \KwResult{$dir$}
+    $(\xVec, \uVec) \gets \text{SPS}\hspace{0.1em}(\xVec_0, tI) \hspace{0.25em} [\text{Conditions}^* \gets h(\xVec) > 0]$ \Comment*[r]{Algorithm \ref{alg:State_Propagation_Simulation}} 
+    $dir \gets \frac{f(\xVec_{END}, \uVec_{END})}{||f(\xVec_{END}, \uVec_{END})||}$ \Comment*[r]{System Dynamic at (\(\xVec_{END}, \uVec_{END}\)) Normalized}
+    \caption{Natural Convergence Direction Vector} \label{alg:Natural_Convergence_Direction_Vector}
+  \end{algorithm}
 
 \subsection{Constraint Contour Point Obtaining}
 \label{subsec:Constraint_Contour_Point_Obtaining}
-
+-falar do porque de ser os pontos mais extremos, o facto de aquele vetor ja simbolizar uma direção que o xf se encontra
 -Dizer quea soluççao proposta esta em closed-form pelo que a funçao que defince o safe set é sabida e no caso é uma elipsoide
 -que nos espaço euclidano de 3 dimensoes exige um pouco mais de computação mas os resultados não divergem muito do que se vera em 2d (perguntar ao prof se devo fazer um apontamento como o algoritmo precisa de proceder uma otmização para decidir o ponto ou se desenvolvo este topico)
 
