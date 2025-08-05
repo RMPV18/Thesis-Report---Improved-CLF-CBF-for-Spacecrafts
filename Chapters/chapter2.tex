@@ -578,7 +578,7 @@ Having \glsxtrshort{CBF} \(h\), the second-order solution, a differentiable and 
 
 
 %The optimization problems such as \ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}, can be processed by making use of solvers able to optimize multiple variables using diffrent methods like the ones presented here, or if it is feasible using the closed-form solution of the optimization problem like \ref{sub:closed_form}. However, the methods shown will just be compreended to one optimization variable, owing to the specifications is pretended to achieve with the  proposed decision algorithms~\ref{sec:Proposed_Propagation_Algorithms}. \par 
-The optimization of the respective parameter is based on minimizing a cost function \(g:\mathbb{R} \to \mathbb{R}\), which in the context of this work expected to be quasi-convex~\footnote{Explicar o que é quasi-convex} along the optimization variable \(x \in \mathbb{R}\), and to do that there are algorithms such as the highly used gradient descent~\ref{subsec:Gradient_Descent} (which support multiple optimization variables) and binary search~\ref{subsec:Binary_Search} method.
+The optimization of the respective parameter is based on minimizing a cost function \(g:\mathbb{R} \to \mathbb{R}\), which in the context of this work expected to be quasi-convex~\footnote{ A quasi-convex function \(f:\mathcal{S} \to \mathbb{R}\), beeing \(\mathcal{S}\) a convex set, verifies \(\forall x,y \in \mathcal{S}\) and \(\lambda \in [0;1]\), \(f(\lambda x + (1-\lambda)y) \leq max\{f(x), f(y)\}\)   } along the optimization variable \(x \in \mathbb{R}\), and to do that there are algorithms such as the highly used gradient descent~\ref{subsec:Gradient_Descent}  and binary search~\ref{subsec:Binary_Search} method.
 
 
 
@@ -616,14 +616,17 @@ If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g
     \caption{Discrete Function Gradient } \label{alg:Discrete_Function_Gradient}
   \end{algorithm}
 
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
+\begin{itemize}
+    \item It is possible to digitally obtain \(\nabla g : \mathbb{R}^n \to \mathbb{R}^n\) by otaining each row \(r\) separately with \(dev_r \in \{ dev_1, ..., dev_n \} \). Beeing \(dev_r \) a column vector, just equal to the divisor \(dev\) in the respective row element (\(dev = ||dev_r||\)).
+\end{itemize}
+\end{tcolorbox} 
+
 
 %\newpage %Só para ajeitar
 
 \subsection{Gradient Descent}
-\label{subsec:Gradient_Descent}
-
-\subsubsection{Different Methods}
-\label{subsubsec:Different_Methods}
+\label{subsec:Gradient_Descent} 
 
 This method is characterized by an iterative update of the optimization variable \(x\), based on the current variable value and function \(g(x)\) gradient responsible to indicate the evolution direction of \(x\) in order to minimize the cost:
 
@@ -667,13 +670,28 @@ Finally the \underline{Triple-Momentum} method which presents an output equation
 
 where \(a, b, c, d\) are the respective steps intensity tuning parameter. \\
 
+
+
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
+\begin{itemize}
+    \item The method supports multiple optimization variables.
+\end{itemize}
+\end{tcolorbox} 
+
+
+
+
+
+
+
 %\newpage %Só para ajeitar
 
 
 \subsection{Binary Search}
 \label{subsec:Binary_Search}
 
-This method is composed by two phases, beeing the first one resposible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Explicar o teorema de bolzano} is verified for the quasi-linear gradient funtion (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used an variation of the gradient descent method~\ref{eq:Gradient_Descent_Normal}, with a starting point \(x_0\):
+This method is composed by two phases, beeing the first one resposible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Bolzano's theorem says that given the continuos function \(f:[a;b] \subset \mathbb{R} \to \mathbb{R}\) and \(f(a)f(b) < 0\), then \(\exists x \in  ]a; b[\) such that \(f(x) = 0\)} is verified for the continuos gradient funtion (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used an variation of the gradient descent method~\ref{eq:Gradient_Descent_Normal}, with a starting point \(x_0\):
 
 \begin{equation}
     x_{k+1} = x_k + \underbrace{(- a \nabla g(x_0))}_{step}
@@ -684,54 +702,202 @@ Where the \(step\) is always equal. That beeing said, the phase 1 algorithm:
 
 \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
-    \KwData{$\underline{nS}$, $\underline{devN}$, $\underline{dev}$ and $\underline{x}$ }
-    \KwResult{$mean(grad_i)$}
-    $i\gets -1$\;
-    \While{$i < \underline{nS} -1$}{
-        $devN_i \gets  \frac{1}{2} \times (i + (i \hspace{0.2em} mod \hspace{0.2em} 2) ) \times \underline{devN} $ \;
-        $grad_i \gets \nabla g(\underline{x} + (-1)^{i}  \times devN_i, (-1)^i \times \underline{dev})$ \Comment*[r]{Equation \ref{eq:Gradient_Discretization}}
-        $i\gets i + 1$\;    
+    \KwData{$xI$, $a$}
+    \KwResult{$(xI,xS)$}
+    $x_0\gets xI$\;
+    $xS\gets xI$\;
+    \While{$\nabla g(xI) \times \nabla g(xS) > 0$}{
+        $xS \gets xI - a \nabla g(x_0)$    \Comment*[r]{Equation \ref{eq:Binary_Search_Phase1_gradDesc}}
+        \If{$\nabla g(xI) \times \nabla g(xS) > 0$}{
+            $xI\gets xS$\;
         }
-    \caption{Discrete Function Gradient } \label{alg:Discrete_Function_Gradient}
+    }
+    \caption{Binary Search Phase 1} \label{alg:Binary_Search_Phase_1}
   \end{algorithm}
-
-
--if there are two points such that the multiplication of the gradient in the respective points is negative then os pontos servem meter isso em codigo
-- no algoritmo é so dizer que x é xI neste equação \ref{eq:Binary_Search_Phase1_gradDesc}
-
-
 
 
 The second phase consists in iteratively taking the extreme points and do a weighted mean obtaining a new delimiter that replace one of the previous points while preserving the application of the Bolzano theorem for next iterations, narrowing the interval and approximating the points to a local minimum.   
 
-
+\SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$xI$, $xS$, $tI$, $w$}
+    \KwResult{$xMid$}
+    \While{$i < tI$}{   
+        $xMid \gets w \times xI + (1-w) \times xS $ \Comment*[r]{Weighted Mean}
+        \eIf{$\nabla g(xMid) > 0$}{
+            $xS\gets xMid$\;
+        }{
+            $xI\gets xMid$\;
+        }
+    }
+    \caption{Binary Search Phase 2} \label{alg:Binary_Search_Phase_2}
+  \end{algorithm}
 
 
 
 \newpage %Só para ajeitar
 
+\endinput
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Constraint Contour Point}
-\label{sec:OPtmization_Algorithms}
+\label{sec:Constraint_Contour_Point}
 
--Falar do porque disto no contexto do trabalho
+Having the objective of global assympyotically stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain convergence/propagation algorithms, such as \ref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to a better fit of problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\).\\
 
--falar de que as constraints tipos estrelas podem ser englobadas por uma elipse ou circulo mas que não é o ponto ,mostrar como se faz neste trabalho pelo que so se considera circulos e elipses
+\subsection{Constraint Fit}
+\label{subsec:Constraint_Fit}
 
--que nos espaço euclidano de 3 dimensoes exige um pouco mais de computação mas os resultados não divergem muito do que se vera em 2d (perguntar ao prof se devo fazer um apontamento como o algoritmo precisa de proceder uma otmização para decidir o ponto ou se desenvolvo este topico)
+The program formulated in \ref{subsec:Constraint_Contour_Point_Obtaining} responsible to obtain a new equlibrium point is characterized by its application in two-dimensional Euclidian Space safety \underline{constraints}. Since the safe set \(\bar{\mathcal{B}}\) (complement of \(\mathcal{B}\)) corresponds to the 0-superlevel set of an unkown safety function \(h_{unkown}: \mathbb{R}^n \to \mathbb{R}\), then via logical operations~\ref{sub:unifying_CBF} smoth-approximations (AND~\ref{eq:Min_smoothFunc_tighted}, OR~\ref{eq:Max_smoothFunc_tighted}), combining the different 0-superlevel sets \(\mathcal{C}_i \subset \mathbb{R}^n \quad \forall i \in \mathcal{I} = \{1,...,p\}\) of the the functions \(h_i: \mathbb{R}^n \to \mathbb{R}\):
 
--Falar doo algoritmo nas secçoes abaixo
+\begin{equation}
+    \begin{array}{l}
+        h_{unkown}(\xVec) \approx h(\xVec) = merge(h_i(\xVec)) \quad \forall i \in \mathcal{I} \\
+        \bar{\mathcal{B}} \subseteq \mathcal{C} = \{\xVec \in \mathbb{R}^n: h(\xVec) \geq 0\}
+    \end{array}
+    \label{eq:Polytope_fit}
+\end{equation}
 
+\(\bar{\mathcal{B}}\) can also be approximated by an ellipsoide:
+
+\begin{align}
+        h_{unkown}(\xVec) \approx h(\xVec) &= \frac{1}{2}((\xVec - p)^{\top}(\xVec - p) - r^2) \label{eq:Ellipsoidal_fit} \\
+        &st. \quad \bar{\mathcal{B}} \subseteq \mathcal{C} \label{eq:Ellipsoidal_fit_Condition}
+\end{align}
+
+With \(p\) and \(r\) susceptible to an optimization that tries to minimize the size of the set \(\mathcal{C} \cap \mathcal{B}\) or at least choosing them such that is garanteed \ref{eq:Ellipsoidal_fit_Condition}. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
 
 \subsection{Intersection Vector}
 \label{subsec:Intersection_Vector}
 
--Falar como se propaga ate ao ponto e qual o vector
+Forcing the deactivation of safety constraints, propagating the system's state, at some point there is an intersection with the unsafe set and the derivative correspondent to the natural movement of the affected elements \(\xVec\) 
+
 
 -o porque de ser como esta atras porque seria o movimento idela ou vetor ideal ou melhor natural da dinamica /variação naquele plano caso não houve constyraint, pelo que fazendo desta maneira o ponto tera em conta ira forneceer uma referencia que menos perturba ou afasta desse movimento
 
+
+-Falar como se propaga ate ao ponto e qual o vector
+
+
 \subsection{Constraint Contour Point Obtaining}
 \label{subsec:Constraint_Contour_Point_Obtaining}
+
+-Dizer quea soluççao proposta esta em closed-form pelo que a funçao que defince o safe set é sabida e no caso é uma elipsoide
+-que nos espaço euclidano de 3 dimensoes exige um pouco mais de computação mas os resultados não divergem muito do que se vera em 2d (perguntar ao prof se devo fazer um apontamento como o algoritmo precisa de proceder uma otmização para decidir o ponto ou se desenvolvo este topico)
+
 
 \newpage %Só para ajeitar
 
