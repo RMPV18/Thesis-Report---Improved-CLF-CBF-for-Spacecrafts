@@ -741,7 +741,7 @@ The second phase consists in iteratively taking the extreme points and do a weig
 \section{Constraint Contour Point}
 \label{sec:Constraint_Contour_Point}
 
-Having the objective of global assympyotically stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain decision algorithms, such as \ref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to a better fit of problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\).\\
+Having the objective of global assympyotically stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain decision algorithms, such as \ref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to be a better fit for problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\).\\
 
 \subsection{Constraint Fit}
 \label{subsec:Constraint_Fit}
@@ -769,32 +769,136 @@ With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer, 
 \subsection{State Propagation Simulation}
 \label{subsub:State_Propagation_Simulation_Algorithm}
 
-Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state convergence. 
+\subsubsection{\glsxtrfull{RK} Methods}
+\label{subsub:Runge-Kutta_Methods}
 
-\subsubsection{Integration Methods}
-\label{subsub:Integration_Methods}
+Its a technique used to solve \glsxtrfull{ODE}s~\footnote{An \glsxtrshort{ODE} is characterized by having a independent variable \(x \in \mathbb{R}\) (commonly time \(t\)) and dependent variables \(y \in \mathbb{R}^n\) and its derivatives relative to \(x\), such that an \glsxtrshort{ODE} corresponds to an equation equivalent to \(g(x,y, \frac{dy}{dx}, ... \frac{d^{n}y}{dx^n})= 0\)  } initial-value problems~\footnote{A initial-value-problem is an \glsxtrshort{ODE} \(\dot{\mathbf{y}}(t) = f(t, \mathbf{y}(t))\) with \( f: \mathbb{R} \times \mathbb{R}^n \to \mathbb{R}^n\) with an initial condition \(t_0,y_0\)} (\(\frac{dy}{dx} = f(x,y)\) with \((x_0, y_0)\)), i.e., to obtain an approximation of a non-linear system solution \(y(x)\) at some point in its domain without using the higher order derivatives of it. \\
 
-Euler
+The \underline{\textbf{Euler}} method shows the most degradation of local truncature error\footnote{A local truncature error corresponds to the error caused by the integrative effect of an iteration of a Runge-Kutta method} as the required step \(\Delta x = x_{n+1} - x_n, \hspace{0.2em} n \in \mathbb{N}_0\) increases but quicker to compute.
 
-Runge Kuta 4 ordem
+\begin{equation}
+    y_{n+1} = y_{n} + \Delta x f(x_{n}, y_{n})
+    \label{eq:Euler_Method}
+\end{equation}
 
-Runge Kutta 4,5
+This method has just one stage, while the next \glsxtrfull{RK}s expanded on it such that allow more. Those stages correspond to intermediate point derivatives based on predictive steps. Introducing to the \textbf{Explictit \glsxtrlong{RK}} \label{subsubsub:RK_Explicit}:
 
-...
+
+\begin{subequations}
+    \begin{align}
+        &y_{n+1} = y_n + \Delta x \sum^s_{i=1}b_i k_i \label{eq:Update_RKbased} \\
+        &k_i = f(x_n + \Delta x c_i, y_n + \Delta x \sum^{i-1}_{j=1} a_{ij}k_j) \label{eq:Derivatives_Explicit-RK}  
+    \end{align}
+    \label{eq:Explicit-RK}  
+\end{subequations}
+
+Where \(s\) is the number of stages, \(\mathbf{a}\) the \glsxtrfull{RK} matrix, with \(a_{ij} \in \mathbb{R}\) and usually tuned such that \(\sum^{i-1}_{j=1} a_{ij} = c_i\), \(\mathbf{b} \in \mathbb{R}^s\) are the weights, so \(\sum^s_{i=1} b_i = 1\), \(\mathbf{c} \in \mathbb{R}^s\) are the nodes and \(c_i \in [0;1]\) . These parameters are usually presented by a Butcher tableau:
+
+\begin{equation}
+    \begin{array}{c|cccc}
+        0\\
+        c_2 & a_{21}\\
+        \vdots & \vdots &\ddots \\
+        c_s & a_{s;1} & \hdots & a_{s;s-1}\\
+        \hline
+        & b_1 & \hdots & b_{s-1} & b_s  
+    \end{array} = 
+    \begin{array}{c|c}
+        \mathbf{c} & \mathbf{a} \\
+        \hline
+        & \mathbf{b}^\top  
+    \end{array}
+    \label{eq:Explicit_Butcher_Tableu}
+\end{equation}
+
+
+The \underline{\glsxtrshort{RK} 4th order} is defined by \ref{eq:Explicit-RK} and its tableau:
+
+\begin{equation}
+    \begin{array}{c|cccc}
+        0\\
+        \frac{1}{2} & \frac{1}{2}\\
+        \frac{1}{2} & 0 & \frac{1}{2} \\
+        1 & 0 & 0 & 1\\
+        \hline
+        & \frac{1}{6} & \frac{1}{3} & \frac{1}{3} & \frac{1}{6}  
+    \end{array}
+    \label{eq:RK4_Tableu}
+\end{equation}
+
+Although this method solution is slower comparatively to Euler~\ref{eq:Euler_Method}, its accuracy is higher. \par
+The \textbf{Adaptive \glsxtrlong{RK}} \label{subsubsub:RK_Adaptive} method, with a adaptive step size \(\Delta x\) according to the estimated local truncature error. If its lower than some treshold, the step size increases and the solutions obtained faster since that point, while if it increases is reduced promoting a accurate solution, but with \(\Delta x \in [\Delta x_{min}; \Delta x_{max}]\).  The error estimations are calculated based on two different methods of one order more than the other. For this new \glsxtrlong{RK} variation the Butcher Tableau is: 
+
+%If the error is higher than some defined relative tolerance then the step size is reduced and the solution given the new step recomputed at the point, while if its lower than some treshold, the step size increases and the solutions obtained faster sice that point.
+
+\begin{equation} 
+    \begin{array}{c|c}
+        \mathbf{c} & \mathbf{a} \\
+        \hline
+        & \mathbf{b}^\top  \\
+        & \mathbf{b}^{*\top }
+    \end{array}
+    \label{eq:Explicit_Butcher_Tableu}
+\end{equation}
+
+
+The low and high order solution are based equally on \ref{eq:Update_RKbased}:
+
+\begin{subequations}
+    \begin{align}
+        y_{n+1} = y_n + \Delta x \sum^{s}_{i=1}b_i k_i \text{  (low-order/output sol.)} \label{eq:Update_Output_adaptiveRK} \\
+        z_{n+1} = y_n + \Delta x \sum^{s}_{i=1}b^*_i k_i \text{  (high-order sol.)} \label{eq:Update_HighOrder_adaptiveRK} 
+    \end{align}
+    \label{eq:Update_Adaptive-RK}  
+\end{subequations}
+
+Where the intermediate derivatives \(k_i\) functions keep the same equation \ref{eq:Derivatives_Explicit-RK} and are equal for both (low and hig order methods) reducing some computing time. The local truncature error estimations ig given by:
+
+\begin{equation}
+    e_{n+1} = |z_{n+1} - y_{n+1}|
+    \label{eq:Local_Truncature_Erro_Estimation_AdaptiveRK}
+\end{equation}
+
+This error affects the new step value, the \underline{Dormand Prince} method~\cite{kimura2009dormand} with its particular update step size iteration. This method Butcher Tableau is:
+
+\begin{equation}
+    \begin{array}{c|ccccccc}
+        0\\
+        \frac{1}{5} & \frac{1}{5}\\
+        \frac{3}{10} & \frac{3}{40} & \frac{9}{40} \\
+        \frac{4}{5} & \frac{44}{45} & -\frac{56}{15} & \frac{32}{9}\\
+        \frac{8}{9} & \frac{19372}{6561} & -\frac{25360}{2187} & \frac{64448}{6561} & -\frac{212}{729}\\
+        1 & \frac{9017}{3168} & -\frac{355}{33} & \frac{46732}{5247} & \frac{49}{176} & -\frac{5103}{18656}\\
+        1 & \frac{35}{384} & 0 & \frac{500}{1113} & \frac{125}{192} & -\frac{2187}{6784} & \frac{11}{84}\\
+        \hline
+        & \frac{35}{384} & 0 & \frac{500}{1113} & \frac{125}{192} & -\frac{2187}{6784} & \frac{11}{84} & 0  \\
+        & \frac{5179}{57600} & 0 & \frac{7571}{16695} & \frac{393}{640} & -\frac{92097}{339200} & \frac{187}{2100} & \frac{1}{40}  
+    \end{array}
+    \label{eq:Dormand-Prince_Tableu}
+\end{equation}
+
+The \(k_7\) derivative is calculated at the predicted point obtained by the low order solution \(y_{n+1}\). The update size step equation as:
+
+\begin{equation}
+    \Delta x_{new} = \Delta x \Bigl( \frac{\epsilon\Delta x}{2e_{n+1}}\Bigr)^{\frac{1}{5}}
+    \label{eq:Update_Size_Step_Equation}
+\end{equation}
+
+With \(\epsilon\) as the error tolerance equal to \(10^{-5}\) in the default version of \href{https://www.mathworks.com/help/matlab/ref/ode45.html}{Matlabs's ode45}.
 
 \subsubsection{State Propagation Simulation Algorithm}
 \label{subsub:State_Propagation_Simulation_Algorithm}
 
-Aiming to simulate a system evolution based on a decision algorithm:
+Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state convergence. Aiming to simulate a system evolution based on a decision algorithm, given the ordinary diferential states dynamics equations \(\dot{\xVec} = f(\xVec,\uVec)\):
 
   \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
-    \KwData{$\xVec_0$, $tI$}
+    \KwData{$f$, $\xVec_0$, $tI$}
     \KwResult{$\xVec$, $\uVec$}
     $i \gets 0$ \;
     \While{$i < tI$ \textbf{AND} Conditions$^*$}{   
         $\uVec_i \gets decision(\xVec_i)$ \Comment*[r]{Decision Algorithm}
-        $\xVec_{i+1} \gets integration(\xVec_i, \uVec_i)$ \Comment*[r]{Euler\ref{}, Runge-Kutta \ref{}, \ref{}, \ref{}}
+        $\xVec_{i+1} \gets integration(f, \xVec_i, \uVec_i)$ \Comment*[r]{Euler~\ref{eq:Euler_Method},  \glsxtrshort{RK} 4~\ref{subsubsub:RK_Explicit} or DP~\ref{subsubsub:RK_Adaptive}}
         $i \gets i +1$ \;
     }
     \caption{State Propagation Simulation (SPS)} \label{alg:State_Propagation_Simulation}
@@ -804,7 +908,7 @@ Aiming to simulate a system evolution based on a decision algorithm:
 \subsection{Natural Convergence Direction}
 \label{subsec:Intersection_Vector}
 
-In order to preserve as possible the natural state movement provided by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the safety constraint \(h\) (\ref{eq:Polytope_fit} or \ref{eq:Ellipsoidal_fit}) was inactive, the new point is obtained accounting with the natural movement direction of those states when they reach the unsafe zone. 
+In order to preserve as possible the natural state movement provided approximately by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the safety constraint \(h\) (\ref{eq:Polytope_fit} or \ref{eq:Ellipsoidal_fit}) was inactive, the new point is obtained accounting with the natural movement direction of those states when they would reach the unsafe zone. 
 
 % \SetKwComment{Comment}{/* }{ */}
 %   \begin{algorithm}
