@@ -763,7 +763,7 @@ The program formulated in \ref{subsec:Constraint_Contour_Point_Obtaining} respon
         &st. \quad \bar{\mathcal{B}} \subseteq \mathcal{C} \label{eq:Ellipsoidal_fit_Condition}
 \end{align}
 
-With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer, \(\mathbf{A_{xis}} \in \mathbb{R}^{c \times c}_{\succ 0}\) and \(p \in \mathbb{R}^{c}\) susceptible to an optimization that tries to minimize the size of the set \(\mathcal{C} \cap \mathcal{B}\) or at least choosing them such that is garanteed \ref{eq:Ellipsoidal_fit_Condition}. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
+With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer (\(c\) equal to the constrained states), \(\mathbf{A_{xis}} \in \mathbb{R}^{c \times c}_{\succ 0}\) and \(p \in \mathbb{R}^{c}\) susceptible to an optimization that tries to minimize the size of the set \(\mathcal{C} \cap \mathcal{B}\) or at least choosing them such that is garanteed \ref{eq:Ellipsoidal_fit_Condition}. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
 
 
 \subsection{State Propagation Simulation}
@@ -774,7 +774,7 @@ With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer, 
 
 Its a technique used to solve \glsxtrfull{ODE}s~\footnote{An \glsxtrshort{ODE} is characterized by having a independent variable \(x \in \mathbb{R}\) (commonly time \(t\)) and dependent variables \(y \in \mathbb{R}^n\) and its derivatives relative to \(x\), such that an \glsxtrshort{ODE} corresponds to an equation equivalent to \(g(x,y, \frac{dy}{dx}, ... \frac{d^{n}y}{dx^n})= 0\)  } initial-value problems~\footnote{A initial-value-problem is an \glsxtrshort{ODE} \(\dot{\mathbf{y}}(t) = f(t, \mathbf{y}(t))\) with \( f: \mathbb{R} \times \mathbb{R}^n \to \mathbb{R}^n\) with an initial condition \(t_0,y_0\)} (\(\frac{dy}{dx} = f(x,y)\) with \((x_0, y_0)\)), i.e., to obtain an approximation of a non-linear system solution \(y(x)\) at some point in its domain without using the higher order derivatives of it. \\
 
-The \underline{\textbf{Euler}} method shows the most degradation of local truncature error\footnote{A local truncature error corresponds to the error caused by the integrative effect of an iteration of a Runge-Kutta method} as the required step \(\Delta x = x_{n+1} - x_n, \hspace{0.2em} n \in \mathbb{N}_0\) increases but quicker to compute.
+The \underline{\textbf{Euler}} method shows the most degradation of local truncature error\footnote{A local truncature error corresponds to the error caused by the integrative effect of an iteration of a Runge-Kutta method} as the required (arbitrary valued) step \(\Delta x = x_{n+1} - x_n, \hspace{0.2em} n \in \mathbb{N}_0\) increases but quicker to compute.
 
 \begin{equation}
     y_{n+1} = y_{n} + \Delta x f(x_{n}, y_{n})
@@ -884,7 +884,7 @@ The \(k_7\) derivative is calculated at the predicted point obtained by the low 
     \label{eq:Update_Size_Step_Equation}
 \end{equation}
 
-With \(\epsilon\) as the error tolerance equal to \(10^{-5}\) in the default version of \href{https://www.mathworks.com/help/matlab/ref/ode45.html}{Matlabs's ode45}.
+With \(\epsilon\) as the error tolerance equal to \(10^{-5}\) in the default version of \href{https://www.mathworks.com/help/matlab/ref/ode45.html}{Matlab ode45}.
 
 \subsubsection{State Propagation Simulation Algorithm}
 \label{subsub:State_Propagation_Simulation_Algorithm}
@@ -893,22 +893,31 @@ Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state co
 
   \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
-    \KwData{$f$, $\xVec_0$, $tI$}
+    \KwData{$f$, $\xVec_0$, $tI$, $\Delta t$, $arg^*$}
     \KwResult{$\xVec$, $\uVec$}
     $i \gets 0$ \;
     \While{$i < tI$ \textbf{AND} Conditions$^*$}{   
-        $\uVec_i \gets decision(\xVec_i)$ \Comment*[r]{Decision Algorithm}
-        $\xVec_{i+1} \gets integration(f, \xVec_i, \uVec_i)$ \Comment*[r]{Euler~\ref{eq:Euler_Method},  \glsxtrshort{RK} 4~\ref{subsubsub:RK_Explicit} or DP~\ref{subsubsub:RK_Adaptive}}
+        $\uVec_i \gets decision^*(\xVec_i, arg^*)$ \Comment*[r]{Decision Algorithm}
+        $\xVec_{i+1} \gets integration(f, \xVec_i, \uVec_i, \Delta t)$ \Comment*[r]{\small Euler~\ref{eq:Euler_Method},  \glsxtrshort{RK} 4~\ref{subsubsub:RK_Explicit} or DP~\ref{subsubsub:RK_Adaptive}}
         $i \gets i +1$ \;
     }
     \caption{State Propagation Simulation (SPS)} \label{alg:State_Propagation_Simulation}
   \end{algorithm}
 
 
-\subsection{Natural Convergence Direction}
-\label{subsec:Intersection_Vector}
 
-In order to preserve as possible the natural state movement provided approximately by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the safety constraint \(h\) (\ref{eq:Polytope_fit} or \ref{eq:Ellipsoidal_fit}) was inactive, the new point is obtained accounting with the natural movement direction of those states when they would reach the unsafe zone. 
+
+\newpage %Só para ajeitar
+
+\subsection{Constraint Contour Point Algorithm}
+\label{subsec:Constraint_Contour_Point_Algorithm}
+
+
+
+\subsubsection{Natural Convergence Direction}
+\label{subsubsec:Intersection_Vector}
+
+The new point is obtained accounting with the natural movement direction of those states when they would reach the unsafe zone, which is provided approximately by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the safety constraint \(h\) (\ref{eq:Polytope_fit} or \ref{eq:Ellipsoidal_fit}) was inactive. 
 
 % \SetKwComment{Comment}{/* }{ */}
 %   \begin{algorithm}
@@ -933,11 +942,50 @@ In order to preserve as possible the natural state movement provided approximate
     \caption{Natural Convergence Direction Vector} \label{alg:Natural_Convergence_Direction_Vector}
   \end{algorithm}
 
-\subsection{Constraint Contour Point Obtaining}
-\label{subsec:Constraint_Contour_Point_Obtaining}
--falar do porque de ser os pontos mais extremos, o facto de aquele vetor ja simbolizar uma direção que o xf se encontra
--Dizer quea soluççao proposta esta em closed-form pelo que a funçao que defince o safe set é sabida e no caso é uma elipsoide
--que nos espaço euclidano de 3 dimensoes exige um pouco mais de computação mas os resultados não divergem muito do que se vera em 2d (perguntar ao prof se devo fazer um apontamento como o algoritmo precisa de proceder uma otmização para decidir o ponto ou se desenvolvo este topico)
+  This vector points to the direction where the system can aproximate more of \(\bar{\xVec}_F\) given some decision algorithm and assuming is always safe.
+
+\subsubsection{Constraint Tangent Point}
+\label{subsubsec:Constraint_Tangent_Point}
+
+From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmatrix} \bigr]\) obtained in \ref{alg:Natural_Convergence_Direction_Vector} is deduced a tangent point in the respective constraint. This point is the most far from the eminent of colliding unsafe set \(\mathcal{C}\) given a perpendicular direction to the obtained vector.%, therefore the new equilibrium point translates as the necessary variation the system states need in that perpendicular direction to pass the unsafe zone.                
+ Assuming it's always used the ellipsoidal fit~\ref{eq:Ellipsoidal_fit}, where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{c \times c}_{\succ 0}\), \(\mathbf{O} \in \mathbb{R}^{c \times n}\) and \(\mathbf{p} \in \mathbb{R}^{c}\), the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:}):
+
+
+\begin{align}
+    &d = \frac{a_u}{a_x - a_y} \label{eq:Constraint_Tangent_Point_auxElement} \\
+    \notag \\
+    &q = a_xv_1^2 + a_yv_2^2 \label{eq:Constraint_Tangent_Point_auxAuxElement} \\
+    \notag \\
+    &\mathbf{l}_i = \begin{bmatrix} \pm \sqrt{\frac{v_2^2}{q}} \\ \pm \sqrt{\frac{v_1^2}{q}}  \end{bmatrix} \quad i \in \{1,2,3,4\} \label{eq:Constraint_Tangent_Point_auxVector} 
+\end{align}
+
+In order to obtain both solutions from the perpedincular vectors to \(\mathbf{v}\):
+
+\begin{subequations}
+    \begin{align}
+        &\mathbf{r}_1 = \argminA_{\mathbf{l}_i \in \mathbb{R}^2} = \begin{bmatrix} a_yv_2 & - a_xv_1 \end{bmatrix} \mathbf{l}_{i} \label{eq:Constraint_Tangent_Point_bc_per} \\
+        &\mathbf{r}_2 = -\mathbf{r}_1 \label{eq:Constraint_Tangent_Point_bc_perp_inverse}
+    \end{align}
+    \label{eq:Constraint_Tangent_Point_bc}
+\end{subequations}   
+
+%&\mathbf{r}_2 = \argmaxA_{\mathbf{l}_i \in \mathbb{R}^2} = \begin{bmatrix} a_yv_2 & - a_xv_1 \end{bmatrix} \mathbf{l}_{i} \label{eq:Constraint_Tangent_Point_bc_inverse}
+    
+
+With \(\mathbf{r} = \bigl[\begin{smallmatrix} \mathbf{r}_1&\mathbf{r}_2\end{smallmatrix} \bigr]\). The respective points are obtained with:
+
+\begin{equation}
+    \mathbf{s}_j = \frac{\begin{bmatrix} d \hspace{0.2em}r_{1j} + r_{2j} \\ d \hspace{0.2em} r_{2j} - r_{1j}\end{bmatrix}}{d^2 + 1} + \mathbf{p} \quad j\in \{1,2\}
+    \label{eq:Constraint_Tangent_Points}
+\end{equation}
+
+The closest-point to the current state is chosed as the intermediate equilibrium point:
+
+\begin{equation}
+    \mathbf{O}\bar{\xVec_I} = \argminA_{\mathbf{s}_j \in \mathbb{R}^2} ||\mathbf{s}_j - \xVec|| 
+    \label{eq:Intermediate_Equilibrium_Point}
+\end{equation}
+
 
 
 \newpage %Só para ajeitar
