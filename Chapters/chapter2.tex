@@ -605,15 +605,15 @@ With \(dev \in \mathbb{R}\) sufficiently close to \(0\). \par
 If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g(x)\), it could be needed increase the number of samples (\(nS \in \mathbb{R}\)) in the neighborhood of \(x\) separated by \(devN\) between them, so digitally:
 \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
-    \KwData{$\underline{nS}$, $\underline{devN}$, $\underline{dev}$ and $\underline{x}$ }
+    \KwData{$nS$, $devN$, $dev$, $g$, $x$}
     \KwResult{$mean(grad_i)$}
     $i\gets -1$\;
-    \While{$i < \underline{nS} -1$}{
-        $devN_i \gets  \frac{1}{2} \times (i + (i \hspace{0.2em} mod \hspace{0.2em} 2) ) \times \underline{devN} $ \;
-        $grad_i \gets \nabla g(\underline{x} + (-1)^{i}  \times devN_i, (-1)^i \times \underline{dev})$ \Comment*[r]{Equation \ref{eq:Gradient_Discretization}}
+    \While{$i < nS -1$}{
+        $devN_i \gets  \frac{1}{2} \times (i + (i \hspace{0.2em} mod \hspace{0.2em} 2) ) \times devN $ \;
+        $grad_i \gets \nabla g(x + (-1)^{i}  \times devN_i, (-1)^i \times dev)$ \Comment*[r]{Equation \ref{eq:Gradient_Discretization}}
         $i\gets i + 1$\;    
         }
-    \caption{Discrete Function Gradient } \label{alg:Discrete_Function_Gradient}
+    \caption{Discrete Gradient Function (DGF)} \label{alg:Discrete_Gradient_Function}
   \end{algorithm}
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
@@ -898,13 +898,11 @@ Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state co
     $i \gets 0$ \;
     \While{$i < tI$ \textbf{AND} Conditions$^*$}{   
         $\uVec_i \gets decision^*(\xVec_i, arg^*)$ \Comment*[r]{Decision Algorithm}
-        $\xVec_{i+1} \gets integration(f, \xVec_i, \uVec_i, \Delta t)$ \Comment*[r]{\small Euler~\ref{eq:Euler_Method},  \glsxtrshort{RK} 4~\ref{subsubsub:RK_Explicit} or DP~\ref{subsubsub:RK_Adaptive}}
+        $\xVec_{i+1} \gets integration^*(f, \xVec_i, \uVec_i, \Delta t)$ \Comment*[r]{\small Euler~\ref{eq:Euler_Method},  \glsxtrshort{RK} 4~\ref{subsubsub:RK_Explicit} or DP~\ref{subsubsub:RK_Adaptive}...}
         $i \gets i +1$ \;
     }
     \caption{State Propagation Simulation (SPS)} \label{alg:State_Propagation_Simulation}
   \end{algorithm}
-
-
 
 
 \newpage %Só para ajeitar
@@ -912,12 +910,10 @@ Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state co
 \subsection{Constraint Contour Point Algorithm}
 \label{subsec:Constraint_Contour_Point_Algorithm}
 
-
-
 \subsubsection{Natural Convergence Direction}
 \label{subsubsec:Intersection_Vector}
 
-The new point is obtained accounting with the natural movement direction of those states when they would reach the unsafe zone, which is provided approximately by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the safety constraint \(h\) (\ref{eq:Polytope_fit} or \ref{eq:Ellipsoidal_fit}) was inactive. 
+The new point is obtained accounting with the natural movement direction of those states when they would reach the unsafe zone, which is provided approximately by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the safety constraint defined by \(h\) (\ref{eq:Polytope_fit} or \ref{eq:Ellipsoidal_fit}) was inactive. 
 
 % \SetKwComment{Comment}{/* }{ */}
 %   \begin{algorithm}
@@ -944,6 +940,7 @@ The new point is obtained accounting with the natural movement direction of thos
 
   This vector points to the direction where the system can aproximate more of \(\bar{\xVec}_F\) given some decision algorithm and assuming is always safe.
 
+
 \subsubsection{Constraint Tangent Point}
 \label{subsubsec:Constraint_Tangent_Point}
 
@@ -952,30 +949,32 @@ From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmat
 
 
 \begin{align}
-    &d = \frac{a_u}{a_x - a_y} \label{eq:Constraint_Tangent_Point_auxElement} \\
+    &d = \frac{a_u\sqrt{2}}{\sqrt{a_xa_y}} \label{eq:Constraint_Tangent_Point_auxElement1} \\
     \notag \\
-    &q = a_xv_1^2 + a_yv_2^2 \label{eq:Constraint_Tangent_Point_auxAuxElement} \\
+    &l = \sqrt{\frac{a_x}{2a_y}} \label{eq:Constraint_Tangent_Point_auxElement2} \\
     \notag \\
-    &\mathbf{l}_i = \begin{bmatrix} \pm \sqrt{\frac{v_2^2}{q}} \\ \pm \sqrt{\frac{v_1^2}{q}}  \end{bmatrix} \quad i \in \{1,2,3,4\} \label{eq:Constraint_Tangent_Point_auxVector} 
+    &q = \pm\sqrt{\frac{1}{\frac{a_x}{2}(v_1^2 + v_2^2) + a_yv_1^2}}  \label{eq:Constraint_Tangent_Point_auxAuxElement} \\
+    \notag \\
+    &\mathbf{z}_i = \begin{bmatrix}  v_2 q \\ v_1 q \end{bmatrix} \quad i \in \{1,2,3,4\} \label{eq:Constraint_Tangent_Point_auxVector} 
 \end{align}
 
 In order to obtain both solutions from the perpedincular vectors to \(\mathbf{v}\):
 
 \begin{subequations}
     \begin{align}
-        &\mathbf{r}_1 = \argminA_{\mathbf{l}_i \in \mathbb{R}^2} = \begin{bmatrix} a_yv_2 & - a_xv_1 \end{bmatrix} \mathbf{l}_{i} \label{eq:Constraint_Tangent_Point_bc_per} \\
+        &\mathbf{r}_1 = \argminA_{\mathbf{z}_i \in \mathbb{R}^2} = \begin{bmatrix} a_yv_2 & - a_xv_1 \end{bmatrix} \mathbf{z}_{i} \label{eq:Constraint_Tangent_Point_bc_per} \\
         &\mathbf{r}_2 = -\mathbf{r}_1 \label{eq:Constraint_Tangent_Point_bc_perp_inverse}
     \end{align}
     \label{eq:Constraint_Tangent_Point_bc}
 \end{subequations}   
 
-%&\mathbf{r}_2 = \argmaxA_{\mathbf{l}_i \in \mathbb{R}^2} = \begin{bmatrix} a_yv_2 & - a_xv_1 \end{bmatrix} \mathbf{l}_{i} \label{eq:Constraint_Tangent_Point_bc_inverse}
+%&\mathbf{r}_2 = \argmaxA_{\mathbf{z}_i \in \mathbb{R}^2} = \begin{bmatrix} a_yv_2 & - a_xv_1 \end{bmatrix} \mathbf{z}_{i} \label{eq:Constraint_Tangent_Point_bc_inverse}
     
 
 With \(\mathbf{r} = \bigl[\begin{smallmatrix} \mathbf{r}_1&\mathbf{r}_2\end{smallmatrix} \bigr]\). The respective points are obtained with:
 
 \begin{equation}
-    \mathbf{s}_j = \frac{\begin{bmatrix} d \hspace{0.2em}r_{1j} + r_{2j} \\ d \hspace{0.2em} r_{2j} - r_{1j}\end{bmatrix}}{d^2 + 1} + \mathbf{p} \quad j\in \{1,2\}
+    \mathbf{s}_j = \frac{\begin{bmatrix} d \hspace{0.1em}r_{1j} + l \hspace{0.1em}r_{2j} \\ d \hspace{0.1em} r_{2j} - l \hspace{0.1em} r_{1j}\end{bmatrix}}{d^2 + l^2} + \mathbf{p} \quad j\in \{1,2\}
     \label{eq:Constraint_Tangent_Points}
 \end{equation}
 
@@ -991,14 +990,64 @@ The closest-point to the current state is chosed as the intermediate equilibrium
 \newpage %Só para ajeitar
 
 
-\section{Proposed Propagation Algorithms}
+\section{Proposed Decision Algorithms}
 \label{sec:Proposed_Propagation_Algorithms}
+
+All the proposed algorithms are based on \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf} decision algorithm, having the objective of stabilizing a system while prioritizing its safety. Using \glsxtrshort{CLF-CBF} allows a relative lower computational effort, in particular its closed form solution~\ref{sub:closed_form}, compared to other techniques, however it lacks adaptive power as its constant parameters consistently dictates an inneficient system behavior for probably the majority of the encoutered scenarios. \\    
+
 
 \subsection{\glsxtrfull{A-JO}}
 \label{subsec:Just_Optimized_Algorithm}
 
+Optimizing parameters can improve the system behaviour for the scenario is deparing with. And an eventual optimization make its behaviour more suited to actuate in an multi-scenario environment. \par
+Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, the proposed technique is centered on the slope \(\alpha\) of the \glsxtrshort{CBF} constraint function \(\alpha:\mathbb{R} \to \mathbb{R}\) (\glsxtrshort{CLF-CBF} \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed}) as an optimization variable:
+
+\begin{equation}
+    \alpha(h) = \alpha h
+    \label{eq:CBF_Alpha_Formulation_AJO}
+\end{equation}
+
+The parameter is optimized using \ref{eq:Gradient_Descent_Normal} but for that is required a cost function \(g_{\xVec_0}:\mathbb{R} \to \mathbb{R}\):
+
+\begin{equation}
+    \begin{array}{ll}
+        g_{\xVec_0}(\alpha) &= g(\alpha, \xVec_0 = cte)  \\   
+        &= \sum_{k=0}^{N}\xVec_{k+1}(\xVec_k,\uVec_k)^{\top}\mathbf{Q}\xVec_{k+1}(\xVec_k,\uVec_k) +  \uVec_k(\alpha,\xVec_k)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_k) \\
+        %&= \sum_{k=0}^{N}\xVec_{k+1}(\alpha,\xVec_k)^{\top}\mathbf{Q}\xVec_{k+1}(\alpha,\xVec_k) +  \uVec_k(\alpha,\xVec_k)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_k) \\
+        &= \sum_{k=0}^{N}\xVec_{k+1}(\alpha,\xVec_0)^{\top}\mathbf{Q}\xVec_{k+1}(\alpha,\xVec_0) +  \uVec_k(\alpha,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_0) \\
+        &= \mathbf{X}(\alpha,\xVec_0)^{\top}\tilde{\mathbf{Q}}\mathbf{X}(\alpha,\xVec_0) +  \mathbf{U}(\alpha,\xVec_0)^{\top}\tilde{\mathbf{R}}\mathbf{U}(\alpha,\xVec_0)
+    \end{array}
+    \label{eq:Cost_Function_Alpha}
+\end{equation}
+
+Where \(N\) is the total of samples, \(\xVec_0\) the present state, \(\mathbf{Q} \in \mathbb{R}^n_{\succ 0}\) is the states cost weight matrix, \(\mathbf{R} \in \mathbb{R}^m_{\succ 0}\) is the inputs cost weight matrix.  \par
+
+Because of the conditioned control input values given by \glsxtrshort{CLF-CBF} controller, the gradient \(\nabla g_{\xVec_0}(\alpha)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V:\mathbb{R}^n \to \mathbb{R}\) and a \glsxtrshort{CBF} \(h:\mathbb{R}^n \to \mathbb{R}\). Meanwhile, \(\xVec_{k+1}\) is given by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\ref{eq:RK4_Tableu}, so given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
+
+\begin{equation}
+    \begin{bmatrix} \mathbf{X}(\alpha,\xVec_0) & \mathbf{U}(\alpha,\xVec_0) \end{bmatrix} = SPS(f, \xVec_0, N, \Delta t, V, h, \alpha) \hspace{0.2em} \begin{bmatrix*}[l] conditions^* \gets V(\xVec_i) \geq tol\\ decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}
+    \label{eq:CLF-CBF_RK4_Propagation}
+\end{equation}
+
+With \(SPS\) (State Propagation Simulation) as the algorithm \ref{alg:State_Propagation_Simulation}. So, choosing \(nS\) number of samples, \(devS\) referent to the distance between them, \(dev\) the discretization step and with \(g_{\xVec_0}(\alpha)\) given by \ref{eq:CLF-CBF_RK4_Propagation}:
+
+\begin{equation}
+    \Delta g_{\xVec_0}(\alpha) = DGF(nS,devS,dev, g_{\xVec_0},\alpha)  
+    \label{discrete_gradient_function}
+\end{equation}
+
+With \(DGS\) (Discrete Gradient Function) as the algorithm \ref{alg:Discrete_Gradient_Function}  and therefore enabling \ref{sec:Single_Parameter_Optmization} and the optimization of the slope \(\alpha\).\par  
+Theoretically the CBF should garantee safety, however due to not be a continuos system (or integration errors), having a high \(\alpha\) can lead to unsafe sets and can also provide a demand on a not possible control input values to keep the system safe, but if that happens is expected to reflect on the path taken, control inputs and therefore penalize in the cost function.
+
+
 \subsection{\glsxtrfull{A-CLF-S}}
 \label{subsec:CLFs_Summed_Algorithm}
+
+
+
+
+
+
 
 \subsection{\glsxtrfull{A-CLF-U}}
 \label{subsec:CLFs_Unified_Algorithm}
