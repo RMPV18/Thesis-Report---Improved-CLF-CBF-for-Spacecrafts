@@ -931,11 +931,11 @@ The new point is obtained accounting with the natural movement direction of thos
 
   \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
-    \KwData{$\xVec_0$, $tI$}
+    \KwData{$f$, $\xVec_0$, $tI$, $\Delta t$, $args^*$}
     \KwResult{$dir$}
-    $(\xVec, \uVec) \gets \text{SPS}\hspace{0.1em}(\xVec_0, tI) \hspace{0.25em} [\text{Conditions}^* \gets h(\xVec) > 0]$ \Comment*[r]{Algorithm \ref{alg:State_Propagation_Simulation}} 
+    $(\xVec, \uVec) \gets \text{SPS}\hspace{0.1em}(f, \xVec_0, tI, \Delta t, args^*) \hspace{0.25em} \begin{bmatrix*}[c]  conditions^* \gets h(\xVec) > 0 \\ decision^* \\ integration^* \end{bmatrix*}$ \Comment*[r]{Algorithm \ref{alg:State_Propagation_Simulation}} 
     $dir \gets \frac{f(\xVec_{END}, \uVec_{END})}{||f(\xVec_{END}, \uVec_{END})||}$ \Comment*[r]{System Dynamic at (\(\xVec_{END}, \uVec_{END}\)) Normalized}
-    \caption{Natural Convergence Direction Vector} \label{alg:Natural_Convergence_Direction_Vector}
+    \caption{Natural Convergence Direction Vector (\(NCDV\))} \label{alg:Natural_Convergence_Direction_Vector}
   \end{algorithm}
 
   This vector points to the direction where the system can aproximate more of \(\bar{\xVec}_F\) given some decision algorithm and assuming is always safe.
@@ -945,7 +945,7 @@ The new point is obtained accounting with the natural movement direction of thos
 \label{subsubsec:Constraint_Tangent_Point}
 
 From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmatrix} \bigr]\) obtained in \ref{alg:Natural_Convergence_Direction_Vector} is deduced a tangent point in the respective constraint. This point is the most far from the eminent of colliding unsafe set \(\mathcal{C}\) given a perpendicular direction to the obtained vector.%, therefore the new equilibrium point translates as the necessary variation the system states need in that perpendicular direction to pass the unsafe zone.                
- Assuming it's always used the ellipsoidal fit~\ref{eq:Ellipsoidal_fit}, where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{c \times c}_{\succ 0}\), \(\mathbf{O} \in \mathbb{R}^{c \times n}\) and \(\mathbf{p} \in \mathbb{R}^{c}\), the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:}):
+ Assuming it's always used the ellipsoidal fit~\ref{eq:Ellipsoidal_fit}, where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{c \times c}_{\succ 0}\), \(\mathbf{O} \in \mathbb{R}^{c \times n}\) and \(\mathbf{p} \in \mathbb{R}^{c}\), the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:CL_Ellipsoide_Tangent_Point}):
 
 
 \begin{align}
@@ -1007,7 +1007,7 @@ Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, t
     \label{eq:CBF_Alpha_Formulation_AJO}
 \end{equation}
 
-The parameter is optimized using \ref{eq:Gradient_Descent_Normal} but for that is required a cost function \(g_{\xVec_0}:\mathbb{R} \to \mathbb{R}\):
+The parameter is optimized using \ref{eq:Gradient_Descent_Normal} but for that is required a cost function \(g_{\xVec_0}:\mathbb{R} \to \mathbb{R}\) which accounts with a whole predction horizon:
 
 \begin{equation}
     \begin{array}{ll}
@@ -1020,7 +1020,7 @@ The parameter is optimized using \ref{eq:Gradient_Descent_Normal} but for that i
     \label{eq:Cost_Function_Alpha}
 \end{equation}
 
-Where \(N\) is the total of samples, \(\xVec_0\) the present state, \(\mathbf{Q} \in \mathbb{R}^n_{\succ 0}\) is the states cost weight matrix, \(\mathbf{R} \in \mathbb{R}^m_{\succ 0}\) is the inputs cost weight matrix.  \par
+Where \(N\) is equivalent to the total of samples, \(\xVec_0\) the present state, \(\mathbf{Q} \in \mathbb{R}^n_{\succ 0}\) is the states cost weight matrix, \(\mathbf{R} \in \mathbb{R}^m_{\succ 0}\) is the inputs cost weight matrix.  \par
 
 Because of the conditioned control input values given by \glsxtrshort{CLF-CBF} controller, the gradient \(\nabla g_{\xVec_0}(\alpha)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V:\mathbb{R}^n \to \mathbb{R}\) and a \glsxtrshort{CBF} \(h:\mathbb{R}^n \to \mathbb{R}\). Meanwhile, \(\xVec_{k+1}\) is given by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\ref{eq:RK4_Tableu}, so given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
 
@@ -1032,27 +1032,116 @@ Because of the conditioned control input values given by \glsxtrshort{CLF-CBF} c
 With \(SPS\) (State Propagation Simulation) as the algorithm \ref{alg:State_Propagation_Simulation}. So, choosing \(nS\) number of samples, \(devS\) referent to the distance between them, \(dev\) the discretization step and with \(g_{\xVec_0}(\alpha)\) given by \ref{eq:CLF-CBF_RK4_Propagation}:
 
 \begin{equation}
-    \Delta g_{\xVec_0}(\alpha) = DGF(nS,devS,dev, g_{\xVec_0},\alpha)  
+    \nabla g_{\xVec_0}(\alpha) = DGF(nS,devS,dev, g_{\xVec_0},\alpha)  
     \label{discrete_gradient_function}
 \end{equation}
 
-With \(DGS\) (Discrete Gradient Function) as the algorithm \ref{alg:Discrete_Gradient_Function}  and therefore enabling \ref{sec:Single_Parameter_Optmization} and the optimization of the slope \(\alpha\).\par  
+With \(DGF\) (Discrete Gradient Function) as the algorithm \ref{alg:Discrete_Gradient_Function}  and therefore enabling \ref{sec:Single_Parameter_Optmization} and the optimization of the slope \(\alpha\).\par  
 Theoretically the CBF should garantee safety, however due to not be a continuos system (or integration errors), having a high \(\alpha\) can lead to unsafe sets and can also provide a demand on a not possible control input values to keep the system safe, but if that happens is expected to reflect on the path taken, control inputs and therefore penalize in the cost function.
 
-
-\subsection{\glsxtrfull{A-CLF-S}}
-\label{subsec:CLFs_Summed_Algorithm}
-
+\subsection{Double \glsxtrshort{CLF}}
+\label{subsec:Double_CLF}
 
 
+The \glsxtrshort{CLF-CBF} returns control input values based on purely the current state but with a relative similar behaviour to a single horizon MPC (in particular with euler integration to define next state) with a \glsxtrshort{CBF} constraint.  The global (infinite horizon) suboptimal solutions could lead to states relatively close to the barrier (given some safety tunable defenitions) and unwanted inputs to deviate from it. So, changing the notion of stability by making the system follow another equilibrium point first could help mitigate the problems. This technique focus on the transition between two \glsxtrshort{CLF} aiming to converge for each of the equilibrium points, the current and next. \par
+
+
+With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Algorithm} is obtained the new equilibrium point \(\bar{\xVec_C} \in \mathbb{R}^n\). Given a system, with dynamics \(f:\mathbb{R}^n \times \mathbb{R}^m \rightarrow \mathbb{R}^n \), at the sate \(\xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) that targets \(\bar{\xVec_N} \in \mathbb{R}^n\) and \glsxtrshort{CBF} \(h\), the new equilibrium point could be obtained:
+
+\begin{equation}
+    \mathbf{v} = NCDV(f, \xVec_0, N, \Delta t, V, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}
+    \label{eq:New_Equlibrium_Point_DirVec_CLF-CBF_RK4}
+\end{equation}
+
+Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natural_Convergence_Direction_Vector}. Given the direction vector \(\mathbf{v}\), assuming an ellipsoidal fit \ref{eq:Ellipsoidal_fit}, with the constraint tangent point  closed form solution~\ref{subsubsec:Constraint_Tangent_Point} like this obtain \(\bar{\xVec_C}\).\\
+
+
+\subsubsection{\glsxtrfull{A-CLF-S}}
+\label{subsubsec:CLFs_Summed_Algorithm}
+
+From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_N\) stabilizing in \(\bar{\xVec_N}\). By doing a wheighted mean between both \glsxtrshort{CLF} is defined a new one (a generalization for multiple \glsxtrshort{CLF} can be found in \ref{app:M_CLF_Transition_Formulation}):
+
+\begin{align}
+    V_1(\xVec) = 
+    \begin{cases}
+        \sigma(\xVec) V_{C}(\xVec) + (1 - \sigma(\xVec))V_{N}(\xVec) \\
+        \sigma(\xVec) = \frac{1}{1+e^{-\zeta V_{C}(\xVec)}} 
+    \end{cases}
+    \label{eq:1stPhase_2-CLF-S}
+\end{align}
+
+\begin{align}
+    V(\xVec) = 
+    \begin{cases}
+        V_1(\xVec) \quad \xVec \in \mathcal{S}\\
+        V_2(\xVec) = V_{N}(\xVec) \quad \xVec \in \bar{\mathcal{S}}
+    \end{cases}
+    \label{eq:New_2-CLF-S}
+\end{align}
+
+\begin{equation}
+    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C}(\xVec) \geq tol \cap \dot{V}_{C}(\xVec, \uVec) \leq 0 \}
+    \label{eq:New_2-CLF-S_actuationPhaseSet}
+\end{equation}
+
+Where \(\sigma(V_C(\xVec))\) is a sigmoide function responsible to the transition between the \glsxtrshort{CLF} and \(\zeta \in \mathbb{R}_{\geq 0}\) is its slope. \(\mathcal{S}\) refers to the just one time activation set of the respective \glsxtrshort{CLF} \(V_1\). 
+
+
+
+The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_1\) and assuming a a high slope \(\zeta\) (\(\dot{\sigma}(\xVec, \uVec)\approx 0\)), is approximately:
+
+\begin{align}
+    K_{V_1}(\xVec) = \Bigl\{\uVec \in \mathbb{R}^m: \dot{V_1}(\xVec, \uVec) &= \dot{V}_{C}(\xVec, \uVec) \sigma(\xVec) + (1-\sigma(\xVec))\dot{V}_{N}(\xVec, \uVec) \notag \\
+    &\leq -\gamma( \mu \sigma(\xVec) V_{C}(\xVec) + (1 - \sigma(\xVec))V_{N}(\xVec)  )\Bigr\}
+    \label{eq:2-CLF-S_Constraint}
+\end{align}
+
+With \(\mu\) as a parameter with default value as \( \frac{V_{N}(\xVec_0)}{V_{C}(\xVec_0)} \), with \(\xVec_0\) equal to system state when is obtained the new equilibrium point \(\bar{\xVec_C}\). The set \(K_{V_2}(\xVec)\) is equivalent to \ref{eq:K-CLF}. \par
+
+Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm} adapt the \glsxtrfull{CBF} slope \(\alpha\) to the new \glsxtrfull{CLF} \(V\) and improve possibly even more the state convergence to the final equilibrium point.\\
 
 
 
 
-\subsection{\glsxtrfull{A-CLF-U}}
-\label{subsec:CLFs_Unified_Algorithm}
+
+\subsubsection{\glsxtrfull{A-CLF-I}}
+\label{subsubsec:CLFs_Independent_Algorithm}
+
+From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_N\) stabilizing in \(\bar{\xVec_N}\)If \(\zeta \to \infty\), according to equations \ref{eq:1stPhase_2-CLF-S} and \ref{eq:New_2-CLF-S}:
 
 
+\begin{align}
+    V(\xVec) = 
+    \begin{cases}
+        V_C(\xVec) \quad \xVec \in \mathcal{S}\\
+        V_N(\xVec) = V_{N}(\xVec) \quad \xVec \in \bar{\mathcal{S}}
+    \end{cases}
+    \label{eq:New_2-CLF-I}
+\end{align}
+
+
+\begin{equation}
+    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C}(\xVec) \geq tol \cap \dot{V}_{C}(\xVec, \uVec) \leq 0 \}
+    \label{eq:New_2-CLF-I_actuationPhaseSet}
+\end{equation}
+
+
+
+And if \(\mu = \frac{V_{N}(\xVec)}{V_{C}(\xVec)}\) then:
+
+\begin{align}
+    K_{V_C}(\xVec) = \Bigl\{\uVec \in \mathbb{R}^m:  \dot{V}_{C}(\xVec, \uVec) \leq -\gamma( V_{N}(\xVec)  )\Bigr\}
+    \label{eq:2-CLF-I_Constraint}
+\end{align}
+
+The set \(K_{V_N}(\xVec)\) is is defined by \ref{eq:K-CLF}. \par
+Like in the previous technique~\ref{subsubsec:CLFs_Summed_Algorithm}, it is possible to apply \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm} and improve the trajectory.\\
+
+
+\subsubsection{\glsxtrfull{A-CLF-U}}
+\label{subsubsec:CLFs_Unified_Algorithm}
+
+Estou a pensar em deixar de parte para já, e como os resultados desta tecnica não são grande coisa acho que vou me focar no capitulo 3 para já.
 
 
 
