@@ -12,12 +12,269 @@
 \chapter{Results}
 \label{cha:results}
 
+The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{subsec:decision_algorithms} \glsxtrshort{A-JO}, \glsxtrshort{A-CLF-S} and \glsxtrshort{A-CLF-I},  are going to be implemented in different systems, in a unicycle~\ref{subsec:unicycle_simul_setup} and orbital system~\ref{subsec:orbital_simul_setup}, and subject to different types of experiments according to the system in question (unicycle~\ref{subsubsec:unicyle_type_of_experiments} or orbital~\ref{subsubsec:orbital_type_of_experiments}). In each of the contexts, there is an analisys of the techniques and a comparation between them highlingting some relevant data.
+
+\section{Setup}
+\label{sec:setup}
+
+\subsection{Decision Algorithms}
+\label{subsec:decision_algorithms}
+
+%The respective algorithms have some parameters to be defined to attend the problem needs.
+
+\subsubsection{\glsxtrshort{A-JO}}
+\label{subsubsec:A-JO_parameters}
+
+The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{eq:Cost_Function_Alpha}, which takes \(N=6000\) samples and has the weight cost matrices \(\mathbf{Q} = \mathbf{I}_{2\times 2} \) and \(\mathbf{R} = 5 \hspace{0.1em}^.\mathbf{I}_{2\times 2} \).\\
+
+The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discrete_gradient_function} parameters used in these experiments are given by:
 
 
-%Tanto se for o modelo do unicycle como da nave, basta meter aqui o modelo
+ \bgroup
+ \rowcolors{1}{}{GhostWhite}
+ \begin{xltabular}{\textwidth}{ccccc}
+   \caption{SPS~\ref{eq:CLF-CBF_RK4_Propagation} Parameters}
+   \label{tab:A-JO:SPS_parameters}\\
+   \toprule
+   \rowcolor{Gainsboro}
+   $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h, \hspace{0.25em} \alpha_{ini}$  \\
+   \midrule
+     \ref{eq:unicycle_model} or \ref{}          &  $[0 \hspace{0.35em} 0]^{\top}$        & 6000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+   \midrule
+   \end{xltabular}
+ \egroup
 
 
 
+
+  \bgroup
+ \rowcolors{1}{}{GhostWhite}
+ \begin{xltabular}{\textwidth}{ccccc}
+   \caption{DGF~\ref{eq:discrete_gradient_function} Parameters}
+   \label{tab:A-JO:DGF_parameters}\\
+   \toprule
+   \rowcolor{Gainsboro}%
+   $nS$ &  $devS$ & $dev$ & $g_{\xVec_0}(\alpha)$  & $\alpha_{ini}$  \\
+   \midrule
+     3          &  0.01        & 0.005        &  \ref{eq:Cost_Function_Alpha}   &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+   \midrule
+   \end{xltabular}
+ \egroup
+
+
+\newpage %so para ajeitar
+
+ \subsubsection{Double \glsxtrshort{CLF}}
+\label{subsubsec:double_CLF_parameters}
+
+The double \glsxtrshort{CLF} algorithms~\ref{subsec:Double_CLF} functions parameters are defined by:
+
+ \bgroup
+ \rowcolors{1}{}{GhostWhite}
+ \begin{xltabular}{\textwidth}{ccccc}
+   \caption{NCDV~\ref{eq:New_Equlibrium_Point_DirVec_CLF-CBF_RK4} Parameters}
+   \label{tab:Double-CLF:NCDV_parameters}\\
+   \toprule
+   \rowcolor{Gainsboro}%
+   $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h$  \\
+   \midrule
+     \ref{eq:unicycle_model} or \ref{}          &  $[0 \hspace{0.35em} 0]^{\top}$        & 6000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+   \midrule
+   \end{xltabular}
+ \egroup
+
+
+  \bgroup
+ \rowcolors{1}{}{GhostWhite}
+ \begin{xltabular}{\textwidth}{lcccc}
+   \caption{Double \glsxtrshort{CLF}~\ref{subsec:Double_CLF} Transition Parameters}
+   \label{tab:Double-CLF:NCDV_parameters}\\
+   \toprule
+   \rowcolor{Gainsboro}%
+   Algorithms   & $\eta$  & $\mu$  & $tol$   & $tol_2$            \\
+   \midrule
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm} & 1       & $\frac{V_N(\xVec)}{V_C(\xVec)}$          & $0.03^.V_C(\xVec)$          & 999          \\
+    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---       & ---         & $0.05^.V_C(\xVec)$           & 50        \\
+    \midrule
+   \end{xltabular}
+ \egroup
+
+
+
+\subsection{Unicycle}
+\label{subsec:unicycle_simul_setup}
+
+This example consists in drive a unicycle to a specific location \(\mathbf{ref} \in \mathbb{R}^2\). Drive a vehicle implies the possibilitie of founding some obstacles, and while a collision could mean a fatality there are other factors as the fuel/energy consumed and how fast to achieve the wanted location, that beeing said, this represents an example of safety-critical control subject to an optimization of its path. \par
+
+\subsubsection{Dynamics}
+\label{subsec:unicycle_dynamics}
+
+This unicycle doesn't loose traction in its wheels, and it is not constrained by its control inputs or its consume. It is also not affected by any perturbation such as drag force characteristic from the enviroment. It can be modeled mathematically as a relative two degree system:
+
+\begin{equation}
+    \begin{bmatrix} \dot{x} \\ \dot{y} \\ \dot{\theta} \end{bmatrix} = \begin{bmatrix} \frac{1}{2}cos \theta & \frac{1}{2}cos \theta \\  \frac{1}{2}sin \theta & \frac{1}{2}sin \theta \\ -L & L  \end{bmatrix} \begin{bmatrix} v_l \\ v_r\end{bmatrix}
+    \label{eq:unicycle_model}
+\end{equation}
+
+
+Where the states are the \((x,y)\) 2D position and \(\theta\) the orientation, and the control inputs \(\uVec \in \mathbb{R}^2\) are the left and right wheel speed \(v_l\) and \(v_r\) respectively, in addition, the constant \(L = 10 m^{-1}\) refers to the inverse of the distance between the two wheels. 
+
+\subsubsection{\glsxtrshort{CLF-CBF} Formulation}
+\label{subsubsec:Unicyle_CLF-CBF_Experiment_Setup}
+
+As the decision algoritms subject to comparations~\ref{subsec:decision_algorithms} are governed by the \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf} backstepping technique~\ref{sub:backstepping}, the system can be written as:
+
+
+\begin{equation}
+    \begin{array}{l}
+        \dot{\xVec} = f_0(\xVec) +  g_0(\xVec, \xi)\uVec \\
+        \dot{\xi} = f_1(\xVec, \xi) + g_1(\xVec, \xi)\uVec
+    \end{array}
+    \label{eq:second_order_unicycle_model_backstepp}
+\end{equation}
+
+With \(\xVec =  \bigl[\begin{smallmatrix} x \\ y \end{smallmatrix}\bigr]\), \(\xi =  \bigl[\begin{smallmatrix} cos\theta \\ sin\theta \end{smallmatrix}\bigr]\), \(f_0(\xVec) = \mathbf{0}_{2 \times 1}\), \(g_0(\xVec, \xi) = \bigl[\begin{smallmatrix} \frac{1}{2}\xi_1 & \frac{1}{2}\xi_1 \\ \frac{1}{2}\xi_2 & \frac{1}{2}\xi_2 \end{smallmatrix}\bigr] \), \(f_1(\xVec, \xi) = \mathbf{0}_{2 \times 1}\) and \(g_1(\xVec, \xi) =  \bigl[\begin{smallmatrix} \xi_2L & -\xi_2^L \\ -\xi_1L &  \xi_2L \end{smallmatrix}\bigr]\). \par
+
+Since it's a second-order system, to use backstepping and obtain the first-order solution \(\mathbf{k}_0(\xVec)\) it is considered the system:
+
+\begin{equation}
+    \dot{\xVec} = k_0(\xVec) 
+    \label{eq:first_order_unicycle_model_backstepp}
+\end{equation}
+
+In order to make the vehicle to the wanted position is formulated a \glsxtrshort{CLF} \(V_0\) which actively works to stabilize the system in the constant \(\mathbf{ref}\).
+
+\begin{subequations}
+   \begin{align}
+    &V_0(\xVec) = \frac{1}{2}(\xVec-\mathbf{ref})^{\top}(\xVec-\mathbf{ref}) \label{eq:V0_unicycle} \\
+    &\dot{V_0}(\xVec) = \underbrace{(\xVec-\mathbf{ref})^{\top}}_{L_GV_0(\xVec)}\mathbf{k}_0(\xVec)  \label{eq:dot_V0_unicycle} \\
+    &\gamma_0(\xVec)  = V_0(\xVec) \label{eq:CLF_gamma0_unicycle}
+\end{align}
+\label{eq:CLF0_unicycle}
+\end{subequations}
+
+
+The safety is defined according to the \glsxtrshort{CBF} \(h_0\) which restricts the obstacles using a ellipsoidal fit~\ref{eq:Ellipsoidal_fit}:
+
+\begin{subequations}
+   \begin{align}
+    &h_0(\xVec) = (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}(\xVec-\mathbf{p}) - 1 \label{eq:h0_unicycle} \\
+    &\dot{h_0}(\xVec) = (\underbrace{(\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}}_{L_Gh_0(\xVec)})\mathbf{k}_0(\xVec)  \label{eq:dot_h0_unicycle} \\
+    &\alpha_0(\xVec, \alpha)  = \alpha h_0(\xVec) \label{eq:CBF_alpha0_unicycle}
+\end{align}
+\label{eq:CBF0_unicycle}
+\end{subequations}
+
+
+With \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}\) referent to the ellipse axis and \(\mathbf{p} \in \mathbb{R}^2\) equal to the center of the ellipse, both stipulated in \ref{subsubsec:unicyle_type_of_experiments}. Given the system \ref{eq:second_order_unicycle_model_backstepp}, the solution \(\mathbf{k}_0(\xVec)\), the \glsxtrshort{CLF} \(V\) and \glsxtrshort{CBF} \(V\) are defined (according to \ref{eq:Backstepp_CF}) as:
+
+
+\begin{subequations}
+   \begin{align}
+    &V(\xVec, \xi) = V_0(\xVec) + 1 - cos(\theta - \theta_0(\xVec)) \label{eq:V_unicycle} \\
+    &\dot{V}(\xVec, \xi) = \Bigl(\underbrace{((\xVec-\mathbf{ref}))^{\top}g_0(\xVec, \mathbf{k}_{0,\xi}) + sin(\theta -\theta_0(\xVec))\begin{bmatrix} -L & L \end{bmatrix}}_{L_GV(\xVec, \xi)} \Bigr) \mathbf{k}(\xVec)  \label{eq:dot_V_unicycle} \\
+    &\gamma(\xVec)  = V(\xVec) \label{eq:CLF_gamma_unicycle}
+\end{align}
+\label{eq:CLF_unicycle}
+\end{subequations}
+
+\begin{subequations}
+   \begin{align}
+    &h(\xVec, \xi) = h_0(\xVec) + 1 - cos(\theta - \theta_0(\xVec)) \label{eq:h_unicycle} \\
+    &\dot{h}(\xVec, \xi) = \Bigl(\underbrace{\bigl((\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}\bigr)g_0(\xVec, \mathbf{k}_{0,\xi}) + sin(\theta -\theta_0(\xVec))\begin{bmatrix} -L & L \end{bmatrix}}_{L_Gh(\xVec, \xi)} \Bigr) \mathbf{k}(\xVec)  \label{eq:dot_h_unicycle} \\
+    &\alpha(\xVec, \xi, \alpha = 1.2)  = \alpha h(\xVec, \xi) \label{eq:CBF_alpha_unicycle}
+\end{align}
+\label{eq:CBF_unicycle}
+\end{subequations}
+
+
+With \(\mathbf{k}_{0,\xi}(\xVec)\) and \(\theta(\xVec)\) given by:
+
+\begin{align}
+    &\mathbf{k}_{0,\xi}(\xVec) = \frac{\mathbf{k}_0(\xVec) }{|| \mathbf{k}_0(\xVec) ||}      \\
+    &\theta_0(\xVec) = angle(\mathbf{k}_{0,\xi,1}(\xVec) + \mathbf{i} \hspace{0.2em} \mathbf{k}_{0,\xi,2}(\xVec))
+\end{align}
+
+
+\subsubsection{Type of Experiments}
+\label{subsubsec:unicyle_type_of_experiments}
+
+-falar do tipo de simulaçoes que se vai fazer\\
+-falar dos valores tomados pelas axis das elipses
+
+
+\subsection{Orbital}
+\label{subsec:orbital_simul_setup}
+
+\subsubsection{Dynamics}
+\label{subsubsec:orbital_dynamics}
+
+-apresentar modelo orbital\\
+-CLF e CBF deste modelo e referindo o facto do fit ser elipsoidal
+
+\subsubsection{\glsxtrshort{CLF-CBF} Formulation}
+\label{subsubsec:Orbital_CLF-CBF_Experiment_Setup}
+
+
+\subsubsection{Type of Experiments}
+\label{subsubsec:orbital_type_of_experiments}
+
+-falar do tipo de simulaçoes que se vai fazer\\
+-falar dos valores tomados pelas axis das elipses
+
+
+\subsection{Some Data}
+\label{subsec:some_data}
+
+The techniques will be evaluated having in account a cost, given by the function \(g(\mathbf{X}, \mathbf{U})\), equivalent to \(g_{\bar{\xVec_0}}(\alpha)\) defined before~\ref{subsubsec:A-JO_parameters}, such as the weight cost matrices, \(\mathbf{Q} = \mathbf{I}_{2\times 2} \) and \(\mathbf{R} = 5 \hspace{0.1em}^.\mathbf{I}_{2\times 2} \), besides that the function is calculated with \(N=6000\) samples. It is also presented the time the system \(f\) takes to reach the equilibrium point.\par
+The computational time for each experiment is given based on a single test (one sample Monte Carlo) using the the processor \emph{Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz}.
+
+
+
+
+
+\section{Experiments}
+\label{sec:experiments}
+
+The dynamical system propagation with respective decision algorithm~\ref{subsec:decision_algorithms} during the experiments is simulated using the \glsxtrlong{DP} integrative method~\ref{eq:Dormand-Prince_Tableu}. So, given a dynamical system (unicycle~\ref{eq:unicycle_model} or orbital~\ref{subsubsec:orbital_model}) \(f:\mathbb{R}^n \to \mathbb{R}^n\), at \( \xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\), a sampling time \(\Delta t = 0.005\) seconds and a total of \(6000\) iterations totaling a simulation of \(30\) seconds:
+
+
+\begin{equation}
+    \begin{bmatrix} \mathbf{X} & \mathbf{U} \end{bmatrix} = SPS(f, \xVec_0, 6000, 0.005, V, h)\begin{bmatrix*}[l]conditions* \gets V(\xVec) \geq tol \\ decision^* \gets \text{algorithms~\ref{subsec:decision_algorithms}} \\ integration^* \gets \text{\glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}}\end{bmatrix*}
+    \label{eq:SPS_Experiments}
+\end{equation}
+
+Where \(SPS\) (State Propagation Simulation) is the algorithm~\ref{alg:State_Propagation_Simulation}.\\
+
+
+
+% \subsection{Unicycle Model}
+% \label{subsec:unicycle_model}
+
+% \subsubsection{Circular Constraint}
+% \label{subsubsec:Circular_Constraint}
+
+% \subsubsection{Ellipsoidal Constraint}
+% \label{subsubsec:Ellipsoidal_Constraint}
+
+% \subsubsection{Double Ellipsoidal Constraint}
+% \label{subsubsec:Double_Ellipsoidal_Constraint}
+
+% \subsection{Orbital Model}
+% \label{subsec:orbital_model}
+
+% \subsubsection{Circular Constraint}
+% \label{subsubsec:Circular_Constraint}
+
+% \subsubsection{Ellipsoidal Constraint}
+% \label{subsubsec:Ellipsoidal_Constraint}
+
+% \subsubsection{Double Ellipsoidal Constraint}
+% \label{subsubsec:Double_Ellipsoidal_Constraint}
+
+
+-mostrar as simulaçoes\\
+-explicar os resultados obtidos
 
 
 
@@ -57,37 +314,34 @@
 %   \label{fig:fig2subfig}
 % \end{figure}
 
-% \textbf{And this is a small text that references the Figure~\ref{fig:fig2subfig} and its Subfigures~\ref{fig:leftsubfig} and~\ref{fig:rightsubfig}.}
-
-% Footnotes\footnote{This is a simple footnote.} will be numbered and shown in the bottom of the page.
 
 
-% The Table~\ref{tab:hla:results} illustrates some important concepts associated with table construction:
-% \begin{asparaenum}[i)]
-% \item Do not use vertical lines;
-% \item The caption should be above the table;
-% \item Use the macros \verb!\toprule!, \verb!\midrule! and \verb!\bottomrule! to make the top, inner and bottom horizontal lines, respectively.
-% \end{asparaenum}
+%  The Table~\ref{tab:hla:results} illustrates some important concepts associated with table construction:
+%  \begin{asparaenum}[i)]
+%  \item Do not use vertical lines;
+%  \item The caption should be above the table;
+%  \item Use the macros \verb!\toprule!, \verb!\midrule! and \verb!\bottomrule! to make the top, inner and bottom horizontal lines, respectively.
+%  \end{asparaenum}
 
-% \bgroup
-% \rowcolors{1}{}{GhostWhite}
-% \begin{xltabular}{\textwidth}{Xccccc}
-%   \caption{Test results summary.}
-%   \label{tab:hla:results}\\
-%   \toprule
-%   \rowcolor{Gainsboro}%
-%   Test   & Anomalies  & Warnings  & Correct   & Categories            & Missed \\
-%   \midrule
-% Connection~\cite{Beckman08}     & 2       & 2          & 1          & \emph{C}              & 1 \\
-% Coordinates'03~\cite{Artho03}   & 1        & 4          & 1          & \emph{2B, 1C}          & 0 \\
-% Local Variable~\cite{Artho03}    & 1        & 2          & 1          & \emph{A}              & 0 \\
-% NASA~\cite{Artho03}              & 1        & 1          & 1          & ---                    & 0 \\
-%   \midrule
-%   \rowcolor{Gainsboro}%
-% Total                            & 12      & 33        & 10        & 5A, 6B, 10C, 2D       & 2 \\
-%   \bottomrule
-%   \end{xltabular}
-% \egroup
+%  \bgroup
+%  \rowcolors{1}{}{GhostWhite}
+%  \begin{xltabular}{\textwidth}{Xccccc}
+%    \caption{Test results summary.}
+%    \label{tab:hla:results}\\
+%    \toprule
+%    \rowcolor{Gainsboro}%
+%    Test   & Anomalies  & Warnings  & Correct   & Categories            & Missed \\
+%    \midrule
+%  Connection~\cite{Beckman08}     & 2       & 2          & 1          & \emph{C}              & 1 \\
+%  Coordinates'03~\cite{Artho03}   & 1        & 4          & 1          & \emph{2B, 1C}          & 0 \\
+%  Local Variable~\cite{Artho03}    & 1        & 2          & 1          & \emph{A}              & 0 \\
+%  NASA~\cite{Artho03}              & 1        & 1          & 1          & ---                    & 0 \\
+%    \midrule
+%    \rowcolor{Gainsboro}%
+%  Total                            & 12      & 33        & 10        & 5A, 6B, 10C, 2D       & 2 \\
+%    \bottomrule
+%    \end{xltabular}
+%  \egroup
 
 
 % \begin{figure}[htbp]
@@ -116,16 +370,6 @@
 %   \label{fig:complete-figure}
 % \end{figure}
 
-% LaTeX is a powerful tool for writing in a mathematical style. It allows you to insert formulas into the text, such as this: $ax^2 + bx + c = 0$. It also allows formulas to be highlighted on a separate line and centered on the page.
-% \[ x = \frac{-b \pm \sqrt{b^2-4ac}}{2a} \]
-% or numbererd
-% \begin{equation}
-% e = mc^2
-% \label{eq:1}
-% \end{equation}
-% which can latter be referenced as equation~\ref{eq:1}
-
-
 
 % Uncomment the algorithms source below and add the following to file “\verb!5_packages.tex!”
 % \begin{verbatim}
@@ -137,21 +381,6 @@
 % \ntaddlistof{listofalgorithms}
 % \end{verbatim}
 % in file “\verb!8_list_og.tex!”.
-
-%  \begin{algorithm}
-%  $i\gets 10$\;
-%  \eIf{$i\geq 5$}
-%  {
-%      $i\gets i-1$\;
-%  }{
-%      \If{$i\leq 3$}
-%      {
-%          $i\gets i+2$\;
-%      }
-%  }
-% \caption{This is an algorithm.}
-%  \end{algorithm}
-
 
 
 

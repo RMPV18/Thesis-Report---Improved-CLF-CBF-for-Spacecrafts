@@ -213,25 +213,25 @@ That beeing said, the first order solution could be obtained via \glsxtrshort{QP
 \end{equation}
 
 
-The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability not only to the first-order system~\ref{eq:NL-CL-System-0Backstep} but also to the actual second-order system. Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order trying to converge to the first order solution. Supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
+The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability not only to the first-order system~\ref{eq:NL-CL-System-0Backstep} but also to the actual second-order system. Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order trying to converge to the first order solution. Now considering the second-order system \ref{eq:HH-NL-System}, supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
 \begin{subequations}
     \label{eq:Backstepp_CF}
     \begin{align}
         V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) = \frac{1}{2}|| \mathbf{\xi} -  k_0(\xVec) ||^2 
         \label{eq:Backstepp_prejudice}\\
-        V(\xVec, \mathbf{\xi}) = V_0(\xVec) + V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) 
+        V(\xVec, \mathbf{\xi}) = V_0(\xVec) + \eta V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) 
         \label{eq:Backstepp_V}\\
-        h(\xVec, \mathbf{\xi}) = h_0(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})
+        h(\xVec, \mathbf{\xi}) = h_0(\xVec) - \eta V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})
         \label{eq:Backstepp_h}
     \end{align}
 \end{subequations}
 
 
-Finally, via \Glsxtrshort{QP}, given a differentiable and locally Lipschitz continuos \(k(\xVec, \mathbf{\xi}):\mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m\):
+With \(\eta \in \mathbb{R}_{\geq 0}\). Finally, via \Glsxtrshort{QP}, given a differentiable and locally Lipschitz continuos \(k(\xVec, \mathbf{\xi}):\mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m\):
 
 \begin{equation}
     \begin{array}{l}
-        k(\xVec, \mathbf{\xi}) = \underset{\uVec \in \mathbb{R}^p, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
+        k(\xVec, \mathbf{\xi}) = \underset{\uVec \in \mathbb{R}^m, \hspace{0.2em} \delta \in \mathbb{R}}{\mathrm{argmin}} \quad \hspace{-0.5em} \frac{1}{2} (\uVec^\top R \uVec + p\delta^2 ) \vspace{1em} \\ 
         \quad \hspace{0.5em}  st. \hspace{0.5em} L_fV(\xVec, \mathbf{\xi}) + L_GV(\xVec, \mathbf{\xi})\mathbf{u} \leq -\gamma(V_0(\mathbf{x})) -\gamma'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi})) + \delta \vspace{0.25em}\\
         \quad \quad \hspace{1em}                 L_fh(\xVec, \mathbf{\xi}) + L_Gh(\xVec, \mathbf{\xi})\mathbf{u} \geq -\alpha(h_0(\mathbf{x})) + \alpha'(V_{\mathbf{\xi}}(\mathbf{x}, \mathbf{\xi}))
     \end{array}
@@ -746,7 +746,7 @@ Having the objective of global assympyotically stability of a system, the system
 \subsection{Constraint Fit}
 \label{subsec:Constraint_Fit}
 
-The program formulated in \ref{subsec:Constraint_Contour_Point_Obtaining} responsible to obtain a new equlibrium point is characterized by its application in two-dimensional Euclidian Space safety \underline{constraints}. Since the safe set \(\bar{\mathcal{B}}\) (complement of \(\mathcal{B}\)) corresponds to the 0-superlevel set of an unkown safety function \(h_{unkown}: \mathbb{R}^n \to \mathbb{R}\), then via logical operations~\ref{sub:unifying_CBF} smoth-approximations (AND~\ref{eq:Min_smoothFunc_tighted}, OR~\ref{eq:Max_smoothFunc_tighted}), combining the different 0-superlevel sets \(\mathcal{C}_i \subset \mathbb{R}^n \quad \forall i \in \mathcal{I} = \{1,...,p\}\) of the the functions \(h_i: \mathbb{R}^n \to \mathbb{R}\):
+The program formulated in \ref{subsubsec:Constraint_Tangent_Point} responsible to obtain a new equilibrium point is characterized by its application in two-dimensional Euclidian Space safety \underline{constraints}. Since the safe set \(\bar{\mathcal{B}}\) (complement of \(\mathcal{B}\)) corresponds to the 0-superlevel set of an unkown safety function \(h_{unkown}: \mathbb{R}^n \to \mathbb{R}\), then via logical operations~\ref{sub:unifying_CBF} smoth-approximations (AND~\ref{eq:Min_smoothFunc_tighted}, OR~\ref{eq:Max_smoothFunc_tighted}), combining the different 0-superlevel sets \(\mathcal{C}_i \subset \mathbb{R}^n \quad \forall i \in \mathcal{I} = \{1,...,p\}\) of the the functions \(h_i: \mathbb{R}^n \to \mathbb{R}\):
 
 \begin{equation}
     \begin{array}{l}
@@ -991,7 +991,7 @@ The closest-point to the current state is chosed as the intermediate equilibrium
 
 
 \section{Proposed Decision Algorithms}
-\label{sec:Proposed_Propagation_Algorithms}
+\label{sec:Proposed_Decision_Algorithms}
 
 All the proposed algorithms are based on \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf} decision algorithm, having the objective of stabilizing a system while prioritizing its safety. Using \glsxtrshort{CLF-CBF} allows a relative lower computational effort, in particular its closed form solution~\ref{sub:closed_form}, compared to other techniques, however it lacks adaptive power as its constant parameters consistently dictates an inneficient system behavior for probably the majority of the encoutered scenarios. \\    
 
@@ -1022,7 +1022,7 @@ The parameter is optimized using \ref{eq:Gradient_Descent_Normal} but for that i
 
 Where \(N\) is equivalent to the total of samples, \(\xVec_0\) the present state, \(\mathbf{Q} \in \mathbb{R}^n_{\succ 0}\) is the states cost weight matrix, \(\mathbf{R} \in \mathbb{R}^m_{\succ 0}\) is the inputs cost weight matrix.  \par
 
-Because of the conditioned control input values given by \glsxtrshort{CLF-CBF} controller, the gradient \(\nabla g_{\xVec_0}(\alpha)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V:\mathbb{R}^n \to \mathbb{R}\) and a \glsxtrshort{CBF} \(h:\mathbb{R}^n \to \mathbb{R}\). Meanwhile, \(\xVec_{k+1}\) is given by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\ref{eq:RK4_Tableu}, so given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
+Because of the conditioned control input values given by \glsxtrshort{CLF-CBF} controller, the gradient \(\nabla g_{\xVec_0}(\alpha)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\). Meanwhile, \(\xVec_{k+1}\) is given by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\ref{eq:RK4_Tableu}, so given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
 
 \begin{equation}
     \begin{bmatrix} \mathbf{X}(\alpha,\xVec_0) & \mathbf{U}(\alpha,\xVec_0) \end{bmatrix} = SPS(f, \xVec_0, N, \Delta t, V, h, \alpha) \hspace{0.2em} \begin{bmatrix*}[l] conditions^* \gets V(\xVec_i) \geq tol\\ decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}
@@ -1033,7 +1033,7 @@ With \(SPS\) (State Propagation Simulation) as the algorithm \ref{alg:State_Prop
 
 \begin{equation}
     \nabla g_{\xVec_0}(\alpha) = DGF(nS,devS,dev, g_{\xVec_0},\alpha)  
-    \label{discrete_gradient_function}
+    \label{eq:discrete_gradient_function}
 \end{equation}
 
 With \(DGF\) (Discrete Gradient Function) as the algorithm \ref{alg:Discrete_Gradient_Function}  and therefore enabling \ref{sec:Single_Parameter_Optmization} and the optimization of the slope \(\alpha\).\par  
@@ -1043,7 +1043,7 @@ Theoretically the CBF should garantee safety, however due to not be a continuos 
 \label{subsec:Double_CLF}
 
 
-The \glsxtrshort{CLF-CBF} returns control input values based on purely the current state but with a relative similar behaviour to a single horizon MPC (in particular with euler integration to define next state) with a \glsxtrshort{CBF} constraint.  The global (infinite horizon) suboptimal solutions could lead to states relatively close to the barrier (given some safety tunable defenitions) and unwanted inputs to deviate from it. So, changing the notion of stability by making the system follow another equilibrium point first could help mitigate the problems. This technique focus on the transition between two \glsxtrshort{CLF} aiming to converge for each of the equilibrium points, the current and next. \par
+The \glsxtrshort{CLF-CBF} returns control input values based on purely the current state, resulting in global (infinite horizon) suboptimal solutions that could lead to states relatively close to the barrier (given some safety tunable defenitions) and unwanted inputs to deviate from it. So, changing the notion of stability by making the system follow another equilibrium point first could help mitigate the problems. This technique focus on the transition between two \glsxtrshort{CLF} aiming to converge for each of the equilibrium points, the current and next. \par
 
 
 With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Algorithm} is obtained the new equilibrium point \(\bar{\xVec_C} \in \mathbb{R}^n\). Given a system, with dynamics \(f:\mathbb{R}^n \times \mathbb{R}^m \rightarrow \mathbb{R}^n \), at the sate \(\xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) that targets \(\bar{\xVec_N} \in \mathbb{R}^n\) and \glsxtrshort{CBF} \(h\), the new equilibrium point could be obtained:
@@ -1080,15 +1080,15 @@ From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following
 \end{align}
 
 \begin{equation}
-    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C}(\xVec) \geq tol \cap \dot{V}_{C}(\xVec, \uVec) \leq 0 \}
+    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C}(\xVec) \geq tol \cap \dot{V}_{C}(\xVec, \uVec) \leq 0 \cap \delta \leq tol_2 \}
     \label{eq:New_2-CLF-S_actuationPhaseSet}
 \end{equation}
 
-Where \(\sigma(V_C(\xVec))\) is a sigmoide function responsible to the transition between the \glsxtrshort{CLF} and \(\zeta \in \mathbb{R}_{\geq 0}\) is its slope. \(\mathcal{S}\) refers to the just one time activation set of the respective \glsxtrshort{CLF} \(V_1\). 
+Where \(\sigma(V_C(\xVec))\) is a sigmoide function responsible to the transition between the \glsxtrshort{CLF} and \(\zeta \in \mathbb{R}_{\geq 0}\) is its slope. \(\mathcal{S}\) refers to the just one time activation set of the respective \glsxtrshort{CLF} \(V_1\), with \(\delta\) referent to the \glsxtrshort{CLF-CBF} \glsxtrshort{QP} optimized relaxation variable. 
 
 
 
-The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_1\) and assuming a a high slope \(\zeta\) (\(\dot{\sigma}(\xVec, \uVec)\approx 0\)), is approximately:
+The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_1\) and assuming a high slope \(\zeta\) (\(\dot{\sigma}(\xVec, \uVec)\approx 0\)), is approximately:
 
 \begin{align}
     K_{V_1}(\xVec) = \Bigl\{\uVec \in \mathbb{R}^m: \dot{V_1}(\xVec, \uVec) &= \dot{V}_{C}(\xVec, \uVec) \sigma(\xVec) + (1-\sigma(\xVec))\dot{V}_{N}(\xVec, \uVec) \notag \\
@@ -1096,7 +1096,7 @@ The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_1\) and
     \label{eq:2-CLF-S_Constraint}
 \end{align}
 
-With \(\mu\) as a parameter with default value as \( \frac{V_{N}(\xVec_0)}{V_{C}(\xVec_0)} \), with \(\xVec_0\) equal to system state when is obtained the new equilibrium point \(\bar{\xVec_C}\). The set \(K_{V_2}(\xVec)\) is equivalent to \ref{eq:K-CLF}. \par
+With \(\mu\) as a parameter with default value as \( \frac{V_{N}(\xVec)}{V_{C}(\xVec)} \). The set \(K_{V_2}(\xVec)\) is equivalent to \ref{eq:K-CLF}. \par
 
 Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm} adapt the \glsxtrfull{CBF} slope \(\alpha\) to the new \glsxtrfull{CLF} \(V\) and improve possibly even more the state convergence to the final equilibrium point.\\
 
@@ -1107,7 +1107,7 @@ Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm} adapt the
 \subsubsection{\glsxtrfull{A-CLF-I}}
 \label{subsubsec:CLFs_Independent_Algorithm}
 
-From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_N\) stabilizing in \(\bar{\xVec_N}\)If \(\zeta \to \infty\), according to equations \ref{eq:1stPhase_2-CLF-S} and \ref{eq:New_2-CLF-S}:
+From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_N\) stabilizing in \(\bar{\xVec_N}\). If \(\zeta \to \infty\), according to equations \ref{eq:1stPhase_2-CLF-S} and \ref{eq:New_2-CLF-S}:
 
 
 \begin{align}
@@ -1121,7 +1121,7 @@ From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following
 
 
 \begin{equation}
-    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C}(\xVec) \geq tol \cap \dot{V}_{C}(\xVec, \uVec) \leq 0 \}
+    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C}(\xVec) \geq tol \cap \dot{V}_{C}(\xVec, \uVec) \leq 0 \cap \delta \leq tol_2\}
     \label{eq:New_2-CLF-I_actuationPhaseSet}
 \end{equation}
 

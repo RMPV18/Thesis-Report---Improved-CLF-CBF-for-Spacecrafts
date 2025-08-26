@@ -76,8 +76,8 @@ Supposing \(g(\xVec, \uVec, \delta) =  \bigl[\begin{smallmatrix} g_1(\xVec, \uVe
     \frac{\partial \mathcal{L}(\xVec, \uVec, \delta, \lambda)}{\partial \lambda} = 0 &\iff  F(\xVec) + L_G(\mathbf{x})\uVec + \begin{bmatrix} -\delta \\ 0 \end{bmatrix} = 0  \notag \\
     &\iff    F(\xVec) - \begin{bmatrix}  \delta \\ 0 \end{bmatrix} - L_G(\mathbf{x})L_G^{\top}(\xVec)\lambda = 0    \notag \\                                                                                          
     &\iff    F(\xVec) - \begin{bmatrix}  p^{-1} \begin{bmatrix} 1 & 0 \end{bmatrix} \lambda \\ 0 \end{bmatrix} - L_G(\mathbf{x})L_G^{\top}(\xVec)\lambda = 0  \notag \\
-    &\iff    F(\xVec) - \left(\begin{bmatrix} p^{-1} & 0 \\ 0 & 0 \end{bmatrix} + L_G(\mathbf{x})L_G(\mathbf{x})^{\top}(\xVec)\right)\lambda = 0  \notag \\     
-    &\iff    \lambda = \left(\begin{bmatrix} p^{-1} & 0 \\ 0 & 0 \end{bmatrix} + L_G(\mathbf{x})L_G(\mathbf{x})^{\top}(\xVec)\right)^{-1}F(\xVec) \label{eq:lagrangian_lambda_gradient_function}   
+    &\iff    F(\xVec) - \left(\begin{bmatrix} p^{-1} & 0 \\ 0 & 0 \end{bmatrix} + L_G(\mathbf{x})L_G^{\top}(\xVec)\right)\lambda = 0  \notag \\     
+    &\iff    \lambda = \left(\begin{bmatrix} p^{-1} & 0 \\ 0 & 0 \end{bmatrix} + L_G(\mathbf{x})L_G^{\top}(\xVec)\right)^{-1}F(\xVec) \label{eq:lagrangian_lambda_gradient_function}   
 \end{align}
 
 \begin{align}
@@ -271,11 +271,11 @@ From each equilibrium points is defined a \glsxtrshort{CLF}, \(V_{N_{j-1}}\) sta
 \end{align}
 
 \begin{equation}
-    \mathcal{S}_j = \{\xVec \in \mathbb{R}^n: V_{C_{j|j}}(\xVec) \geq tol \cap \dot{V}_{C_{j|j}}(\xVec, \uVec) \leq 0 \}
+    \mathcal{S}_j = \{\xVec \in \mathbb{R}^n: V_{C_{j|j}}(\xVec) \geq tol \cap \dot{V}_{C_{j|j}}(\xVec, \uVec) \leq 0 \cap \delta \leq tol_2 \}
     \label{eq:New_M-CLF-S_actuationPhaseSet}
 \end{equation}
 
-Where \(\sigma(V_{C_{j|i}}(\xVec))\) is a sigmoide function responsible to the transition between the \glsxtrshort{CLF} \(V_{C_{j|i}}\) and \(V_{N_{i}}\), \(\zeta \in \mathbb{R}_{\geq 0}\) is its slope and \(\mathcal{S}_j\) the just one time activation set of the respective \glsxtrshort{CLF} \(V_j\). 
+Where \(\sigma(V_{C_{j|i}}(\xVec))\) is a sigmoide function responsible to the transition between the \glsxtrshort{CLF} \(V_{C_{j|i}}\) and \(V_{N_{i}}\), \(\zeta \in \mathbb{R}_{\geq 0}\) is its slope and \(\mathcal{S}_j\) the just one time activation set of the respective \glsxtrshort{CLF} \(V_j\), with \(\delta\) referent to the \glsxtrshort{CLF-CBF} \glsxtrshort{QP} optimized relaxation variable. 
 
 
 
@@ -298,7 +298,7 @@ If \(\zeta \to \infty\), according to equations \ref{eq:New_M-CLF-S_starting_Con
 \end{align}
 
 \begin{equation}
-    \mathcal{S}_j = \{\xVec \in \mathbb{R}^n: V_{N_{j-1}}(\xVec) \geq tol \cap \dot{V}_{N_{j-1}}(\xVec, \uVec) \leq 0 \}
+    \mathcal{S}_j = \{\xVec \in \mathbb{R}^n: V_{N_{j-1}}(\xVec) \geq tol \cap \dot{V}_{N_{j-1}}(\xVec, \uVec) \leq 0 \cap \delta \leq tol_2 \}
     \label{eq:New_M-CLF-I_actuationPhaseSet}
 \end{equation}
 
