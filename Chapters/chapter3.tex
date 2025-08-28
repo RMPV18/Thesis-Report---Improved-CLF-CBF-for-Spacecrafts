@@ -39,7 +39,7 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
    \rowcolor{Gainsboro}
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h, \hspace{0.25em} \alpha_{ini}$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{}          &  $[0 \hspace{0.35em} 0]^{\top}$        & 6000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+     \ref{eq:unicycle_model} or \ref{}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 6000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -78,7 +78,7 @@ The double \glsxtrshort{CLF} algorithms~\ref{subsec:Double_CLF} functions parame
    \rowcolor{Gainsboro}%
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{}          &  $[0 \hspace{0.35em} 0]^{\top}$        & 6000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+     \ref{eq:unicycle_model} or \ref{}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 6000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -91,15 +91,15 @@ The double \glsxtrshort{CLF} algorithms~\ref{subsec:Double_CLF} functions parame
    \label{tab:Double-CLF:NCDV_parameters}\\
    \toprule
    \rowcolor{Gainsboro}%
-   Algorithms   & $\eta$  & $\mu$  & $tol$   & $tol_2$            \\
+   Algorithms   & $\zeta$  & $\mu$  & $tol$   & $tol_2$            \\
    \midrule
-    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm} & 1       & $\frac{V_N(\xVec)}{V_C(\xVec)}$          & $0.03^.V_C(\xVec)$          & 999          \\
-    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---       & ---         & $0.05^.V_C(\xVec)$           & 50        \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 1         & $\frac{V_N(\xVec)}{V_C(\xVec)}$        & $0.03^.V_C(\xVec_0)$         & 999          \\
+    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---       & ---                                    & $0.05^.V_C(\xVec_0)$         & 50        \\
     \midrule
    \end{xltabular}
  \egroup
 
-
+With \(V_C(\xVec)\) and \(V_N(\xVec)\) following the same formulation but different equilibrium points.
 
 \subsection{Unicycle}
 \label{subsec:unicycle_simul_setup}
@@ -180,8 +180,8 @@ With \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}\) referent to th
 
 \begin{subequations}
    \begin{align}
-    &h(\xVec, \xi) = h_0(\xVec) + 1 - cos(\theta - \theta_0(\xVec)) \label{eq:h_unicycle} \\
-    &\dot{h}(\xVec, \xi) = \Bigl(\underbrace{\bigl((\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}\bigr)g_0(\xVec, \mathbf{k}_{0,\xi}) + sin(\theta -\theta_0(\xVec))\begin{bmatrix} -L & L \end{bmatrix}}_{L_Gh(\xVec, \xi)} \Bigr) \mathbf{k}(\xVec)  \label{eq:dot_h_unicycle} \\
+    &h(\xVec, \xi) = h_0(\xVec) - 1 + cos(\theta - \theta_0(\xVec)) \label{eq:h_unicycle} \\
+    &\dot{h}(\xVec, \xi) = \Bigl(\underbrace{\bigl((\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}\bigr)g_0(\xVec, \mathbf{k}_{0,\xi}) - sin(\theta -\theta_0(\xVec))\begin{bmatrix} -L & L \end{bmatrix}}_{L_Gh(\xVec, \xi)} \Bigr) \mathbf{k}(\xVec)  \label{eq:dot_h_unicycle} \\
     &\alpha(\xVec, \xi, \alpha = 1.2)  = \alpha h(\xVec, \xi) \label{eq:CBF_alpha_unicycle}
 \end{align}
 \label{eq:CBF_unicycle}
@@ -199,8 +199,18 @@ With \(\mathbf{k}_{0,\xi}(\xVec)\) and \(\theta(\xVec)\) given by:
 \subsubsection{Type of Experiments}
 \label{subsubsec:unicyle_type_of_experiments}
 
--falar do tipo de simulaçoes que se vai fazer\\
--falar dos valores tomados pelas axis das elipses
+Falar do tipo de simulaçoes que se vai fazer que basicamente se resume a:\\
+-falar dos valores tomados pelas axis das elipses\\
+-falar do centro da elipse\\
+-referir com base nos valores tomados pelas axis se é um circululo uma ellipse na horizontal, vertical ou diagonal relativamente ao uniciclo\\
+-o valor inicial, posição e orientação dos sistema\\
+
+NOTA: A medida que for escolhendo as simulaçoes ir metendo aqui a descrição delas (breve diria eu e direta).\par
+Cada um dos experimentos descritos tem uma label ou nao mas seja como for sao destinguidos por ex:\textcolor{blue}{\underline{U.C.H.F.Pe)}} (Unicycle Circle Horizontal Far Perpendicular) talvez com cor diferente, tipo de letra, a bold ou sublinhadodo e com label mas não subsubsecção para não dar demasiado destque diria eu e confundir
+
+
+Os experimentos que não entrarem aqui seram colocados nos anexos
+
 
 
 \subsection{Orbital}
@@ -209,8 +219,7 @@ With \(\mathbf{k}_{0,\xi}(\xVec)\) and \(\theta(\xVec)\) given by:
 \subsubsection{Dynamics}
 \label{subsubsec:orbital_dynamics}
 
--apresentar modelo orbital\\
--CLF e CBF deste modelo e referindo o facto do fit ser elipsoidal
+
 
 \subsubsection{\glsxtrshort{CLF-CBF} Formulation}
 \label{subsubsec:Orbital_CLF-CBF_Experiment_Setup}
@@ -219,8 +228,6 @@ With \(\mathbf{k}_{0,\xi}(\xVec)\) and \(\theta(\xVec)\) given by:
 \subsubsection{Type of Experiments}
 \label{subsubsec:orbital_type_of_experiments}
 
--falar do tipo de simulaçoes que se vai fazer\\
--falar dos valores tomados pelas axis das elipses
 
 
 \subsection{Some Data}
@@ -240,7 +247,7 @@ The dynamical system propagation with respective decision algorithm~\ref{subsec:
 
 
 \begin{equation}
-    \begin{bmatrix} \mathbf{X} & \mathbf{U} \end{bmatrix} = SPS(f, \xVec_0, 6000, 0.005, V, h)\begin{bmatrix*}[l]conditions* \gets V(\xVec) \geq tol \\ decision^* \gets \text{algorithms~\ref{subsec:decision_algorithms}} \\ integration^* \gets \text{\glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}}\end{bmatrix*}
+    \begin{bmatrix} \mathbf{X} & \mathbf{U} \end{bmatrix} = SPS(f, \xVec_0, 6000, 0.005, V, h)\begin{bmatrix*}[l]conditions^* \gets V(\xVec) \geq tol \\ decision^* \gets \text{algorithms~\ref{subsec:decision_algorithms}} \\ integration^* \gets \text{\glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}}\end{bmatrix*}
     \label{eq:SPS_Experiments}
 \end{equation}
 
@@ -248,30 +255,241 @@ Where \(SPS\) (State Propagation Simulation) is the algorithm~\ref{alg:State_Pro
 
 
 
-% \subsection{Unicycle Model}
-% \label{subsec:unicycle_model}
+\subsection{Unicycle}
+\label{subsec:unicycle_experiments}
 
-% \subsubsection{Circular Constraint}
-% \label{subsubsec:Circular_Constraint}
+\underline{UCCL}
+\label{ssssec:UCCL} %Unicycle Circular Close Looking
 
-% \subsubsection{Ellipsoidal Constraint}
-% \label{subsubsec:Ellipsoidal_Constraint}
 
-% \subsubsection{Double Ellipsoidal Constraint}
-% \label{subsubsec:Double_Ellipsoidal_Constraint}
+\begin{figure}[htbp]
+  \begin{subfigure}{0.6\textwidth}
+    \centering
+    \includegraphics[width=0.99\linewidth]{UCCL.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UCCL_CostEvol}
+  \end{subfigure}
+  \begin{subfigure}{0.59\textwidth}
+    \centering
+    \includegraphics[width=0.95\linewidth]{UCCL_costs.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UCCL_trajectory}
+  \end{subfigure}
+  \caption{UCCL~\ref{}}
+\label{fig:UCCLTrajectory_and_CostEvol}
+\end{figure}
 
-% \subsection{Orbital Model}
-% \label{subsec:orbital_model}
 
-% \subsubsection{Circular Constraint}
-% \label{subsubsec:Circular_Constraint}
+Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps beeing purely based on a \glsxtrshort{CLF-CBF} technique which lacks a bigger prediction horizon and thus taking the unicycle close to the obstacle as it is the way that approximates more to the \(\mathbf{ref}\) in the moment (less state cost compared to A-CLF-summed), obligating eventually to higher input values (generally bigger than CLF-summed) to deviate from the barrier safely while forcing as much as possible a speed of convergence to \(\mathbf{ref}\).  The \glsxtrshort{A-CLF-S} following the other point first results in a initially not so fast approximation to \txtref but (this forcing but informative point predicts an) to a shorter countour path and that allows to avoid abrupt maneuvers leading to less input cost.  
 
-% \subsubsection{Ellipsoidal Constraint}
-% \label{subsubsec:Ellipsoidal_Constraint}
 
-% \subsubsection{Double Ellipsoidal Constraint}
-% \label{subsubsec:Double_Ellipsoidal_Constraint}
+  \bgroup
+ \rowcolors{1}{}{orange!4}
+ \begin{xltabular}{\textwidth}{|l|ccccc|}
+   \toprule
+   \rowcolor{blue!6}%
+   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   \midrule
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 8.3014 & 21.16  & 29896 & 1907.9 & 31804 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 9.386  & 30     & 14481 & 5973.9 & 20455 \\
+    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 22.965 & 6440  & 6448.8 & 12889 \\
+    \midrule
+    \caption{Some UCCL Data}
+    \label{tab:Some_UCCL_Data}\\
+   \end{xltabular}
+ \egroup
 
+However the \glsxtrshort{A-JO} was less time consuming than \glsxtrshort{A-CLF-S} during the experiment as it reached the final location faster and owing to an optimization of \(\alpha\) parameter by \glsxtrshort{A-CLF-S} too, the resulting cost is comparably way higher. \\
+
+\newpage %so para ajeutar
+
+\underline{UCFL}
+\label{UCFL} %Unicycle Circular Close Looking
+
+
+\begin{figure}[htbp]
+  \begin{subfigure}{0.6\textwidth}
+    \centering
+    \includegraphics[width=0.99\linewidth]{UCFL.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UCFL_CostEvol}
+  \end{subfigure}
+  \begin{subfigure}{0.59\textwidth}
+    \centering
+    \includegraphics[width=0.95\linewidth]{UCFL_costs.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UCFL_trajectory}
+  \end{subfigure}
+  \caption{UCFL~\ref{}}
+\label{fig:UCFLTrajectory_and_CostEvol}
+\end{figure}
+
+
+
+The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with \glsxtrshort{A-CLF-S} as it was seen in UCCL\ref{ssssec:UCCL}. The \glsxtrshort{A-CLF-S} reveals a relatively similar path to the optimal solution but a faster convergence to \txtref as the \(\gamma\) parameter value (not subject to an optimization) is not suited, which results in higher inputs and penalizing in the total cost. 
+
+
+
+  \bgroup
+ \rowcolors{1}{}{orange!4}
+ \begin{xltabular}{\textwidth}{|l|ccccc|}
+   \toprule
+   \rowcolor{blue!6}%
+   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   \midrule
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 2.2433 & 13.875  & 49425 & 3756.3 & 53182 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 19.793  & 23.385     & 20190 & 9568.4 & 29758 \\
+    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 22.16 & 12330  & 12348 & 24678 \\
+    \midrule
+    \caption{Some UCFL Data}
+   \label{tab:Some_UCFL_Data}\\
+   \end{xltabular}
+ \egroup
+
+ \newpage %so para ajeiutar
+
+\underline{UEV}
+\label{UEV} %Unicycle Ellipse Vertical
+
+ \begin{figure}[htbp]
+  \begin{subfigure}{0.6\textwidth}
+    \centering
+    \includegraphics[width=0.99\linewidth]{UEV.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UEV_CostEvol}
+  \end{subfigure}
+  \begin{subfigure}{0.59\textwidth}
+    \centering
+    \includegraphics[width=0.95\linewidth]{UEV_costs.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UEV_trajectory}
+  \end{subfigure}
+  \caption{UEV~\ref{}}
+\label{fig:UEVTrajectory_and_CostEvol}
+\end{figure}
+
+Now given an ellipsoidal obstacle, the bigger the axis, making a lower angle with the theoretical vehicle always safe trajectory, relative to the other one the less impactful is \glsxtrshort{A-CLF-S}, not only because of new point demanding a so relevant maneuver but also because of the respective ellipse CBF natural imposure of a more soft avoidance. 
+
+
+ \bgroup
+ \rowcolors{1}{}{orange!4}
+ \begin{xltabular}{\textwidth}{|l|ccccc|}
+   \toprule
+   \rowcolor{blue!6}%
+   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   \midrule
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 3.3449 & 9.185  & 53112 & 4983.7 & 58096 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 9.5229  & 9.485     & 47649 & 5899 & 53547 \\
+    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 16.315 & 11522  & 11547 & 23069 \\
+    \midrule
+    \caption{Some UEV Data}
+   \label{tab:Some_UEV_Data}\\
+   \end{xltabular}
+ \egroup
+
+
+ \glsxtrshort{A-JO} computational time keeps beeing lower than \glsxtrshort{A-CLF-S} but now for an not so worst cost.
+
+
+  \newpage %so para ajeiutar
+
+
+\underline{UEH}
+\label{UEH} %Unicycle Ellipse Vertical
+
+ \begin{figure}[htbp]
+  \begin{subfigure}{0.6\textwidth}
+    \centering
+    \includegraphics[width=0.99\linewidth]{UEH.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UEH_CostEvol}
+  \end{subfigure}
+  \begin{subfigure}{0.59\textwidth}
+    \centering
+    \includegraphics[width=0.95\linewidth]{UEH_costs.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UEH_trajectory}
+  \end{subfigure}
+  \caption{UEH~\ref{}}
+\label{fig:UEHTrajectory_and_CostEvol}
+\end{figure}
+
+
+If in UEV~\ref{UEV} the \glsxtrshort{A-CLF-S} shows a relative worst performance, in this case its path cost is comparatively considerably better. Beyond that, Aimportant to say that against ellipsoides with its biggest axis near perpendicular to the theoretical vehicle always safe trajectory, or speacially straight surfaces, the best solution given by the \glsxtrshort{CLF-CBF} is to get as much as possible the system close to the obstacle as the \glsxtrshort{CLF-CBF} keeps giving control inputs that lead the system in that instant as close to the \txtref as possible in that exclusive moment, but the \glsxtrshort{A-CLF-S} converging to the contour point is capable to free from it. The \glsxtrshort{MPC} solution presented corresponds to a local minimum, but its path reveals a similar problem to \glsxtrshort{A-JO} due to the finite horizon and its objective function trying to approximate the system as much to \txtref instead of actually optimze its reaching time.
+
+
+\bgroup
+ \rowcolors{1}{}{orange!4}
+ \begin{xltabular}{\textwidth}{|l|ccccc|}
+   \toprule
+   \rowcolor{blue!6}%
+   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   \midrule
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 13.68  & 9.92  & 1.3522e+05 & 3543.4 & 1.3877e+05 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 42.607  & 30     & 21563 & 6332.5 & 27896 \\
+    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 30 & 3727.1  & 27617 & 31344 \\
+    \midrule
+    \caption{Some UEH Data}
+   \label{tab:Some_UEH_Data}\\
+   \end{xltabular}
+ \egroup
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
+\begin{itemize}
+    \item If the constraint is circular, the vehicle is oriented to the \txtref and to the center of the circle the unicycle converges to the obstacle limit.
+  \end{itemize}
+\end{tcolorbox} 
+
+\newpage %so para ajeitar
+
+\underline{UED}
+\label{UED} %Unicycle Ellipse Vertical
+
+ \begin{figure}[htbp]
+  \begin{subfigure}{0.6\textwidth}
+    \centering
+    \includegraphics[width=0.99\linewidth]{UED.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UED_CostEvol}
+  \end{subfigure}
+  \begin{subfigure}{0.59\textwidth}
+    \centering
+    \includegraphics[width=0.95\linewidth]{UED_costs.png}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:UED_trajectory}
+  \end{subfigure}
+  \caption{UED~\ref{}}
+\label{fig:UEDTrajectory_and_CostEvol}
+\end{figure}
+
+
+As in UEH, although the other techiniques don't keep stuck, the \glsxtrshort{A-CLF-S} keeps showing a better result and the other suffering from the same limitations.
+
+
+\bgroup
+ \rowcolors{1}{}{orange!4}
+ \begin{xltabular}{\textwidth}{|l|ccccc|}
+   \toprule
+   \rowcolor{blue!6}%
+   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   \midrule
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 3.939  & 9.295  & 4.0474e+05 & 8500 & 4.1324e+05 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 53.897 & 9.7     & 43945 & 19422 & 63367 \\
+    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 30 & 15047  & 69133 & 84180 \\
+    \midrule
+    \caption{Some UED Data}
+   \label{tab:Some_UED_Data}\\
+   \end{xltabular}
+ \egroup
+
+
+\subsection{Orbital}
+\label{subsec:orbital_experiments}
 
 -mostrar as simulaçoes\\
 -explicar os resultados obtidos
@@ -344,14 +562,14 @@ Where \(SPS\) (State Propagation Simulation) is the algorithm~\ref{alg:State_Pro
 %  \egroup
 
 
-% \begin{figure}[htbp]
-%   \centering
-%   \includegraphics[height=1in]{snowman-vectorial}
-%   \includegraphics[height=3in]{snowman-vectorial}
-%   \includegraphics[height=6in]{snowman-vectorial}
-%   \caption{Vectorial image (PDF)}
-%   \label{fig:Figures_Tree_silhouettes-vectorial}
-% \end{figure}
+%  \begin{figure}[htbp]
+%    \centering
+%    \includegraphics[height=1in]{snowman-vectorial}
+%    \includegraphics[height=3in]{snowman-vectorial}
+%    \includegraphics[height=6in]{snowman-vectorial}
+%    \caption{Vectorial image (PDF)}
+%    \label{fig:Figures_Tree_silhouettes-vectorial}
+%  \end{figure}
 
 % To combine several figures into a single one… You can then reference the set as Figure~\ref{fig:complete-figure} or the sub-figures separately as~\ref{fig:woolball} and~\ref{fig:cloud}.
 

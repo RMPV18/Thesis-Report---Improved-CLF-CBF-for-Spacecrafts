@@ -85,21 +85,42 @@
 % }
 
 
-%my commands
 
-\newcommand{\uVec}{\mathbf{u}}
-\newcommand{\xVec}{\mathbf{x}}
-\DeclareMathOperator*{\argminA}{arg\,min} % Jan Hlavacek
-\DeclareMathOperator*{\argmaxA}{arg\,max} % Jan Hlavacek
-
-\newcommand{\sOrderArg}{(\xVec, \mathbf{\xi})}
-\newcommand{\sOrderArgB}{(\xVec \mathcolor{gray}{, \mathbf{\xi}})}
-
+%%%MEU%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %my packages
 
 \usepackage{mathtools}
- 
+\usepackage{caption}
+\captionsetup[figure]{font=small, labelfont=small}%, labelfont=bf} %scriptsize or footnotesize or small or normalsize or large or Large
+\usepackage{subcaption}
+
+
+%my commands
+
+%New Commands
+\DeclareMathOperator*{\argminA}{arg\,min} % Jan Hlavacek
+\DeclareMathOperator*{\argmaxA}{arg\,max} % Jan Hlavacek
+
+
+%Less time Costly Commands
+  \newcommand{\uVec}{\mathbf{u}}
+  \newcommand{\xVec}{\mathbf{x}}
+  \newcommand{\refVec}{\mathbf{ref}} 
+
+  %Rare
+  \newcommand{\sOrderArg}{(\xVec, \mathbf{\xi})}
+  \newcommand{\sOrderArgB}{(\xVec \mathcolor{gray}{, \mathbf{\xi}})}
+  \newcommand{\txtref}{\(\mathbf{ref}\) }
+  
+
+
+
+
+
+
+
+
 
 
 
