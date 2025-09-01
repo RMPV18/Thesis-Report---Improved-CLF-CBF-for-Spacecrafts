@@ -283,7 +283,7 @@ With \(\nu = \omega + \theta_t = \theta_t = \dot{\theta_t} t \) as the argument 
 \end{equation}
 
 
-%This augmented dynamics are used just for simulation of the state propagation, for bakstepping purposes is used \ref{eq:orbital_dynamics}.
+This augmented dynamics are used just for simulation of the state propagation, for bakstepping purposes is used \ref{eq:orbital_dynamics}.
 
 \subsubsection{\glsxtrshort{CLF-CBF} Formulation}
 \label{subsubsec:Orbital_CLF-CBF_Experiment_Setup}
@@ -292,16 +292,12 @@ With \(\nu = \omega + \theta_t = \theta_t = \dot{\theta_t} t \) as the argument 
 The given system is non-linear and in strict-feedback form \ref{eq:HH-NL-System}:
 
 \begin{align}
-  & f_0(\xVec) = \mathbf{0}_{2 \times 1}   \notag \\  &g_0(\xVec) = \begin{bmatrix}
-   1 & 0 & 0\\  0& 1& 0
-  \end{bmatrix} \label{eq:orbital_0_dyn} \\ \notag \\
-  & f_1(\xVec,\xi) = \begin{bmatrix}  2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t+ \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ 2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2} \\  \sqrt{\frac{\mu}{r_t^3}}  \end{bmatrix} - \begin{bmatrix}  R_{\text{\tiny LVLH,ECI}}(\theta_t)^.p_{J_2}(\theta_t, \partial x, \partial y) \\ 0\end{bmatrix}   
-  \notag \\ & g_1(\xVec, \xi) = \begin{bmatrix}
-   1 & 0\\  0& 1\\ 0 & 0 
-  \end{bmatrix} \label{eq:orbital_1_dyn}
+  & f_0(\xVec) = \mathbf{0}_{2 \times 1}   \notag \\  &g_0(\xVec) = \mathbf{I}_{2 \times 2} \label{eq:orbital_0_dyn} \\ \notag \\
+  & f_1(\xVec,\xi) = \begin{bmatrix}  2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t+ \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ 2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2} \end{bmatrix} -  R_{\text{\tiny LVLH,ECI}}(\theta_t)^.p_{J_2}(\theta_t, \partial x, \partial y)   
+  \notag \\ & g_1(\xVec, \xi) = \mathbf{I_{2 \times 2}}\label{eq:orbital_1_dyn}
 \end{align}
 
-With \(\xVec = \bigl[\begin{smallmatrix} \partial x \\ \partial y \end{smallmatrix} \bigr]\) and \(\xi = \Bigl[\begin{smallmatrix} \partial \dot{x} \\ \partial \dot{y} \\ \theta_t \end{smallmatrix} \Bigr]\). \\
+With \(\xVec = \bigl[\begin{smallmatrix} \partial x \\ \partial y \end{smallmatrix} \bigr]\) and \(\xi = \Bigl[\begin{smallmatrix} \partial \dot{x} \\ \partial \dot{y} \end{smallmatrix} \Bigr]\). \\
 
 Following the standart backstepping technique~\ref{sub:backstepping}, to obtain the first-order solution \(\mathbf{k}_0(\xVec)\) is considered the system \ref{eq:NL-CL-System-0Backstep}. The first-order \glsxtrshort{CLF} \(V_0\) stabilizing the system in \(\refVec \in \mathbb{R}^2\) is given by:
 
@@ -309,7 +305,7 @@ Following the standart backstepping technique~\ref{sub:backstepping}, to obtain 
 \begin{subequations}
    \begin{align}
     &V_0(\xVec) = \frac{1}{2}(\xVec-\mathbf{ref})^{\top}(\xVec-\mathbf{ref}) \label{eq:V0_unicycle} \\
-    &\dot{V_0}(\xVec) = \underbrace{(\xVec-\mathbf{ref})^{\top}g_0(\xVec)}_{L_GV_0(\xVec)}\mathbf{k}_0(\xVec)  \label{eq:dot_V0_unicycle} \\
+    &\dot{V_0}(\xVec) = \underbrace{(\xVec-\mathbf{ref})^{\top}}_{L_GV_0(\xVec)}\mathbf{k}_0(\xVec)  \label{eq:dot_V0_unicycle} \\
     &\gamma_0(\xVec)  = V_0(\xVec) \label{eq:CLF_gamma0_unicycle}
 \end{align}
 \label{eq:CLF0_unicycle}
@@ -321,7 +317,7 @@ The safety is defined by \glsxtrshort{CBF} \(h_0\), restricting the obstacles us
 \begin{subequations}
    \begin{align}
     &h_0(\xVec) = (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}(\xVec-\mathbf{p}) - 1 \label{eq:h0_orbital} \\
-    &\dot{h_0}(\xVec) = (\underbrace{(\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}g_0(\xVec)}_{L_Gh_0(\xVec)})\mathbf{k}_0(\xVec)  \label{eq:dot_h0_unicycle} \\
+    &\dot{h_0}(\xVec) = (\underbrace{(\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}}_{L_Gh_0(\xVec)})\mathbf{k}_0(\xVec)  \label{eq:dot_h0_unicycle} \\
     &\alpha_0(\xVec, \alpha)  = \alpha h_0(\xVec) \label{eq:CBF_alpha0_orbital}
 \end{align}
 \label{eq:CBF0_orbital}
@@ -334,7 +330,7 @@ With the ellipse axis \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}
 \begin{subequations}
    \begin{align}
     &V(\xVec, \xi) = V_0(\xVec) + \frac{1}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:V_orbital} \\
-    &\dot{V}(\xVec, \xi) = \underbrace{(\xVec-\mathbf{ref})^{\top}g_0(\xVec)\xi + (\xi - \mathbf{k_0(\xVec)})f_1(\xVec, \xi)}_{L_fV(\xVec, \xi)} + \underbrace{(\xi - \mathbf{k_0(\xVec)})g_1(\xVec, \xi)}_{L_GV(\xVec, \xi)} \mathbf{k}(\xVec)  \label{eq:dot_V_orbital} \\
+    &\dot{V}(\xVec, \xi) = \underbrace{(\xVec-\mathbf{ref})^{\top}\xi + (\xi - \mathbf{k_0(\xVec)})f_1(\xVec, \xi)}_{L_fV(\xVec, \xi)} + \underbrace{(\xi - \mathbf{k_0(\xVec)})}_{L_GV(\xVec, \xi)} \mathbf{k}(\xVec)  \label{eq:dot_V_orbital} \\
     &\gamma(\xVec)  = V(\xVec) \label{eq:CLF_gamma_orbital}
 \end{align}
 \label{eq:CLF_orbital}
@@ -343,7 +339,7 @@ With the ellipse axis \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}
 \begin{subequations}
    \begin{align}
     &h(\xVec, \xi) = h_0(\xVec) -  \frac{1}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:h_orbital} \\
-    &\dot{h}(\xVec, \xi) = \underbrace{L_Gh_0(\xVec)\xi - (\xi - \mathbf{k_0(\xVec)})f_1(\xVec, \xi)}_{L_fh(\xVec, \xi)} + \underbrace{ \Bigl(  - (\xi - \mathbf{k_0(\xVec)})g_1(\xVec, \xi)\Bigr)}_{L_GV(\xVec, \xi)}  \mathbf{k}(\xVec)  \label{eq:dot_h_orbital} \\
+    &\dot{h}(\xVec, \xi) = \underbrace{L_Gh_0(\xVec)\xi - (\xi - \mathbf{k_0(\xVec)})f_1(\xVec, \xi)}_{L_fh(\xVec, \xi)} + \underbrace{ \Bigl(  - (\xi - \mathbf{k_0(\xVec)})\Bigr)}_{L_GV(\xVec, \xi)}  \mathbf{k}(\xVec)  \label{eq:dot_h_orbital} \\
     &\alpha(\xVec, \xi, \alpha = 1.2)  = \alpha h(\xVec, \xi) \label{eq:CBF_alpha_orbital}
 \end{align}
 \label{eq:CBF_orbital}

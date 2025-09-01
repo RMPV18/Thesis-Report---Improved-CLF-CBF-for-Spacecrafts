@@ -28,14 +28,14 @@ Considering a nonlinear control-affine system:
     \label{eq:Nonlinear-First-Order-System} 
 \end{equation}
 
-with stet \(\xVec \in \mathbb{R}^n\), control input \(\uVec \in \mathbb{R}^m\), and locally Lipschitz continuos\footnote{Given two metric spaces (\(X, d_X\)) and (\(Y, d_Y\)), where \(d_X\) and \(d_Y\)  represent the \(X\) and \(Y\) metrics respectively, a function \(f:X \to Y\) is Lipschitz continuos if there exist a constant \(L \geq 0\) such that \(\forall (x_1,x_2) \in X\), \hspace{0.4em} \(d_Y(f(x_1),f(x_2))\leq L \hspace{0.2em} d_X(x_1,x_2)\)} functions \(f: \mathbb{R}^n \to \mathbb{R}^n\) and \(g: \mathbb{R}^n \to \mathbb{R}^{n \times m}\). Given a locally Lipschitz continuos \(k: \mathbb{R}^n \to \mathbb{R}^m\), it results in the closed-loop system:
+with state \(\xVec \in \mathbb{R}^n\), control input \(\uVec \in \mathbb{R}^m\), and locally Lipschitz continuous\footnote{Given two metric spaces (\(X, d_X\)) and (\(Y, d_Y\)), where \(d_X\) and \(d_Y\)  represent the \(X\) and \(Y\) metrics respectively, a function \(f:X \to Y\) is Lipschitz continuos if there exist a constant \(L \geq 0\) such that \(\forall (x_1,x_2) \in X\), \hspace{0.4em} \(d_Y(f(x_1),f(x_2))\leq L \hspace{0.2em} d_X(x_1,x_2)\)} functions \(f: \mathbb{R}^n \to \mathbb{R}^n\) and \(g: \mathbb{R}^n \to \mathbb{R}^{n \times m}\). Given a locally Lipschitz continuos \(k: \mathbb{R}^n \to \mathbb{R}^m\), it results in the closed-loop system:
 
 \begin{equation}
     \dot{\xVec} = f(\xVec) + g(\xVec)k(\xVec)
     \label{eq:Nonlinear-First-Order-Closed-Loop-System} 
 \end{equation}
 
-For any initial condition \(\xVec_0 \in \mathbb{R}^n\), there is a maximal time interval \(\mathcal{I}(\xVec_0) = [0; t_{max}(\xVec_0)[ \) and unique continuosly differentiable solution \(\varphi: \mathcal{I}(\xVec_0) \to \mathbb{R}^n \) such that:
+For any initial condition \(\xVec_0 \in \mathbb{R}^n\), there is a maximal time interval \(\mathcal{I}(\xVec_0) = [0; t_{max}(\xVec_0)[ \) and unique continuously differentiable solution \(\varphi: \mathcal{I}(\xVec_0) \to \mathbb{R}^n \) such that:
 
 \begin{equation}
     \begin{array}{l}
@@ -46,7 +46,7 @@ For any initial condition \(\xVec_0 \in \mathbb{R}^n\), there is a maximal time 
 \end{equation}
 
 
-\subsection{First-Order Formulation}
+\subsection{Relative Degree One Formulation}
 \label{sub:formulation}
 
 \subsubsection{\glsxtrfull{CLF}}
@@ -149,11 +149,11 @@ In case of conditions' conflict, in order to the closed loop system~\ref{eq:Nonl
 Having \(\delta\) as an optimization variable not only allows to balance between the input values exceed usage and the level of relaxation but also to not have a fixed \(\delta\) value which would result for all states not so faster convergence and to the neighborhood of the equilibrium point instead of the actual target point. \\
 
 %tikz daquele esquema
-\begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
-\begin{itemize}
-    \item If it's not pretended to enforce stability or safety, just remove from the optimization problem the respective constraint responsible to it
-\end{itemize}
-\end{tcolorbox}
+% \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
+% \begin{itemize}
+%     \item If it's not pretended to enforce stability or safety, just remove from the optimization problem the respective constraint responsible to it
+% \end{itemize}
+% \end{tcolorbox}
 
 \newpage %Só para ajeitar
 
@@ -243,13 +243,13 @@ It's expected that  \( \gamma << \gamma'\)  contributing to a faster convergence
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
     \item If it's not pretended to enforce stability or safety, just remove from both optimization problem (\ref{eq:CLF-CBF-QP-relaxed-0Backstep} and \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) the respective constraint responsible to it
-    \item If it's a higher-order (than second) system, then, assuming it's a third-order system, the solution obtained in \ref{eq:CLF-CBF-QP-relaxed-1Backstep} is the "new \(k_0\)" and the third-order solution tries to converge to the second-order one (while this one is converging to the first-order solution)
+    %\item If it's a higher-order (than second) system, then, assuming it's a third-order system, the solution obtained in \ref{eq:CLF-CBF-QP-relaxed-1Backstep} is the "new \(k_0\)" and the third-order solution tries to converge to the second-order one (while this one is converging to the first-order solution)
 \end{itemize}
 \end{tcolorbox} 
 
 
 
-\subsection{Closed Form}
+\subsection{Closed Form Solution}
 \label{sub:closed_form}
 
 The objective of this thesis is to purpose a set of low computational effort techniques suitable to spacecrafts. Aiming a faster computation of the optimization problems solutions, any of the previous \glsxtrshort{QP}s (\ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) have a closed-form\footnote{An closed-form expression is expressed by a limit number and well defined operations (elementary functions)} solution which allows to calculate directly the respective solution instead of depending of a numerical solver. Given the \glsxtrshort{QP} optimization problem and a controller \(k(\xVec, \mathcolor{gray}{\mathbf{\xi}}): \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p} \to \mathbb{R}^m\) \textcolor{gray}{(if it is a second-order system)}:
