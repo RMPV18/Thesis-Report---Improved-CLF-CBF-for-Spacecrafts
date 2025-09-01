@@ -20,8 +20,6 @@ The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{su
 \subsection{Decision Algorithms}
 \label{subsec:decision_algorithms}
 
-%The respective algorithms have some parameters to be defined to attend the problem needs.
-
 \subsubsection{\glsxtrshort{A-JO}}
 \label{subsubsec:A-JO_parameters}
 
@@ -199,36 +197,173 @@ With \(\mathbf{k}_{0,\xi}(\xVec)\) and \(\theta(\xVec)\) given by:
 \subsubsection{Type of Experiments}
 \label{subsubsec:unicyle_type_of_experiments}
 
-Falar do tipo de simulaçoes que se vai fazer que basicamente se resume a:\\
--falar dos valores tomados pelas axis das elipses\\
--falar do centro da elipse\\
--referir com base nos valores tomados pelas axis se é um circululo uma ellipse na horizontal, vertical ou diagonal relativamente ao uniciclo\\
--o valor inicial, posição e orientação dos sistema\\
 
-NOTA: A medida que for escolhendo as simulaçoes ir metendo aqui a descrição delas (breve diria eu e direta).\par
-Cada um dos experimentos descritos tem uma label ou nao mas seja como for sao destinguidos por ex:\textcolor{blue}{\underline{U.C.H.F.Pe)}} (Unicycle Circle Horizontal Far Perpendicular) talvez com cor diferente, tipo de letra, a bold ou sublinhadodo e com label mas não subsubsecção para não dar demasiado destque diria eu e confundir
+During the experiments the \glsxtrshort{CLF-CBF} provide a new solution each \(0.005\) seconds.\\
 
 
-Os experimentos que não entrarem aqui seram colocados nos anexos
+\underline{UCC}:
+\label{ssssec:UCC} %Unicycle Circular Close 
+\begin{itemize}
+  \item The unicycle starts at \(\xVec_0 = \Bigl[\begin{smallmatrix} 0 \\ 0 \\ \frac{\pi}{4}  \end{smallmatrix}\Bigr]\) and moves towards \(\refVec = \bigl[\begin{smallmatrix} 2.9563 \\ 2.9832 \end{smallmatrix}\bigr]\)
+  \item The obstacle separating the vehicle and \txtref is a circle centered in \(\mathbf{p} = \bigl[\begin{smallmatrix} 2.1213 \\ 2.1213 \end{smallmatrix}\bigr] \) with radius equal one, \(\mathbf{A_{xis}} = \mathbf{I}_{2 \times 2}\).
+\end{itemize}
+
+\underline{UCF}:
+\label{ssssec:UCF} %Unicycle Circular Far 
+\begin{itemize}
+  \item The unicycle starts at \(\xVec_0 = \Bigl[\begin{smallmatrix} 0 \\ 0 \\ \frac{\pi}{4}  \end{smallmatrix}\Bigr]\) and moves towards now a far location \(\refVec = \bigl[\begin{smallmatrix} 4.2087 \\ 4.2760 \end{smallmatrix}\bigr]\)
+  \item The obstacle separating the vehicle and \txtref is again a circle centered in \(\mathbf{p} = \bigl[\begin{smallmatrix} 2.1213 \\ 2.1213 \end{smallmatrix}\bigr] \) with radius equal one, \(\mathbf{A_{xis}} = \mathbf{I}_{2 \times 2}\).
+\end{itemize}
+
+\underline{UEV}:
+\label{ssssec:UEV} %Unicycle Ellipsoide Vertical 
+\begin{itemize}
+  \item The unicycle starts at \(\xVec_0 = \Bigl[\begin{smallmatrix} 0 \\ 0 \\ 0 \end{smallmatrix}\Bigr]\) and moves towards  \(\refVec = \bigl[\begin{smallmatrix} 6.9915 \\ 0.2064 \end{smallmatrix}\bigr]\)
+  \item The obstacle separating the vehicle and \txtref is a ellipse centered in \(\mathbf{p} = \bigl[\begin{smallmatrix} 4.5 \\ 0 \end{smallmatrix}\bigr] \) with its biggest axis making a more acute angle with the unicycle unsafe inertial speed when it reaches the obstacle, \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} 2 & 0\\ 0 & 1\end{smallmatrix}\bigr]\).
+\end{itemize}
+
+\underline{UEH}:
+\label{ssssec:UEH} %Unicycle Ellipsoide Horizontal 
+\begin{itemize}
+  \item The unicycle starts at \(\xVec_0 = \Bigl[\begin{smallmatrix} 0 \\ 0 \\ 0 \end{smallmatrix}\Bigr]\) and moves towards  \(\refVec = \bigl[\begin{smallmatrix} 4.9966 \\ 0.0826 \end{smallmatrix}\bigr]\)
+  \item The obstacle separating the vehicle and \txtref is a ellipse centered in \(\mathbf{p} = \bigl[\begin{smallmatrix} 4 \\ 0 \end{smallmatrix}\bigr] \) with its smallest axis making a more acute angle with the unicycle unsafe inertial speed when it reaches the obstacle, \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} 1 & 0\\ 0 & 2\end{smallmatrix}\bigr]\).
+\end{itemize}
+
+
+\underline{UED}:
+\label{ssssec:UED} %Unicycle Ellipsoide Diagonal 
+\begin{itemize}
+  \item The unicycle starts at \(\xVec_0 = \Bigl[\begin{smallmatrix} 0 \\ 0 \\ 0 \end{smallmatrix}\Bigr]\) and moves towards  \(\refVec = \bigl[\begin{smallmatrix} 9 \\ 0 \end{smallmatrix}\bigr]\)
+  \item The obstacle separating the vehicle and \txtref is a ellipse centered in \(\mathbf{p} = \bigl[\begin{smallmatrix} 6 \\ 1 \end{smallmatrix}\bigr] \), diagonally against the unicycle, \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} 1 & -1.35\\ -1.35 & 0.7\end{smallmatrix}\bigr]\).
+\end{itemize}
 
 
 
 \subsection{Orbital}
 \label{subsec:orbital_simul_setup}
 
+The satellites, space ships... orbiting around a celestial body are vulnerable to found sapce debris, other ships, among other space elements that could put in risk the highly regarded safety of the ships, and to avoid them demanding more of the limited resources such as fuel, energy consume... Given that like in the unicycle case this represents an example of safety-critical control subject to an optimization of its path.  More than that, the computers presented on the vehicles are designed to demand low energy consume, they need to have an suited shielding but also low weight, among other specifications which results in lower power processors, receptive to lower-effort control techniques.     
+
+
 \subsubsection{Dynamics}
 \label{subsubsec:orbital_dynamics}
 
+The vehicle is trying to converge to a formation position, following an theoretical circular Kepler orbit~\footnote{Escrever o que é uma orbita de keplker} with constant null latitude, in an environment subject to \(J_2\)~\footnote{escrever o que e uma perturbação J2 e ela provem da onda, do formato esferoide oblato (se der, resultante da rotação axial)} perturbations. It has thrusters in all directions, with unconstrained power or some variation of it, and also without a fuel/energy limitation. It is considered a chaser spacecraft with equal null latitude as the reference \txtref is trying to rendezvous~\footnote{}, and is assumed the obstacles encountered, or preferebly the other ship formation, with infinite length in the direction perpedicular to the equatorial plane, disabling the possibilitie of the ship to move in that direction to avoid them, providing a problem with just two-dimensional Euclidian Space safety contraints.  The model, based on the second-order \glsxtrshort{NERM}, is:
 
+\begin{equation}
+  \begin{bmatrix} \partial \dot{x} \\ \partial \dot{y} \\  \partial\ddot{ x } \\ \partial\ddot{ y} \end{bmatrix} = \begin{bmatrix}
+  \partial\dot{ x } \\ \partial\dot{ y } \\ 2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ 2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2} 
+  \end{bmatrix} - \begin{bmatrix}
+  \mathbf{0}_{2 \times 1} \\  R_{\text{\tiny LVLH,ECI}}(\nu)^.p_{J_2}(\theta_t, \partial x, \partial y)
+  \end{bmatrix} + \begin{bmatrix}
+  \mathbf{0}_{2 \times 1} \\ \mathbf{T}
+  \end{bmatrix}
+  \label{eq:orbital_dynamics}
+\end{equation}
+
+With (\( \partial x, \partial y\)) as the position of the chaser relative to the target in the \glsxtrshort{LVLH} frame, (\(\dot{\partial x}, \dot{\partial y}\)) as the relative speed, \(\theta_t\) equal to the target true anomaly and \(\dot{\theta_t} = \sqrt{\frac{\mu}{r_t^3}}\) equivalent to the (mean) orbital rate, the earth \(\mu = 3.983 \times 10^{14} \hspace{0.2em} m^3/s^2\), \(r_t\) is the radius of the target orbit. The thrusters\(\mathbf{T}\) corresponds to the controllable input  values. The pertubation \(p_{J2}\) is in the \glsxtrshort{ECI} referencial so is applied a change of basis to the \glsxtrshort{LVLH} frame with \(R_{\text{\tiny LVLH,ECI}}(\Omega,\nu)\).
+
+\begin{align}
+  &p_{J2} = -\frac{3}{2} \frac{J_2 \mu R^2}{r_t^5}\Bigl(r_{t}(\theta_t)+ R^{-1}_{\text{\tiny LVLH,ECI}}(\nu) \begin{bmatrix}\partial x \\ \partial y\end{bmatrix}\Bigr) \label{eq:J2_peturbation} \\
+  &r_t(\theta_t) = r_t\begin{bmatrix} cos(\theta_t) \\ sin(\theta_t)\end{bmatrix}\label{eq:circular_kepler_orbit_position} \\
+  &R_{\text{\tiny LVLH,ECI}}(\nu) = \begin{bmatrix}
+    cos(\nu) & sin(\nu) \\ -sin(\nu) & cos(\nu)
+   \end{bmatrix}
+  \label{eq:LVLH_ECI_2D_Rotation_Matrix}
+\end{align}
+
+With \(\nu = \omega + \theta_t = \theta_t = \dot{\theta_t} t \) as the argument of latitude, \(\omega\) as the argument of periapsis. So, adding a new state \(\theta_t\):
+
+
+\begin{equation}
+  \dot{\xVec}_{aug} = \begin{bmatrix} \dot{\xVec} \\  \dot{\theta_t} \end{bmatrix} = \begin{bmatrix}
+  \partial \dot{x} \\ \partial \dot{y} \\  \partial\ddot{ x } \\ \partial\ddot{ y} \\ \sqrt{\frac{\mu}{r_t^3}} 
+  \end{bmatrix} 
+  \label{eq:orbital_dynamics_augmented}
+\end{equation}
+
+
+%This augmented dynamics are used just for simulation of the state propagation, for bakstepping purposes is used \ref{eq:orbital_dynamics}.
 
 \subsubsection{\glsxtrshort{CLF-CBF} Formulation}
 \label{subsubsec:Orbital_CLF-CBF_Experiment_Setup}
+
+
+The given system is non-linear and in strict-feedback form \ref{eq:HH-NL-System}:
+
+\begin{align}
+  & f_0(\xVec) = \mathbf{0}_{2 \times 1}   \notag \\  &g_0(\xVec) = \begin{bmatrix}
+   1 & 0 & 0\\  0& 1& 0
+  \end{bmatrix} \label{eq:orbital_0_dyn} \\ \notag \\
+  & f_1(\xVec,\xi) = \begin{bmatrix}  2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t+ \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ 2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2} \\  \sqrt{\frac{\mu}{r_t^3}}  \end{bmatrix} - \begin{bmatrix}  R_{\text{\tiny LVLH,ECI}}(\theta_t)^.p_{J_2}(\theta_t, \partial x, \partial y) \\ 0\end{bmatrix}   
+  \notag \\ & g_1(\xVec, \xi) = \begin{bmatrix}
+   1 & 0\\  0& 1\\ 0 & 0 
+  \end{bmatrix} \label{eq:orbital_1_dyn}
+\end{align}
+
+With \(\xVec = \bigl[\begin{smallmatrix} \partial x \\ \partial y \end{smallmatrix} \bigr]\) and \(\xi = \Bigl[\begin{smallmatrix} \partial \dot{x} \\ \partial \dot{y} \\ \theta_t \end{smallmatrix} \Bigr]\). \\
+
+Following the standart backstepping technique~\ref{sub:backstepping}, to obtain the first-order solution \(\mathbf{k}_0(\xVec)\) is considered the system \ref{eq:NL-CL-System-0Backstep}. The first-order \glsxtrshort{CLF} \(V_0\) stabilizing the system in \(\refVec \in \mathbb{R}^2\) is given by:
+
+
+\begin{subequations}
+   \begin{align}
+    &V_0(\xVec) = \frac{1}{2}(\xVec-\mathbf{ref})^{\top}(\xVec-\mathbf{ref}) \label{eq:V0_unicycle} \\
+    &\dot{V_0}(\xVec) = \underbrace{(\xVec-\mathbf{ref})^{\top}g_0(\xVec)}_{L_GV_0(\xVec)}\mathbf{k}_0(\xVec)  \label{eq:dot_V0_unicycle} \\
+    &\gamma_0(\xVec)  = V_0(\xVec) \label{eq:CLF_gamma0_unicycle}
+\end{align}
+\label{eq:CLF0_unicycle}
+\end{subequations}
+
+
+The safety is defined by \glsxtrshort{CBF} \(h_0\), restricting the obstacles using a ellipsoidal fit~\ref{eq:Ellipsoidal_fit}:
+
+\begin{subequations}
+   \begin{align}
+    &h_0(\xVec) = (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}(\xVec-\mathbf{p}) - 1 \label{eq:h0_orbital} \\
+    &\dot{h_0}(\xVec) = (\underbrace{(\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}g_0(\xVec)}_{L_Gh_0(\xVec)})\mathbf{k}_0(\xVec)  \label{eq:dot_h0_unicycle} \\
+    &\alpha_0(\xVec, \alpha)  = \alpha h_0(\xVec) \label{eq:CBF_alpha0_orbital}
+\end{align}
+\label{eq:CBF0_orbital}
+\end{subequations}
+
+
+With the ellipse axis \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}\)  and the center of the ellipse \(\mathbf{p} \in \mathbb{R}^2\), both associated a value in \ref{subsubsec:unicyle_type_of_experiments}. Given the high-order system, the solution \(\mathbf{k}_0(\xVec)\), the \glsxtrshort{CLF} \(V\) and \glsxtrshort{CBF} \(V\) are defined (according to \ref{eq:Backstepp_CF}) as:
+
+
+\begin{subequations}
+   \begin{align}
+    &V(\xVec, \xi) = V_0(\xVec) + \frac{1}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:V_orbital} \\
+    &\dot{V}(\xVec, \xi) = \underbrace{(\xVec-\mathbf{ref})^{\top}g_0(\xVec)\xi + (\xi - \mathbf{k_0(\xVec)})f_1(\xVec, \xi)}_{L_fV(\xVec, \xi)} + \underbrace{(\xi - \mathbf{k_0(\xVec)})g_1(\xVec, \xi)}_{L_GV(\xVec, \xi)} \mathbf{k}(\xVec)  \label{eq:dot_V_orbital} \\
+    &\gamma(\xVec)  = V(\xVec) \label{eq:CLF_gamma_orbital}
+\end{align}
+\label{eq:CLF_orbital}
+\end{subequations}
+
+\begin{subequations}
+   \begin{align}
+    &h(\xVec, \xi) = h_0(\xVec) -  \frac{1}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:h_orbital} \\
+    &\dot{h}(\xVec, \xi) = \underbrace{L_Gh_0(\xVec)\xi - (\xi - \mathbf{k_0(\xVec)})f_1(\xVec, \xi)}_{L_fh(\xVec, \xi)} + \underbrace{ \Bigl(  - (\xi - \mathbf{k_0(\xVec)})g_1(\xVec, \xi)\Bigr)}_{L_GV(\xVec, \xi)}  \mathbf{k}(\xVec)  \label{eq:dot_h_orbital} \\
+    &\alpha(\xVec, \xi, \alpha = 1.2)  = \alpha h(\xVec, \xi) \label{eq:CBF_alpha_orbital}
+\end{align}
+\label{eq:CBF_orbital}
+\end{subequations}
+
+
 
 
 \subsubsection{Type of Experiments}
 \label{subsubsec:orbital_type_of_experiments}
 
 
+
+\textcolor{red}{-Acho que vão ser todos iguais aos do unicycle fora a defenição de alguns parametros que se tem de indicar para defenir a orbita.\\
+-Os experimentos que não entrarem aqui talvez serão colocados nos anexos. \\
+-Acho que estes são os que agregam mais para já.\\
+-Ainda assim parace que tenho pouco conteudo logo parece que deveria ter resultados para quando se usa o algoritmo de Binary Search, e quando se usa o Polytope Fit embora exija que eu adicione à metdologia o algporitmo para se obter o ponto de contorno para esses fits.\\
+-Cheguei à conclusão que para mais que um obstaculo desvaloriza a tecnica e que seria outro topico a parte que exigiria outras estratégias que eu tenho mas necessitaria de mais tempo para implementar se assim for o caso. 
+-Algumas explicaçoes não batem muito certo com o que os graficos mostram mas é pela reformulação das tecnicas acho que iram corrigir e vai passar a bater certo quando implementadas
+}
 
 \subsection{Some Data}
 \label{subsec:some_data}
@@ -238,12 +373,13 @@ The computational time for each experiment is given based on a single test (one 
 
 
 
+\newpage %só para ajeitar
 
 
 \section{Experiments}
 \label{sec:experiments}
 
-The dynamical system propagation with respective decision algorithm~\ref{subsec:decision_algorithms} during the experiments is simulated using the \glsxtrlong{DP} integrative method~\ref{eq:Dormand-Prince_Tableu}. So, given a dynamical system (unicycle~\ref{eq:unicycle_model} or orbital~\ref{subsubsec:orbital_model}) \(f:\mathbb{R}^n \to \mathbb{R}^n\), at \( \xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\), a sampling time \(\Delta t = 0.005\) seconds and a total of \(6000\) iterations totaling a simulation of \(30\) seconds:
+The dynamical system propagation with respective decision algorithm~\ref{subsec:decision_algorithms} during the experiments is simulated using the \glsxtrlong{DP} integrative method~\ref{eq:Dormand-Prince_Tableu}. So, given a dynamical system (unicycle~\ref{eq:unicycle_model} or orbital~\ref{eq:orbital_dynamics_augmented}) \(f:\mathbb{R}^n \to \mathbb{R}^n\), at \( \xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\), a sampling time \(\Delta t = 0.005\) seconds (\(\leq\) than \glsxtrshort{CLF-CBF} calling time \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}) and a total of \(6000\) iterations totaling a simulation of \(30\) seconds:
 
 
 \begin{equation}
@@ -258,29 +394,32 @@ Where \(SPS\) (State Propagation Simulation) is the algorithm~\ref{alg:State_Pro
 \subsection{Unicycle}
 \label{subsec:unicycle_experiments}
 
-\underline{UCCL}
-\label{ssssec:UCCL} %Unicycle Circular Close Looking
+
+\underline{UCC}
+\label{ssssec:UCC_experiment} %Unicycle Circular Close Looking
 
 
 \begin{figure}[htbp]
   \begin{subfigure}{0.6\textwidth}
     \centering
-    \includegraphics[width=0.99\linewidth]{UCCL.png}
+    \includegraphics[width=0.99\linewidth]{UCC.png}
   %\caption{A figure with two sub-figures!}
-  \label{fig:UCCL_CostEvol}
+  \label{fig:UCC_CostEvol}
   \end{subfigure}
   \begin{subfigure}{0.59\textwidth}
     \centering
-    \includegraphics[width=0.95\linewidth]{UCCL_costs.png}
+    \includegraphics[width=0.95\linewidth]{UCC_costs.png}
   %\caption{A figure with two sub-figures!}
-  \label{fig:UCCL_trajectory}
+  \label{fig:UCC_trajectory}
   \end{subfigure}
-  \caption{UCCL~\ref{}}
-\label{fig:UCCLTrajectory_and_CostEvol}
+  \caption{UCC~\ref{ssssec:UCC}}
+\label{fig:UCCTrajectory_and_CostEvol}
 \end{figure}
 
 
-Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps beeing purely based on a \glsxtrshort{CLF-CBF} technique which lacks a bigger prediction horizon and thus taking the unicycle close to the obstacle as it is the way that approximates more to the \(\mathbf{ref}\) in the moment (less state cost compared to A-CLF-summed), obligating eventually to higher input values (generally bigger than CLF-summed) to deviate from the barrier safely while forcing as much as possible a speed of convergence to \(\mathbf{ref}\).  The \glsxtrshort{A-CLF-S} following the other point first results in a initially not so fast approximation to \txtref but (this forcing but informative point predicts an) to a shorter countour path and that allows to avoid abrupt maneuvers leading to less input cost.  
+Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps beeing purely based on a \glsxtrshort{CLF-CBF} technique which lacks a bigger prediction horizon and thus taking the unicycle close to the obstacle as it is the way that approximates more to the \(\mathbf{ref}\) in the moment (less state cost initially compared to A-CLF-summed), obligating eventually to higher input values to deviate from the barrier safely while forcing as much as possible a speed of convergence to \(\mathbf{ref}\).  The \glsxtrshort{A-CLF-S} following the other point first results in a initially not so fast approximation to \txtref but to a shorter countour path and that allows to avoid abrupt maneuvers leading to less input cost.  
+
+ \newpage %so para ajeiutar
 
 
   \bgroup
@@ -295,39 +434,38 @@ Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps
     \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
     Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 22.965 & 6440  & 6448.8 & 12889 \\
     \midrule
-    \caption{Some UCCL Data}
-    \label{tab:Some_UCCL_Data}\\
+    \caption{Some UCC Data}
+    \label{tab:Some_UCC_Data}\\
    \end{xltabular}
  \egroup
 
 However the \glsxtrshort{A-JO} was less time consuming than \glsxtrshort{A-CLF-S} during the experiment as it reached the final location faster and owing to an optimization of \(\alpha\) parameter by \glsxtrshort{A-CLF-S} too, the resulting cost is comparably way higher. \\
 
-\newpage %so para ajeutar
 
-\underline{UCFL}
-\label{UCFL} %Unicycle Circular Close Looking
+\underline{UCF}
+\label{ssssec:UCF_experiments} %Unicycle Circular Close Looking
 
 
 \begin{figure}[htbp]
   \begin{subfigure}{0.6\textwidth}
     \centering
-    \includegraphics[width=0.99\linewidth]{UCFL.png}
+    \includegraphics[width=0.99\linewidth]{UCF.png}
   %\caption{A figure with two sub-figures!}
-  \label{fig:UCFL_CostEvol}
+  \label{fig:UCF_CostEvol}
   \end{subfigure}
   \begin{subfigure}{0.59\textwidth}
     \centering
-    \includegraphics[width=0.95\linewidth]{UCFL_costs.png}
+    \includegraphics[width=0.95\linewidth]{UCF_costs.png}
   %\caption{A figure with two sub-figures!}
-  \label{fig:UCFL_trajectory}
+  \label{fig:UCF_trajectory}
   \end{subfigure}
-  \caption{UCFL~\ref{}}
-\label{fig:UCFLTrajectory_and_CostEvol}
+  \caption{UCF~\ref{ssssec:UCF}}
+\label{fig:UCFTrajectory_and_CostEvol}
 \end{figure}
 
 
 
-The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with \glsxtrshort{A-CLF-S} as it was seen in UCCL\ref{ssssec:UCCL}. The \glsxtrshort{A-CLF-S} reveals a relatively similar path to the optimal solution but a faster convergence to \txtref as the \(\gamma\) parameter value (not subject to an optimization) is not suited, which results in higher inputs and penalizing in the total cost. 
+The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with \glsxtrshort{A-CLF-S} as it was seen in UCC\ref{ssssec:UCC_experiment}. The \glsxtrshort{A-CLF-S} reveals a relatively similar path to the optimal solution but a faster convergence to \txtref as the \(\gamma\) parameter value (not subject to an optimization) is not suited, which results in higher inputs and penalizing in the total cost. 
 
 
 
@@ -343,15 +481,15 @@ The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with
     \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
     Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 22.16 & 12330  & 12348 & 24678 \\
     \midrule
-    \caption{Some UCFL Data}
-   \label{tab:Some_UCFL_Data}\\
+    \caption{Some UCF Data}
+   \label{tab:Some_UCF_Data}\\
    \end{xltabular}
  \egroup
 
  \newpage %so para ajeiutar
 
 \underline{UEV}
-\label{UEV} %Unicycle Ellipse Vertical
+\label{ssssec:UEV_experiments} %Unicycle Ellipse Vertical
 
  \begin{figure}[htbp]
   \begin{subfigure}{0.6\textwidth}
@@ -366,11 +504,11 @@ The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with
   %\caption{A figure with two sub-figures!}
   \label{fig:UEV_trajectory}
   \end{subfigure}
-  \caption{UEV~\ref{}}
+  \caption{UEV~\ref{ssssec:UEV}}
 \label{fig:UEVTrajectory_and_CostEvol}
 \end{figure}
 
-Now given an ellipsoidal obstacle, the bigger the axis, making a lower angle with the theoretical vehicle always safe trajectory, relative to the other one the less impactful is \glsxtrshort{A-CLF-S}, not only because of new point demanding a so relevant maneuver but also because of the respective ellipse CBF natural imposure of a more soft avoidance. 
+Now given an ellipsoidal obstacle, with this kind of axis configuration, the bigger the axis is relative to the other one, the less impactful is \glsxtrshort{A-CLF-S}, not only because of the new point demanding a not so relevant maneuver but also because of the respective ellipse \glsxtrshort{CBF} natural imposure of a more soft avoidance. 
 
 
  \bgroup
@@ -391,14 +529,14 @@ Now given an ellipsoidal obstacle, the bigger the axis, making a lower angle wit
  \egroup
 
 
- \glsxtrshort{A-JO} computational time keeps beeing lower than \glsxtrshort{A-CLF-S} but now for an not so worst cost.
+ \glsxtrshort{A-JO} computational time keeps beeing lower than \glsxtrshort{A-CLF-S} and now for an not so worst cost.
 
 
   \newpage %so para ajeiutar
 
 
 \underline{UEH}
-\label{UEH} %Unicycle Ellipse Vertical
+\label{ssssec:UEH_experiments} %Unicycle Ellipse Vertical
 
  \begin{figure}[htbp]
   \begin{subfigure}{0.6\textwidth}
@@ -413,12 +551,12 @@ Now given an ellipsoidal obstacle, the bigger the axis, making a lower angle wit
   %\caption{A figure with two sub-figures!}
   \label{fig:UEH_trajectory}
   \end{subfigure}
-  \caption{UEH~\ref{}}
+  \caption{UEH~\ref{ssssec:UEH}}
 \label{fig:UEHTrajectory_and_CostEvol}
 \end{figure}
 
 
-If in UEV~\ref{UEV} the \glsxtrshort{A-CLF-S} shows a relative worst performance, in this case its path cost is comparatively considerably better. Beyond that, Aimportant to say that against ellipsoides with its biggest axis near perpendicular to the theoretical vehicle always safe trajectory, or speacially straight surfaces, the best solution given by the \glsxtrshort{CLF-CBF} is to get as much as possible the system close to the obstacle as the \glsxtrshort{CLF-CBF} keeps giving control inputs that lead the system in that instant as close to the \txtref as possible in that exclusive moment, but the \glsxtrshort{A-CLF-S} converging to the contour point is capable to free from it. The \glsxtrshort{MPC} solution presented corresponds to a local minimum, but its path reveals a similar problem to \glsxtrshort{A-JO} due to the finite horizon and its objective function trying to approximate the system as much to \txtref instead of actually optimze its reaching time.
+If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relative worst performance, in this case its path cost is comparatively to it considerably better than \glsxtrshort{A-JO}. Beyond that, important to say that against this type of ellipsoides and orientation againts it and the \txtref, or speacially against straight surfaces, the best solution given by the \glsxtrshort{CLF-CBF} is to get the system as close to the obstacle, converging to the its surface, as the \glsxtrshort{CLF-CBF} keeps providing control inputs that lead the system as much closer as possible to the \txtref for each exclusive moment, while the \glsxtrshort{A-CLF-S} converging to the contour point is capable to free from it. The \glsxtrshort{MPC} solution presented corresponds to a local minimum, but its path reveals a similar problem to \glsxtrshort{A-JO} due to the finite horizon and its objective function trying to approximate the system as much to \txtref instead of actually optimize its reaching time.
 
 
 \bgroup
@@ -440,14 +578,14 @@ If in UEV~\ref{UEV} the \glsxtrshort{A-CLF-S} shows a relative worst performance
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
-    \item If the constraint is circular, the vehicle is oriented to the \txtref and to the center of the circle the unicycle converges to the obstacle limit.
+    \item If the constraint is circular and the vehicle is oriented to the \txtref and to the center of the circle, the unicycle converges to the obstacle limit.
   \end{itemize}
 \end{tcolorbox} 
 
 \newpage %so para ajeitar
 
 \underline{UED}
-\label{UED} %Unicycle Ellipse Vertical
+\label{UED_experiments} %Unicycle Ellipse Vertical
 
  \begin{figure}[htbp]
   \begin{subfigure}{0.6\textwidth}
@@ -462,12 +600,12 @@ If in UEV~\ref{UEV} the \glsxtrshort{A-CLF-S} shows a relative worst performance
   %\caption{A figure with two sub-figures!}
   \label{fig:UED_trajectory}
   \end{subfigure}
-  \caption{UED~\ref{}}
+  \caption{UED~\ref{ssssec:UED}}
 \label{fig:UEDTrajectory_and_CostEvol}
 \end{figure}
 
 
-As in UEH, although the other techiniques don't keep stuck, the \glsxtrshort{A-CLF-S} keeps showing a better result and the other suffering from the same limitations.
+As in UEH~\ref{ssssec:UEH_experiments}, although the other techiniques don't keep stuck, they keep the same characteristics and go for the longest side. While the \glsxtrshort{A-CLF-S} keeps showing a better result.
 
 
 \bgroup

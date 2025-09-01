@@ -194,7 +194,7 @@ for any initial states \((\xVec_0, \mathbf{\xi}_0) \in \mathbb{R}^n \times \math
 \subsubsection{Purposal Solution Obtaining}
 \label{subsub:quadratic_program_formulation}
 
-Since having a second order system~\ref{eq:HH-NL-System} the access to \(\mathbf{\xi}\) is not direct, we must "backstepp" in order to be able to control \(\uVec\), affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\). The strategy passes by obtaining the solution if it was a first order system~\ref{eq:Nonlinear-First-Order-System} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input), so given a differentiable and locally Lipschitz continuos \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
+Having a second order system~\ref{eq:HH-NL-System} the output dynamic don't have direct access to control \(\uVec\) or even is able to control \(\mathbf{\xi}\). In order to affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\), the strategy passes by obtaining the solution if it was a first order system~\ref{eq:Nonlinear-First-Order-System} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input), so given a differentiable and locally Lipschitz continuos \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
 
 \begin{equation}
     \dot{\xVec} = f_0(\xVec) + g_0(\xVec) k_0(\xVec)\\ 
