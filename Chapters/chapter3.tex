@@ -245,7 +245,6 @@ During the experiments the \glsxtrshort{CLF-CBF} provide a new solution each \(0
 
 The satellites, space ships... orbiting around a celestial body are vulnerable to found sapce debris, other ships, among other space elements that could put in risk the highly regarded safety of the ships, and to avoid them demanding more of the limited resources such as fuel, energy consume... Given that like in the unicycle case this represents an example of safety-critical control subject to an optimization of its path.  More than that, the computers presented on the vehicles are designed to demand low energy consume, they need to have an suited shielding but also low weight, among other specifications which results in lower power processors, receptive to lower-effort control techniques.     
 
-
 \subsubsection{Dynamics}
 \label{subsubsec:orbital_dynamics}
 
@@ -254,47 +253,25 @@ The vehicle is trying to converge to a formation position, following an theoreti
 \begin{equation}
   \begin{bmatrix} \partial \dot{x} \\ \partial \dot{y} \\  \partial\ddot{ x } \\ \partial\ddot{ y} \end{bmatrix} = \begin{bmatrix}
   \partial\dot{ x } \\ \partial\dot{ y } \\ 2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ -2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} 
-  \end{bmatrix} - \begin{bmatrix}
-  \mathbf{0}_{2 \times 1} \\  R_{\text{\tiny LVLH,ECI}}(\nu)^.p_{J_2}(\theta_t, \partial x, \partial y)
   \end{bmatrix} + \begin{bmatrix}
   \mathbf{0}_{2 \times 1} \\ \mathbf{T}
   \end{bmatrix}
   \label{eq:orbital_dynamics}
 \end{equation}
 
-With (\( \partial x, \partial y\)) as the position of the chaser relative to the target in the \glsxtrshort{LVLH} frame, (\(\dot{\partial x}, \dot{\partial y}\)) as the relative speed, \(\theta_t\) equal to the target true anomaly and \(\dot{\theta_t} = \sqrt{\frac{\mu}{r_t^3}}\) equivalent to the (mean) orbital rate, the earth \(\mu = 3.983 \times 10^{14} \hspace{0.2em} m^3/s^2\), \(r_t\) is the radius of the target orbit. The thrusters\(\mathbf{T}\) corresponds to the controllable input  values. The pertubation \(p_{J2}\) is in the \glsxtrshort{ECI} referencial so is applied a change of basis to the \glsxtrshort{LVLH} frame with \(R_{\text{\tiny LVLH,ECI}}(\Omega,\nu)\).
+With (\( \partial x, \partial y\)) as the position of the chaser relative to the target in the \glsxtrshort{LVLH} frame, (\(\dot{\partial x}, \dot{\partial y}\)) as the relative speed, \(\theta_t\) equal to the target true anomaly and \(\dot{\theta_t} = \sqrt{\frac{\mu}{r_t^3}}\) equivalent to the (mean) orbital rate, with \(\mu = GM\) (\(G\) the gravitational constant and \(M\) the celestial body mass), \(r_t\) is the radius of the target orbit. The thrusters\(\mathbf{T}\) corresponds to the controllable input values.
 
-\begin{align}
-  &p_{J2} = -\frac{3}{2} \frac{J_2 \mu R^2}{r_t^5}\Bigl(r_{t}(\theta_t)+ R^{-1}_{\text{\tiny LVLH,ECI}}(\nu) \begin{bmatrix}\partial x \\ \partial y\end{bmatrix}\Bigr) \label{eq:J2_peturbation} \\
-  &r_t(\theta_t) = r_t\begin{bmatrix} cos(\theta_t) \\ sin(\theta_t)\end{bmatrix}\label{eq:circular_kepler_orbit_position} \\
-  &R_{\text{\tiny LVLH,ECI}}(\nu) = \begin{bmatrix}
-    cos(\nu) & sin(\nu) \\ -sin(\nu) & cos(\nu)
-   \end{bmatrix}
-  \label{eq:LVLH_ECI_2D_Rotation_Matrix}
-\end{align}
-
-With \(\nu = \omega + \theta_t = \theta_t = \dot{\theta_t} t \) as the argument of latitude, \(\omega\) as the argument of periapsis. So, adding a new state \(\theta_t\):
-
-
-\begin{equation}
-  \dot{\xVec}_{aug} = \begin{bmatrix} \dot{\xVec} \\  \dot{\theta_t} \end{bmatrix} = \begin{bmatrix}
-  \partial \dot{x} \\ \partial \dot{y} \\  \partial\ddot{ x } \\ \partial\ddot{ y} \\ \sqrt{\frac{\mu}{r_t^3}} 
-  \end{bmatrix} 
-  \label{eq:orbital_dynamics_augmented}
-\end{equation}
-
-
-This augmented dynamics are used just for simulation of the state propagation, for bakstepping purposes is used \ref{eq:orbital_dynamics}.
+\newpage
 
 \subsubsection{\glsxtrshort{CLF-CBF} Formulation}
 \label{subsubsec:Orbital_CLF-CBF_Experiment_Setup}
 
-
 The given system is non-linear and in strict-feedback form \ref{eq:HH-NL-System}:
 
 \begin{align}
-  & f_0(\xVec) = \mathbf{0}_{2 \times 1}   \notag \\  &g_0(\xVec) = \mathbf{I}_{2 \times 2} \label{eq:orbital_0_dyn} \\ \notag \\
-  & f_1(\xVec,\xi) = \begin{bmatrix}  2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t+ \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ -2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} \end{bmatrix} -  R_{\text{\tiny LVLH,ECI}}(\theta_t)^.p_{J_2}(\theta_t, \partial x, \partial y)   
+  & f_0(\xVec) = \mathbf{0}_{2 \times 1}   \notag \\  
+  & g_0(\xVec) = \mathbf{I}_{2 \times 2} \label{eq:orbital_0_dyn} \\ \notag \\
+  & f_1(\xVec,\xi) = \begin{bmatrix}  2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t+ \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ -2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} \end{bmatrix} 
   \notag \\ & g_1(\xVec, \xi) = \mathbf{I_{2 \times 2}}\label{eq:orbital_1_dyn}
 \end{align}
 
@@ -302,60 +279,100 @@ With \(\xVec = \bigl[\begin{smallmatrix} \partial x \\ \partial y \end{smallmatr
 
 Following the standart backstepping technique~\ref{sub:backstepping}, to obtain the first-order solution \(\mathbf{k}_0(\xVec)\) is considered the system \ref{eq:NL-CL-System-0Backstep}. The first-order \glsxtrshort{CLF} \(V_0\) stabilizing the system in \(\refVec \in \mathbb{R}^2\) is given by:
 
-
 \begin{subequations}
-   \begin{align}
+  \begin{align}
     &V_0(\xVec) = \frac{1}{2}(\xVec-\mathbf{ref})^{\top}(\xVec-\mathbf{ref}) \label{eq:V0_unicycle} \\
     &\dot{V_0}(\xVec) = \underbrace{(\xVec-\mathbf{ref})^{\top}}_{L_GV_0(\xVec)}\mathbf{k}_0(\xVec)  \label{eq:dot_V0_unicycle} \\
-    &\gamma_0(\xVec)  = V_0(\xVec) \label{eq:CLF_gamma0_unicycle}
-\end{align}
+    &\gamma_0(\xVec)  = 0.1 V_0(\xVec) \label{eq:CLF_gamma0_unicycle}
+  \end{align}
 \label{eq:CLF0_unicycle}
 \end{subequations}
 
 
-The safety is defined by \glsxtrshort{CBF} \(h_0\), restricting the obstacles using a ellipsoidal fit~\ref{eq:Ellipsoidal_fit}:
+The safety is defined by \glsxtrshort{CBF} \(h_0\), restricting the obstacles using a square, obtained by doing a polytopic fit~\ref{eq:Polytope_fit}, a union of four 0-superlevel sets defined according its respective \glsxtrshort{CBF}, combined via \ref{eq:Max_smoothFunc_tighted} with its parameteres \(b = ln(4)\) and \(k = 20\). Each \glsxtrshort{CBF} \(h_{0_i}\) is defined by:
 
 \begin{subequations}
    \begin{align}
-    &h_0(\xVec) = (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}(\xVec-\mathbf{p}) - 1 \label{eq:h0_orbital} \\
-    &\dot{h_0}(\xVec) = (\underbrace{(\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}}_{L_Gh_0(\xVec)})\mathbf{k}_0(\xVec)  \label{eq:dot_h0_unicycle} \\
-    &\alpha_0(\xVec, \alpha)  = \alpha h_0(\xVec) \label{eq:CBF_alpha0_orbital}
+    &h_{0_1}(\xVec) = -\delta x + p_1 - \frac{sqe}{2}\label{eq:h0_1_orbital} \\
+    &\dot{h_{0_1}}(\xVec) = (\underbrace{\begin{bmatrix} -1 & 0 \end{bmatrix}}_{L_Gh_{0_1}(\xVec)})\mathbf{k}_0(\xVec)  \label{eq:dot_h0_1_unicycle} 
 \end{align}
-\label{eq:CBF0_orbital}
+\label{eq:CBF0_1_orbital}
 \end{subequations}
 
+\begin{subequations}
+   \begin{align}
+    &h_{0_2}(\xVec) = \delta y - p_2 - \frac{sqe}{2}\label{eq:h0_2_orbital} \\
+    &\dot{h_{0_2}}(\xVec) = (\underbrace{\begin{bmatrix} 0 & 1 \end{bmatrix}}_{L_Gh_{0_2}(\xVec)})\mathbf{k}_0(\xVec)  \label{eq:dot_h0_2_unicycle} 
+\end{align}
+\label{eq:CBF0_2_orbital}
+\end{subequations}
 
-With the ellipse axis \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}\)  and the center of the ellipse \(\mathbf{p} \in \mathbb{R}^2\), both associated a value in \ref{subsubsec:unicyle_type_of_experiments}. Given the high-order system, the solution \(\mathbf{k}_0(\xVec)\), the \glsxtrshort{CLF} \(V\) and \glsxtrshort{CBF} \(V\) are defined (according to \ref{eq:Backstepp_CF}) as:
+\begin{subequations}
+   \begin{align}
+    &h_{0_3}(\xVec) = \delta x - p_1 - \frac{sqe}{2}\label{eq:h0_3_orbital} \\
+    &\dot{h_{0_3}}(\xVec) = (\underbrace{\begin{bmatrix} 1 & 0 \end{bmatrix}}_{L_Gh_{0_3}(\xVec)})\mathbf{k}_0(\xVec)  \label{eq:dot_h0_3_unicycle} 
+\end{align}
+\label{eq:CBF0_3_orbital}
+\end{subequations}
+
+\begin{subequations}
+   \begin{align}
+    &h_{0_4}(\xVec) = -\delta y + p_2 - \frac{sqe}{2}\label{eq:h0_4_orbital} \\
+    &\dot{h_{0_4}}(\xVec) = (\underbrace{\begin{bmatrix} 0 & -1 \end{bmatrix}}_{L_Gh_{0_4}(\xVec)})\mathbf{k}_4(\xVec)  \label{eq:dot_h0_4_unicycle} 
+\end{align}
+\label{eq:CBF0_4_orbital}
+\end{subequations}
+
+\begin{equation}
+  \alpha_0(\xVec, \alpha)  = \alpha h_0(\xVec) 
+  \label{eq:CBF_alpha0_orbital}
+\end{equation}
+
+
+
+With  \(sqe \in \mathbb{R}_{\geq 0}\) as the square edge size and the center of the square \(\mathbf{p} \in \mathbb{R}^2\), both associated a value in \ref{subsubsec:orbital_type_of_experiments}. Given the high-order system, the solution \(\mathbf{k}_0(\xVec)\), the \glsxtrshort{CLF} \(V\) and \glsxtrshort{CBF} \(h\) are defined (according to \ref{eq:Backstepp_CF}) as:
 
 
 \begin{subequations}
    \begin{align}
-    &V(\xVec, \xi) = V_0(\xVec) + \frac{1}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:V_orbital} \\
-    &\dot{V}(\xVec, \xi) = \underbrace{(\xVec-\mathbf{ref})^{\top}\xi + (\xi - \mathbf{k_0(\xVec)})^{\top}f_1(\xVec, \xi)}_{L_fV(\xVec, \xi)} + \underbrace{(\xi - \mathbf{k_0(\xVec)})^{\top}}_{L_GV(\xVec, \xi)} \mathbf{k}(\xVec)  \label{eq:dot_V_orbital} \\
-    &\gamma(\xVec)  = V(\xVec) \label{eq:CLF_gamma_orbital}
+    &V(\xVec, \xi) = V_0(\xVec) + \frac{\eta}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:V_orbital} \\
+    &\dot{V}(\xVec, \xi) = \underbrace{(\xVec-\mathbf{ref})^{\top}\xi + \eta(\xi - \mathbf{k_0(\xVec)})^{\top}f_1(\xVec, \xi)}_{L_fV(\xVec, \xi)} + \underbrace{\eta(\xi - \mathbf{k_0(\xVec)})^{\top}}_{L_GV(\xVec, \xi)} \mathbf{k}(\xVec)  \label{eq:dot_V_orbital} \\
+    &\gamma(\xVec)  = 0.1 V(\xVec) \label{eq:CLF_gamma_orbital}
 \end{align}
 \label{eq:CLF_orbital}
 \end{subequations}
 
+Following the the square delimitation of the obstacle \ref{subsub:uniCBF_secondOrder_system}, now considering the second-order system and the obtained low-order controller \(\mathbf{k}_0(\xVec)\), the resultant \glsxtrshort{CBF} \(h\) is given by;
+
 \begin{subequations}
    \begin{align}
-    &h(\xVec, \xi) = h_0(\xVec) -  \frac{1}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:h_orbital} \\
-    &\dot{h}(\xVec, \xi) = \underbrace{L_Gh_0(\xVec)\xi - (\xi - \mathbf{k_0(\xVec)})^{\top}f_1(\xVec, \xi)}_{L_fh(\xVec, \xi)} + \underbrace{ \Bigl(  - (\xi - \mathbf{k_0(\xVec)})\Bigr)^{\top}}_{L_Gh(\xVec, \xi)}  \mathbf{k}(\xVec)  \label{eq:dot_h_orbital} \\
+    &h(\xVec, \xi) = h_0(\xVec) -  \frac{\eta}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:h_orbital} \\
+    &\dot{h}(\xVec, \xi) = \underbrace{L_Gh_0(\xVec)\xi - \eta (\xi - \mathbf{k_0(\xVec)})^{\top}f_1(\xVec, \xi)}_{L_fh(\xVec, \xi)} + \underbrace{ \Bigl(  - \eta(\xi - \mathbf{k_0(\xVec)})\Bigr)^{\top}}_{L_Gh(\xVec, \xi)}  \mathbf{k}(\xVec)  \label{eq:dot_h_orbital} \\
     &\alpha(\xVec, \xi, \alpha = 1.2)  = \alpha h(\xVec, \xi) \label{eq:CBF_alpha_orbital}
 \end{align}
 \label{eq:CBF_orbital}
 \end{subequations}
 
+With \(\eta = 700\).
 
-
+\newpage %Só para ajeitar
 
 \subsubsection{Type of Experiments}
 \label{subsubsec:orbital_type_of_experiments}
 
 
+During the experiments the \glsxtrshort{CLF-CBF} provide a new solution each \(0.005\) seconds.\\
 
-\textcolor{red}{-Acho que vão ser todos iguais aos do unicycle fora a defenição de alguns parametros que se tem de indicar para defenir a orbita.\\
-}
+
+\underline{OPC}:
+\label{ssssec:OPC} %Unicycle Circular Close 
+\begin{itemize}
+  \item The \glsxtrshort{LVLH} spacecraft centered (target) is doing a circular orbit around planet Earth \(\mu = 3.983 \times 10^{14} m^3/s^{2}\) with a radius \(r_t = 6.371 \times 10^6 m\)
+  \item The spacecraft starts at \(\xVec_0 = \Bigl[\begin{smallmatrix} 0 \\ 0 \\ 0 \\ 0  \end{smallmatrix}\Bigr]\) and moves towards \(\refVec = \bigl[\begin{smallmatrix} 3 \\ 0 \end{smallmatrix}\bigr]\)
+  \item The obstacle separating the vehicle and \txtref is a worst case scenario, a square centered in \(\mathbf{p} = \bigl[\begin{smallmatrix} 2 \\ 0 \end{smallmatrix}\bigr] \) with edges equal one, \(sqedge = 1 m\).
+\end{itemize}
+
+
 
 \subsection{Some Data}
 \label{subsec:some_data}
@@ -619,15 +636,53 @@ As in UEH~\ref{ssssec:UEH_experiments}, although the other techiniques don't kee
    \end{xltabular}
  \egroup
 
+ \newpage
 
 \subsection{Orbital}
 \label{subsec:orbital_experiments}
 
--mostrar as simulaçoes\\
--explicar os resultados obtidos
+\underline{OPC}
+\label{OPC_experiments} %Unicycle Ellipse Vertical
+
+ \begin{figure}[htbp]
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{OPC.pdf}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:OPC_CostEvol}
+  \end{subfigure}
+  \begin{subfigure}{0.6\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{OPC_costs.pdf}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:OPC_trajectory}
+  \end{subfigure}
+  \caption{OPC~\ref{ssssec:OPC}}
+\label{fig:OPCTrajectory_and_CostEvol}
+\end{figure}
 
 
+As in UEH~\ref{ssssec:UEH_experiments}, \glsxtrshort{A-JO} and \glsxtrshort{MPC}  kept stuck. While the \glsxtrshort{A-CLF-S} keeps showing a better result, proving the efficiency of it and in particular the polytopic contour points obtaining algorithm. 
 
+
+  \bgroup
+ \rowcolors{1}{}{orange!4}
+ \begin{xltabular}{\textwidth}{|l|cccccc|}
+   \toprule
+   \rowcolor{blue!6}%
+   Algorithms   & DecisionTime & OPtiTime & ReachTime  & InputCost   & StateCost & Cost           \\
+   \midrule
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 2.44e-4 & 1.48 & 30 & 45.901  & 4691.1  & 4737 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 3e-4 & 2.2     & 30 & 10.015 & 2322.1 &  2332.1 \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---  & ---     & 30  & 131.36 & 3094.7 & 3226.1 \\
+    \midrule
+    \caption{Some OPC Data}
+    \label{tab:Some_OPC_Data}\\
+   \end{xltabular}
+ \egroup
+
+
+The cost of the \glsxtrshort{A-CLF-S} showed to be even less than the supposed optimal solution.
 
 
 
