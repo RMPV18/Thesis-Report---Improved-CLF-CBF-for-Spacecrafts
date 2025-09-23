@@ -23,7 +23,7 @@ The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{su
 \subsubsection{\glsxtrshort{A-JO}}
 \label{subsubsec:A-JO_parameters}
 
-The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{eq:Cost_Function_Alpha}, which takes \(N=6000\) samples and has the weight cost matrices \(\mathbf{Q} = \mathbf{I}_{2\times 2} \) and \(\mathbf{R} = 5 \hspace{0.1em}^.\mathbf{I}_{2\times 2} \).\\
+The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{eq:Cost_Function_Alpha}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 0.2\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\\
 
 The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discrete_gradient_function} parameters used in these experiments are given by:
 
@@ -37,7 +37,7 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
    \rowcolor{Gainsboro}
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h, \hspace{0.25em} \alpha_{ini}$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 6000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+     \ref{eq:unicycle_model} or \ref{eq:orbital_dynamics_augmented}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -62,10 +62,12 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
 
 \newpage %so para ajeitar
 
- \subsubsection{Double \glsxtrshort{CLF}}
-\label{subsubsec:double_CLF_parameters}
+ \subsubsection{\glsxtrshort{A-CLF-S}}
+\label{subsubsec:A-CLF-S_parameters}
 
-The double \glsxtrshort{CLF} algorithms~\ref{subsec:Double_CLF} functions parameters are defined by:
+The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 0.2\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\\
+
+The \glsxtrshort{A-CLF-S} functions parameters are defined by:
 
  \bgroup
  \rowcolors{1}{}{GhostWhite}
@@ -76,7 +78,7 @@ The double \glsxtrshort{CLF} algorithms~\ref{subsec:Double_CLF} functions parame
    \rowcolor{Gainsboro}%
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 6000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+     \ref{eq:unicycle_model} or \ref{orbital_dynamics_augmented}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -84,15 +86,14 @@ The double \glsxtrshort{CLF} algorithms~\ref{subsec:Double_CLF} functions parame
 
   \bgroup
  \rowcolors{1}{}{GhostWhite}
- \begin{xltabular}{\textwidth}{lcccc}
+ \begin{xltabular}{\textwidth}{cccc}
    \caption{Double \glsxtrshort{CLF}~\ref{subsec:Double_CLF} Transition Parameters}
    \label{tab:Double-CLF:NCDV_parameters}\\
    \toprule
    \rowcolor{Gainsboro}%
-   Algorithms   & $\zeta$  & $\mu$  & $tol$   & $tol_2$            \\
+   $\zeta$  & $\mu$  & $tol$   & $tol_2$            \\
    \midrule
-    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 1         & $\frac{V_N(\xVec)}{V_C(\xVec)}$        & $0.03^.V_C(\xVec_0)$         & 999          \\
-    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---       & ---                                    & $0.05^.V_C(\xVec_0)$         & 50        \\
+     40         & $\frac{V_N(\xVec)}{V_C(\xVec)}$        & $0.01$         & 999          \\
     \midrule
    \end{xltabular}
  \egroup
@@ -146,7 +147,7 @@ In order to make the vehicle to the wanted position is formulated a \glsxtrshort
    \begin{align}
     &V_0(\xVec) = \frac{1}{2}(\xVec-\mathbf{ref})^{\top}(\xVec-\mathbf{ref}) \label{eq:V0_unicycle} \\
     &\dot{V_0}(\xVec) = \underbrace{(\xVec-\mathbf{ref})^{\top}}_{L_GV_0(\xVec)}\mathbf{k}_0(\xVec)  \label{eq:dot_V0_unicycle} \\
-    &\gamma_0(\xVec)  = V_0(\xVec) \label{eq:CLF_gamma0_unicycle}
+    &\gamma_0(\xVec)  = 0.1V_0(\xVec) \label{eq:CLF_gamma0_unicycle}
 \end{align}
 \label{eq:CLF0_unicycle}
 \end{subequations}
@@ -170,8 +171,8 @@ With \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}\) referent to th
 \begin{subequations}
    \begin{align}
     &V(\xVec, \xi) = V_0(\xVec) + 1 - cos(\theta - \theta_0(\xVec)) \label{eq:V_unicycle} \\
-    &\dot{V}(\xVec, \xi) = \Bigl(\underbrace{((\xVec-\mathbf{ref}))^{\top}g_0(\xVec, \mathbf{k}_{0,\xi}) + sin(\theta -\theta_0(\xVec))\begin{bmatrix} -L & L \end{bmatrix}}_{L_GV(\xVec, \xi)} \Bigr) \mathbf{k}(\xVec)  \label{eq:dot_V_unicycle} \\
-    &\gamma(\xVec)  = V(\xVec) \label{eq:CLF_gamma_unicycle}
+    &\dot{V}(\xVec, \xi) = \Bigl(\underbrace{((\xVec-\mathbf{ref}))^{\top}g_0(\xVec, \xi) + sin(\theta -\theta_0(\xVec))\begin{bmatrix} -L & L \end{bmatrix}}_{L_GV(\xVec, \xi)} \Bigr) \mathbf{k}(\xVec)  \label{eq:dot_V_unicycle} \\
+    &\gamma(\xVec)  = 0.1V(\xVec) \label{eq:CLF_gamma_unicycle}
 \end{align}
 \label{eq:CLF_unicycle}
 \end{subequations}
@@ -179,7 +180,7 @@ With \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}\) referent to th
 \begin{subequations}
    \begin{align}
     &h(\xVec, \xi) = h_0(\xVec) - 1 + cos(\theta - \theta_0(\xVec)) \label{eq:h_unicycle} \\
-    &\dot{h}(\xVec, \xi) = \Bigl(\underbrace{\bigl((\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}\bigr)g_0(\xVec, \mathbf{k}_{0,\xi}) - sin(\theta -\theta_0(\xVec))\begin{bmatrix} -L & L \end{bmatrix}}_{L_Gh(\xVec, \xi)} \Bigr) \mathbf{k}(\xVec)  \label{eq:dot_h_unicycle} \\
+    &\dot{h}(\xVec, \xi) = \Bigl(\underbrace{\bigl((\mathbf{A_{xis}}(\xVec-\mathbf{p}))^{\top} + (\xVec-\mathbf{p})^{\top}\mathbf{A_{xis}}\bigr)g_0(\xVec, \xi) - sin(\theta -\theta_0(\xVec))\begin{bmatrix} -L & L \end{bmatrix}}_{L_Gh(\xVec, \xi)} \Bigr) \mathbf{k}(\xVec)  \label{eq:dot_h_unicycle} \\
     &\alpha(\xVec, \xi, \alpha = 1.2)  = \alpha h(\xVec, \xi) \label{eq:CBF_alpha_unicycle}
 \end{align}
 \label{eq:CBF_unicycle}
@@ -248,11 +249,11 @@ The satellites, space ships... orbiting around a celestial body are vulnerable t
 \subsubsection{Dynamics}
 \label{subsubsec:orbital_dynamics}
 
-The vehicle is trying to converge to a formation position, following an theoretical circular Kepler orbit~\footnote{A Kepler orbit  is the elliptical, circular or hyperbolic movement of a body relative to another. This orbits are characterized for neglecting perturbations.} with constant null latitude, in an environment subject to \(J_2\)~\footnote{ The \(J_2\) perturbation \cite{curtis2019orbital} is originated from  the oblate spheroidal shapes of celestial bodies, resulting from the centrifugal force due to their axial rotation. Beeing \(J\) a component corresponding to a zonal harmonic obtained from observations dependent of the respective celestial body, and \(J_2\) the most relevant one. } perturbations. It has thrusters in all directions, with unconstrained power or some variation of it, and also without a fuel/energy limitation. It is considered a chaser spacecraft with equal null latitude as the reference \txtref is trying to rendezvous~\footnote{ Rendezvous \cite{luo2014survey} consists of making two spacecraft meet each other (target and chaser), i.e, converging to a point where the orbital trajectories of them coincide. This maneuver is characterized by two autonomous control phases, where are implemented the purposed algorithms.}, and is assumed the obstacles encountered, or preferebly the other ship in formation, with infinite length in the direction perpedicular to the equatorial plane, disabling the possibilitie of the ship to move in that direction to avoid them, providing a problem with just two-dimensional Euclidian Space safety contraints.  The model, based on the second-order \glsxtrshort{NERM} \cite{sullivan2017comprehensive}, is:
+The vehicle is trying to converge to a formation position, following an theoretical circular Kepler orbit~\footnote{A Kepler orbit  is the elliptical, circular or hyperbolic movement of a body relative to another. This orbits are characterized for neglecting perturbations.} with constant null latitude, in a environment not subject to perturbations such as the \(J_2\)~\footnote{ The \(J_2\) perturbation \cite{curtis2019orbital} is originated from  the oblate spheroidal shapes of celestial bodies, resulting from the centrifugal force due to their axial rotation. Beeing \(J\) a component corresponding to a zonal harmonic obtained from observations dependent of the respective celestial body, and \(J_2\) the most relevant one. }, due to the high accuracy of the model used and short separations praticed relative to the orbit radius \cite{kaczmarek2023autonomous}. It has thrusters in all directions, with unconstrained power or some variation of it, and also without a fuel/energy limitation. That beeing said, the control inputs are designed to be the accelerations in the given directions, as it is abstracted the mass of the vehicle that is considered constant because of the short experiment. It is considered a chaser spacecraft with equal null latitude as the reference \txtref is trying to rendezvous~\footnote{ Rendezvous \cite{luo2014survey} consists of making two spacecraft meet each other (target and chaser), i.e, converging to a point where the orbital trajectories of them coincide. This maneuver is characterized by two autonomous control phases, where are implemented the purposed algorithms.}, and is assumed the obstacles encountered, or preferebly the other ship in formation, with infinite length in the direction perpedicular to the equatorial plane, disabling the possibilitie of the ship to move in that direction to avoid them, providing a problem with just two-dimensional Euclidian Space safety contraints.  The model, based on the second-order \glsxtrshort{NERM} \cite{sullivan2017comprehensive}, is:
 
 \begin{equation}
   \begin{bmatrix} \partial \dot{x} \\ \partial \dot{y} \\  \partial\ddot{ x } \\ \partial\ddot{ y} \end{bmatrix} = \begin{bmatrix}
-  \partial\dot{ x } \\ \partial\dot{ y } \\ 2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ 2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2} 
+  \partial\dot{ x } \\ \partial\dot{ y } \\ 2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ -2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} 
   \end{bmatrix} - \begin{bmatrix}
   \mathbf{0}_{2 \times 1} \\  R_{\text{\tiny LVLH,ECI}}(\nu)^.p_{J_2}(\theta_t, \partial x, \partial y)
   \end{bmatrix} + \begin{bmatrix}
@@ -293,7 +294,7 @@ The given system is non-linear and in strict-feedback form \ref{eq:HH-NL-System}
 
 \begin{align}
   & f_0(\xVec) = \mathbf{0}_{2 \times 1}   \notag \\  &g_0(\xVec) = \mathbf{I}_{2 \times 2} \label{eq:orbital_0_dyn} \\ \notag \\
-  & f_1(\xVec,\xi) = \begin{bmatrix}  2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t+ \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ 2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2} \end{bmatrix} -  R_{\text{\tiny LVLH,ECI}}(\theta_t)^.p_{J_2}(\theta_t, \partial x, \partial y)   
+  & f_1(\xVec,\xi) = \begin{bmatrix}  2\dot{\theta_t}\partial\dot{y} + \bigl(\dot{\theta_t}\bigr)^2 \partial x - \frac{\mu(r_t + \partial x)}{\bigl((r_t+ \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} + \frac{\mu}{r_t^2}  \\ -2\dot{\theta_t}\partial\dot{x} + \bigl(\dot{\theta_t}\bigr)^2 \partial y - \frac{\mu \partial y}{\bigl((r_t + \partial x)^2 + \partial y^2\bigr)^{\frac{3}{2}}} \end{bmatrix} -  R_{\text{\tiny LVLH,ECI}}(\theta_t)^.p_{J_2}(\theta_t, \partial x, \partial y)   
   \notag \\ & g_1(\xVec, \xi) = \mathbf{I_{2 \times 2}}\label{eq:orbital_1_dyn}
 \end{align}
 
@@ -330,7 +331,7 @@ With the ellipse axis \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}
 \begin{subequations}
    \begin{align}
     &V(\xVec, \xi) = V_0(\xVec) + \frac{1}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:V_orbital} \\
-    &\dot{V}(\xVec, \xi) = \underbrace{(\xVec-\mathbf{ref})^{\top}\xi + (\xi - \mathbf{k_0(\xVec)})f_1(\xVec, \xi)}_{L_fV(\xVec, \xi)} + \underbrace{(\xi - \mathbf{k_0(\xVec)})}_{L_GV(\xVec, \xi)} \mathbf{k}(\xVec)  \label{eq:dot_V_orbital} \\
+    &\dot{V}(\xVec, \xi) = \underbrace{(\xVec-\mathbf{ref})^{\top}\xi + (\xi - \mathbf{k_0(\xVec)})^{\top}f_1(\xVec, \xi)}_{L_fV(\xVec, \xi)} + \underbrace{(\xi - \mathbf{k_0(\xVec)})^{\top}}_{L_GV(\xVec, \xi)} \mathbf{k}(\xVec)  \label{eq:dot_V_orbital} \\
     &\gamma(\xVec)  = V(\xVec) \label{eq:CLF_gamma_orbital}
 \end{align}
 \label{eq:CLF_orbital}
@@ -339,7 +340,7 @@ With the ellipse axis \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}
 \begin{subequations}
    \begin{align}
     &h(\xVec, \xi) = h_0(\xVec) -  \frac{1}{2} || \xi - \mathbf{k_0(\xVec)}||^2 \label{eq:h_orbital} \\
-    &\dot{h}(\xVec, \xi) = \underbrace{L_Gh_0(\xVec)\xi - (\xi - \mathbf{k_0(\xVec)})f_1(\xVec, \xi)}_{L_fh(\xVec, \xi)} + \underbrace{ \Bigl(  - (\xi - \mathbf{k_0(\xVec)})\Bigr)}_{L_GV(\xVec, \xi)}  \mathbf{k}(\xVec)  \label{eq:dot_h_orbital} \\
+    &\dot{h}(\xVec, \xi) = \underbrace{L_Gh_0(\xVec)\xi - (\xi - \mathbf{k_0(\xVec)})^{\top}f_1(\xVec, \xi)}_{L_fh(\xVec, \xi)} + \underbrace{ \Bigl(  - (\xi - \mathbf{k_0(\xVec)})\Bigr)^{\top}}_{L_Gh(\xVec, \xi)}  \mathbf{k}(\xVec)  \label{eq:dot_h_orbital} \\
     &\alpha(\xVec, \xi, \alpha = 1.2)  = \alpha h(\xVec, \xi) \label{eq:CBF_alpha_orbital}
 \end{align}
 \label{eq:CBF_orbital}
@@ -354,18 +355,13 @@ With the ellipse axis \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}
 
 
 \textcolor{red}{-Acho que vão ser todos iguais aos do unicycle fora a defenição de alguns parametros que se tem de indicar para defenir a orbita.\\
--Os experimentos que não entrarem aqui talvez serão colocados nos anexos. \\
--Acho que estes são os que agregam mais para já.\\
--Ainda assim parace que tenho pouco conteudo logo parece que deveria ter resultados para quando se usa o algoritmo de Binary Search, e quando se usa o Polytope Fit embora exija que eu adicione à metdologia o algporitmo para se obter o ponto de contorno para esses fits.\\
--Cheguei à conclusão que para mais que um obstaculo desvaloriza a tecnica e que seria outro topico a parte que exigiria outras estratégias que eu tenho mas necessitaria de mais tempo para implementar se assim for o caso. 
--Algumas explicaçoes não batem muito certo com o que os graficos mostram mas é pela reformulação das tecnicas acho que iram corrigir e vai passar a bater certo quando implementadas
 }
 
 \subsection{Some Data}
 \label{subsec:some_data}
 
-The techniques will be evaluated having in account a cost, given by the function \(g(\mathbf{X}, \mathbf{U})\), equivalent to \(g_{\bar{\xVec_0}}(\alpha)\) defined before~\ref{subsubsec:A-JO_parameters}, such as the weight cost matrices, \(\mathbf{Q} = \mathbf{I}_{2\times 2} \) and \(\mathbf{R} = 5 \hspace{0.1em}^.\mathbf{I}_{2\times 2} \), besides that the function is calculated with \(N=6000\) samples. It is also presented the time the system \(f\) takes to reach the equilibrium point.\par
-The computational time for each experiment is given based on a single test (one sample Monte Carlo) using the the processor \emph{Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz}.
+The techniques will be evaluated having in account a cost, given by the function \(g(\mathbf{X}, \mathbf{U})\), equivalent to \(g_{\bar{\xVec_0}}(\alpha)\) defined before~\ref{subsubsec:A-JO_parameters}, such as the weight cost matrices, \(\mathbf{Q} = 0.2 \hspace{0.1em}^. \mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \), besides that the function is calculated with \(N=10000\) samples. It is also presented the time the system \(f\) takes to reach the equilibrium point.\par
+The computational time for each decision making is given based on a N sample Monte Carlo, obtained during the whole simulation horizon, and is also shown the time used to setup the control techniques, making use of the processor \emph{Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz}.
 
 
 
@@ -396,15 +392,15 @@ Where \(SPS\) (State Propagation Simulation) is the algorithm~\ref{alg:State_Pro
 
 
 \begin{figure}[htbp]
-  \begin{subfigure}{0.6\textwidth}
+  \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=0.99\linewidth]{UCC.png}
+    \includegraphics[width=1\linewidth]{UCC.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UCC_CostEvol}
   \end{subfigure}
-  \begin{subfigure}{0.59\textwidth}
+  \begin{subfigure}{0.6\textwidth}
     \centering
-    \includegraphics[width=0.95\linewidth]{UCC_costs.png}
+    \includegraphics[width=1\linewidth]{UCC_costs.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UCC_trajectory}
   \end{subfigure}
@@ -420,22 +416,21 @@ Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps
 
   \bgroup
  \rowcolors{1}{}{orange!4}
- \begin{xltabular}{\textwidth}{|l|ccccc|}
+ \begin{xltabular}{\textwidth}{|l|cccccc|}
    \toprule
    \rowcolor{blue!6}%
-   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   Algorithms   & DecisionTime & OPtiTime & ReachTime  & InputCost   & StateCost & Cost           \\
    \midrule
-    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 8.3014 & 21.16  & 29896 & 1907.9 & 31804 \\
-    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 9.386  & 30     & 14481 & 5973.9 & 20455 \\
-    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 22.965 & 6440  & 6448.8 & 12889 \\
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 1.89e-4 & 1.82 & 50 & 282.36 & 7101.2 & 7383.6 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.29e-4 & 2.45 & 50 & 352.96 & 5224.5 & 5577.5 \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 15.65  & 6440  & 6448.8 & 2577.5 \\
     \midrule
     \caption{Some UCC Data}
     \label{tab:Some_UCC_Data}\\
    \end{xltabular}
  \egroup
 
-However the \glsxtrshort{A-JO} was less time consuming than \glsxtrshort{A-CLF-S} during the experiment as it reached the final location faster and owing to an optimization of \(\alpha\) parameter by \glsxtrshort{A-CLF-S} too, the resulting cost is comparably way higher. \\
+The \glsxtrshort{A-JO} decion time taked is comparable to a typical \glsxtrshort{CLF-CBF}. It was less time consuming than \glsxtrshort{A-CLF-S} during the experiment and the optimization time too, as it happens an optimization of the \(\alpha\) parameter too along with the computation of the new reference point by \glsxtrshort{A-CLF-S}. The resulting cost of the \glsxtrshort{A-JO} is comparably way higher, as in the next experiments, the trajectories generated by it are longer reflecting particularly in the high input cost and the paths generally more conflicting with the obstacle verifying a greater softening of the \glsxtrshort{CLF} constraint and the presence in more expensive states. \\
 
 
 \underline{UCF}
@@ -443,15 +438,15 @@ However the \glsxtrshort{A-JO} was less time consuming than \glsxtrshort{A-CLF-S
 
 
 \begin{figure}[htbp]
-  \begin{subfigure}{0.6\textwidth}
+  \begin{subfigure}{0.55\textwidth}
     \centering
-    \includegraphics[width=0.99\linewidth]{UCF.png}
+    \includegraphics[width=1\linewidth]{UCF.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UCF_CostEvol}
   \end{subfigure}
-  \begin{subfigure}{0.59\textwidth}
+  \begin{subfigure}{0.6\textwidth}
     \centering
-    \includegraphics[width=0.95\linewidth]{UCF_costs.png}
+    \includegraphics[width=1\linewidth]{UCF_costs.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UCF_trajectory}
   \end{subfigure}
@@ -461,42 +456,44 @@ However the \glsxtrshort{A-JO} was less time consuming than \glsxtrshort{A-CLF-S
 
 
 
-The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with \glsxtrshort{A-CLF-S} as it was seen in UCC\ref{ssssec:UCC_experiment}. The \glsxtrshort{A-CLF-S} reveals a relatively similar path to the optimal solution but a faster convergence to \txtref as the \(\gamma\) parameter value (not subject to an optimization) is not suited, which results in higher inputs and penalizing in the total cost. 
+The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with \glsxtrshort{A-CLF-S} as it was seen in UCC\ref{ssssec:UCC_experiment}, but in this case is more evident the higher input due to the initial turning of the unicyle and other relative abrupt ones due to the change of convergence point. The \glsxtrshort{A-CLF-S} reveals a relatively similar path to the optimal solution but a slower convergence to \txtref as the \(\gamma\) parameter value (not subject to an optimization) is too low and static, which results in lower inputs but expensive states penalizing in the total cost. \\ 
 
+\vspace{5em}
 
 
   \bgroup
  \rowcolors{1}{}{orange!4}
- \begin{xltabular}{\textwidth}{|l|ccccc|}
+ \begin{xltabular}{\textwidth}{|l|cccccc|}
    \toprule
    \rowcolor{blue!6}%
-   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   Algorithms   & DecisionTime & OPtiTime & ReachTime  & InputCost   & StateCost & Cost           \\
    \midrule
-    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 2.2433 & 13.875  & 49425 & 3756.3 & 53182 \\
-    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 19.793  & 23.385     & 20190 & 9568.4 & 29758 \\
-    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 22.16 & 12330  & 12348 & 24678 \\
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 1.98e-4 & 2.06 & 50 & 487.21 & 14413 & 14900 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.32e-4 & 2.83 & 50 & 1060.5 & 8668.7 & 9729.2 \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 14.855  & 2465.8  & 2469.4 & 4935.2 \\
     \midrule
     \caption{Some UCF Data}
-   \label{tab:Some_UCF_Data}\\
+    \label{tab:Some_UCF_Data}\\
    \end{xltabular}
  \egroup
 
- \newpage %so para ajeiutar
+Even though the input cost of the \glsxtrshort{A-JO} is lower than \glsxtrshort{A-CLF-S}, its sate cost is even more higher. Relative to the computational times, decision and optimization wise the comparation between them keeps the same. \\
+
+ %\newpage %so para ajeiutar
 
 \underline{UEV}
 \label{ssssec:UEV_experiments} %Unicycle Ellipse Vertical
 
  \begin{figure}[htbp]
-  \begin{subfigure}{0.6\textwidth}
+  \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=0.99\linewidth]{UEV.png}
+    \includegraphics[width=1\linewidth]{UEV.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UEV_CostEvol}
   \end{subfigure}
-  \begin{subfigure}{0.59\textwidth}
+  \begin{subfigure}{0.6\textwidth}
     \centering
-    \includegraphics[width=0.95\linewidth]{UEV_costs.png}
+    \includegraphics[width=1\linewidth]{UEV_costs.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UEV_trajectory}
   \end{subfigure}
@@ -507,20 +504,19 @@ The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with
 Now given an ellipsoidal obstacle, with this kind of axis configuration, the bigger the axis is relative to the other one, the less impactful is \glsxtrshort{A-CLF-S}, not only because of the new point demanding a not so relevant maneuver but also because of the respective ellipse \glsxtrshort{CBF} natural imposure of a more soft avoidance. 
 
 
- \bgroup
+  \bgroup
  \rowcolors{1}{}{orange!4}
- \begin{xltabular}{\textwidth}{|l|ccccc|}
+ \begin{xltabular}{\textwidth}{|l|cccccc|}
    \toprule
    \rowcolor{blue!6}%
-   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   Algorithms   & DecisionTime & OPtiTime & ReachTime  & InputCost   & StateCost & Cost           \\
    \midrule
-    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 3.3449 & 9.185  & 53112 & 4983.7 & 58096 \\
-    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 9.5229  & 9.485     & 47649 & 5899 & 53547 \\
-    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 16.315 & 11522  & 11547 & 23069 \\
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 1.86e-4 & 1.90 & 50 & 547.1 & 19495 & 20042 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.43e-4 & 2.37 & 50 & 1142.5 & 11604 & 12747 \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 14.81  & 3229.5  & 3234.4 & 6463.9 \\
     \midrule
     \caption{Some UEV Data}
-   \label{tab:Some_UEV_Data}\\
+    \label{tab:Some_UEV_Data}\\
    \end{xltabular}
  \egroup
 
@@ -535,15 +531,15 @@ Now given an ellipsoidal obstacle, with this kind of axis configuration, the big
 \label{ssssec:UEH_experiments} %Unicycle Ellipse Vertical
 
  \begin{figure}[htbp]
-  \begin{subfigure}{0.6\textwidth}
+  \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=0.99\linewidth]{UEH.png}
+    \includegraphics[width=1\linewidth]{UEH.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UEH_CostEvol}
   \end{subfigure}
-  \begin{subfigure}{0.59\textwidth}
+  \begin{subfigure}{0.6\textwidth}
     \centering
-    \includegraphics[width=0.95\linewidth]{UEH_costs.png}
+    \includegraphics[width=1\linewidth]{UEH_costs.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UEH_trajectory}
   \end{subfigure}
@@ -552,25 +548,28 @@ Now given an ellipsoidal obstacle, with this kind of axis configuration, the big
 \end{figure}
 
 
-If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relative worst performance, in this case its path cost is comparatively to it considerably better than \glsxtrshort{A-JO}. Beyond that, important to say that against this type of ellipsoides and orientation againts it and the \txtref, or speacially against straight surfaces, the best solution given by the \glsxtrshort{CLF-CBF} is to get the system as close to the obstacle, converging to the its surface, as the \glsxtrshort{CLF-CBF} keeps providing control inputs that lead the system as much closer as possible to the \txtref for each exclusive moment, while the \glsxtrshort{A-CLF-S} converging to the contour point is capable to free from it. The \glsxtrshort{MPC} solution presented corresponds to a local minimum, but its path reveals a similar problem to \glsxtrshort{A-JO} due to the finite horizon and its objective function trying to approximate the system as much to \txtref instead of actually optimize its reaching time.
+If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relative worst performance, in this case its path cost is comparatively to it considerably better than \glsxtrshort{A-JO}. Beyond that, important to say that against this type of ellipsoides and orientation againts it and the \txtref, or specially against straight surfaces, the best solution given by the \glsxtrshort{CLF-CBF} is to get the system as close to the obstacle, converging to the its surface, as the \glsxtrshort{CLF-CBF} keeps providing control inputs that lead the system as much closer as possible to the \txtref for each exclusive moment, while the \glsxtrshort{A-CLF-S} converging to the contour point is capable to free from it. The \glsxtrshort{MPC} solution presented corresponds to a local minimum, but its path reveals a similar problem to \glsxtrshort{A-JO} due to the finite horizon and its objective function trying to approximate the system as much to \txtref instead of actually optimize its reaching time, or like \glsxtrshort{A-CLF-S}, although not as effective, make an optimization purely based of the last theoretical state.  
 
 
-\bgroup
+  \bgroup
  \rowcolors{1}{}{orange!4}
- \begin{xltabular}{\textwidth}{|l|ccccc|}
+ \begin{xltabular}{\textwidth}{|l|cccccc|}
    \toprule
    \rowcolor{blue!6}%
-   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   Algorithms   & DecisionTime & OPtiTime & ReachTime  & InputCost   & StateCost & Cost           \\
    \midrule
-    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 13.68  & 9.92  & 1.3522e+05 & 3543.4 & 1.3877e+05 \\
-    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 42.607  & 30     & 21563 & 6332.5 & 27896 \\
-    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 30 & 3727.1  & 27617 & 31344 \\
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 1.92e-4 & 1.92 & 50 & 2958.5 & 13435  & 16394 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.52e-4 & 2.73 & 50 & 574.53 & 10007 & 10582  \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 50  & 1053.9  & 9015.4 & 10069 \\
     \midrule
     \caption{Some UEH Data}
-   \label{tab:Some_UEH_Data}\\
+    \label{tab:Some_UEH_Data}\\
    \end{xltabular}
  \egroup
+
+ %\vspace{5em}
+
+ The cost don't necessarily means a better performance. As it is possible to see, the \glsxtrshort{A-CLF-S} is the only one of the them beeing able to surpass the obstacle although its cost is the lower.
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
@@ -584,15 +583,15 @@ If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relativ
 \label{UED_experiments} %Unicycle Ellipse Vertical
 
  \begin{figure}[htbp]
-  \begin{subfigure}{0.6\textwidth}
+  \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=0.99\linewidth]{UED.png}
+    \includegraphics[width=1\linewidth]{UED.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UED_CostEvol}
   \end{subfigure}
-  \begin{subfigure}{0.59\textwidth}
+  \begin{subfigure}{0.6\textwidth}
     \centering
-    \includegraphics[width=0.95\linewidth]{UED_costs.png}
+    \includegraphics[width=1\linewidth]{UED_costs.pdf}
   %\caption{A figure with two sub-figures!}
   \label{fig:UED_trajectory}
   \end{subfigure}
@@ -604,20 +603,19 @@ If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relativ
 As in UEH~\ref{ssssec:UEH_experiments}, although the other techiniques don't keep stuck, they keep the same characteristics and go for the longest side. While the \glsxtrshort{A-CLF-S} keeps showing a better result.
 
 
-\bgroup
+  \bgroup
  \rowcolors{1}{}{orange!4}
- \begin{xltabular}{\textwidth}{|l|ccccc|}
+ \begin{xltabular}{\textwidth}{|l|cccccc|}
    \toprule
    \rowcolor{blue!6}%
-   Algorithms   & ComputationalTime  & ReachTime  & InputCost   & StateCost & Cost           \\
+   Algorithms   & DecisionTime & OPtiTime & ReachTime  & InputCost   & StateCost & Cost           \\
    \midrule
-    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 3.939  & 9.295  & 4.0474e+05 & 8500 & 4.1324e+05 \\
-    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 53.897 & 9.7     & 43945 & 19422 & 63367 \\
-    \glsxtrshort{A-CLF-I}~\ref{subsubsec:CLFs_Independent_Algorithm}   & ---   & ---      & ---  & ---  & ---  \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---    & 30 & 15047  & 69133 & 84180 \\
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 2.1e-4 & 2.12 & 50 & 9769.6 & 38910  & 48680 \\
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 3.18e-4 & 3.58 & 50 & 11497 & 77575 & 89073  \\
+    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 50  & 4243 & 22267 & 26510 \\
     \midrule
     \caption{Some UED Data}
-   \label{tab:Some_UED_Data}\\
+    \label{tab:Some_UED_Data}\\
    \end{xltabular}
  \egroup
 

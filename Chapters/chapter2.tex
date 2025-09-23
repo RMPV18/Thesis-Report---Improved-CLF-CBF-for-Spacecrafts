@@ -607,8 +607,8 @@ If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g
   \begin{algorithm}
     \KwData{$nS$, $devN$, $dev$, $g$, $x$}
     \KwResult{$mean(grad_i)$}
-    $i\gets -1$\;
-    \While{$i < nS -1$}{
+    $i\gets 0$\;
+    \While{$i \leq nS -1$}{
         $devN_i \gets  \frac{1}{2} \times (i + (i \hspace{0.2em} mod \hspace{0.2em} 2) ) \times devN $ \;
         $grad_i \gets \nabla g(x + (-1)^{i}  \times devN_i, (-1)^i \times dev)$ \Comment*[r]{Equation \ref{eq:Gradient_Discretization}}
         $i\gets i + 1$\;    
@@ -703,20 +703,22 @@ Where the \(step\) is always equal. That beeing said, the phase 1 algorithm:
 \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
     \KwData{$xI$, $a$}
-    \KwResult{$(xI,xS)$}
-    $x_0\gets xI$\;
-    $xS\gets xI$\;
-    \While{$\nabla g(xI) \times \nabla g(xS) > 0$}{
-        $xS \gets xI - a \nabla g(x_0)$    \Comment*[r]{Equation \ref{eq:Binary_Search_Phase1_gradDesc}}
-        \If{$\nabla g(xI) \times \nabla g(xS) > 0$}{
-            $xI\gets xS$\;
-        }
+    \KwResult{$sort(xI,xS)$}
+    $xS \gets xI - a \nabla g(x_I)$    \Comment*[r]{Equation \ref{eq:Binary_Search_Phase1_gradDesc}}
+    \While{$\nabla g(x_I) \times \nabla g(xS) > 0$}{
+        $xI\gets xS$\;
+        $xS \gets xI - a \nabla g(x_I)$\;
     }
     \caption{Binary Search Phase 1} \label{alg:Binary_Search_Phase_1}
   \end{algorithm}
 
 
-The second phase consists in iteratively taking the extreme points and do a weighted mean obtaining a new delimiter that replace one of the previous points while preserving the application of the Bolzano theorem for next iterations, narrowing the interval and approximating the points to a local minimum.   
+The second phase consists in iteratively taking the extreme points and do a weighted mean obtaining a new delimiter that replace one of the previous points while preserving the application of the Bolzano theorem for next iterations, narrowing the interval and approximating the points to a local minimum. Moreover, the weight from the mean is updated, according to the interval evolution, given by the function:
+
+\begin{equation}
+    sig_{\pm}(x) = \frac{0.125}{1+e^{\pm5(x-0.5)}} -0.0125
+    \label{eq:binsea_weight_update_function}
+\end{equation}
 
 \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -726,8 +728,10 @@ The second phase consists in iteratively taking the extreme points and do a weig
         $xMid \gets w \times xI + (1-w) \times xS $ \Comment*[r]{Weighted Mean}
         \eIf{$\nabla g(xMid) > 0$}{
             $xS\gets xMid$\;
+            $w \gets w - sig_{-}(w)$  \Comment*[r]{Sigmoide function \ref{eq:binsea_weight_update_function}}
         }{
             $xI\gets xMid$\;
+            $w \gets w + sig_{+}(w)$\;
         }
     }
     \caption{Binary Search Phase 2} \label{alg:Binary_Search_Phase_2}
@@ -944,7 +948,7 @@ The new point is obtained accounting with the natural movement direction of thos
 \subsubsection{Constraint Tangent Point}
 \label{subsubsec:Constraint_Tangent_Point}
 
-From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmatrix} \bigr]\) obtained in \ref{alg:Natural_Convergence_Direction_Vector} is deduced a tangent point in the respective constraint. This point is the most far from the eminent of colliding unsafe set \(\mathcal{C}\) given a perpendicular direction to the obtained vector.%, therefore the new equilibrium point translates as the necessary variation the system states need in that perpendicular direction to pass the unsafe zone.                
+From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmatrix} \bigr]\) obtained in \ref{alg:Natural_Convergence_Direction_Vector} (\(\mathbf{v} = \mathbf{O} \hspace{0.2em} dir\), with \(\mathbf{O}\) as the observer matrix of the two constrained states) is deduced a tangent point in the respective constraint. This point is the most far from the eminent of colliding unsafe set \(\mathcal{C}\) given a perpendicular direction to the obtained vector.%, therefore the new equilibrium point translates as the necessary variation the system states need in that perpendicular direction to pass the unsafe zone.                
  Assuming it's always used the ellipsoidal fit~\ref{eq:Ellipsoidal_fit}, where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{c \times c}_{\succ 0}\), \(\mathbf{O} \in \mathbb{R}^{c \times n}\) and \(\mathbf{p} \in \mathbb{R}^{c}\), the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:CL_Ellipsoide_Tangent_Point}):
 
 
@@ -1007,7 +1011,7 @@ Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, t
     \label{eq:CBF_Alpha_Formulation_AJO}
 \end{equation}
 
-The parameter is optimized using \ref{eq:Gradient_Descent_Normal} but for that is required a cost function \(g_{\xVec_0}:\mathbb{R} \to \mathbb{R}\) which accounts with a whole predction horizon:
+The parameter is optimized using the binary search algorithm \ref{subsec:Binary_Search} but for that is required a cost function \(g_{\xVec_0}:\mathbb{R} \to \mathbb{R}\) which accounts with a whole predction horizon:
 
 \begin{equation}
     \begin{array}{ll}
