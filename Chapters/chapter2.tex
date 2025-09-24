@@ -1043,6 +1043,35 @@ With \(SPS\) (State Propagation Simulation) as the algorithm \ref{alg:State_Prop
 With \(DGF\) (Discrete Gradient Function) as the algorithm \ref{alg:Discrete_Gradient_Function}  and therefore enabling \ref{sec:Single_Parameter_Optmization} and the optimization of the slope \(\alpha\).\par  
 Theoretically the CBF should garantee safety, however due to not be a continuos system (or integration errors), having a high \(\alpha\) can lead to unsafe sets and can also provide a demand on a not possible control input values to keep the system safe, but if that happens is expected to reflect on the path taken, control inputs and therefore penalize in the cost function.
 
+
+
+\subsection{Other Cost Function}
+\label{subsubsec:Other Cost Function}
+
+The purposed algorithm follows an optimization based on a cost function given a whole horizon of states, yet changing it could give different results \ref{sec:experiments}. 
+
+\begin{equation}
+    \begin{array}{ll}
+        g_{\xVec_0}(\alpha) &= g(\alpha, \xVec_0 = cte)  \\   
+        &= \xVec_{N+1}(\alpha,\xVec_0)^{\top}\mathbf{Q}\xVec_{N+1}(\alpha,\xVec_0) + \sum_{k=0}^{N}  \uVec_k(\alpha,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_0) \\
+        &= \xVec_{N+1}(\alpha,\xVec_0)^{\top}\mathbf{Q}\xVec_{N+1}(\alpha,\xVec_0) +  \mathbf{U}(\alpha,\xVec_0)^{\top}\tilde{\mathbf{R}}\mathbf{U}(\alpha,\xVec_0)
+    \end{array}
+    \label{eq:Cost_Function_Alpha_last_state}
+\end{equation}
+
+This cost function just takes into account the last state from the horizon, i.e., pathes where the last system sate is as close as possible to the desired state at the end of the horizon, or even reached it return lower costs, and between those pathes the less input consuming and generally the shortest paths are the optimal ones. Compared to \ref{eq:Cost_Function_Alpha} it demands a higher \(\mathbf{Q}\), so the cost value returned could be relatively high according how far from the stability objective the system is.
+
+
+\begin{equation}
+    \begin{array}{ll}
+        g_{\xVec_0}(\alpha) &= g(\alpha, \xVec_0 = cte)  \\   
+        &= \sum_{k=0}^{N} \xVec_{k+1}(\alpha,\xVec_0)^{\top}\mathbf{Q}_i\xVec_{k+1}(\alpha,\xVec_0) +  \uVec_k(\alpha,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_0)
+    \end{array}
+    \label{eq:Cost_Function_Alpha_evol_state}
+\end{equation}
+
+Where \(det(\mathbf{Q}_i) \leq  det(\mathbf{Q}_{i+1})\), in order to keep a similar behaviour to \ref{eq:Cost_Function_Alpha_last_state} without the optimized path simply targeting the last instant.
+
 \subsection{Double \glsxtrshort{CLF}}
 \label{subsec:Double_CLF}
 
@@ -1063,53 +1092,149 @@ Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natu
 \subsubsection{\glsxtrfull{A-CLF-S}}
 \label{subsubsec:CLFs_Summed_Algorithm}
 
-From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_N\) stabilizing in \(\bar{\xVec_N}\). By doing a wheighted mean between both \glsxtrshort{CLF} is defined a new one (a generalization for multiple \glsxtrshort{CLF} can be found in \ref{app:M_CLF_Transition_Formulation}):
+From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_{C_0}\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_{N_0}\) stabilizing in \(\bar{\xVec_N}\). By doing a wheighted mean between both \glsxtrshort{CLF} is defined a new one (a generalization for multiple \glsxtrshort{CLF} can be found in \ref{app:M_CLF_Transition_Formulation}):
 
 \begin{align}
-    V_1(\xVec) = 
-    \begin{cases}
-        \sigma(\xVec) V_{C}(\xVec) + (1 - \sigma(\xVec))V_{N}(\xVec) \\
-        \sigma(\xVec) = \frac{1}{1+e^{-\zeta V_{C}(\xVec)}} 
-    \end{cases}
-    \label{eq:1stPhase_2-CLF-S}
+    &\sigma(\xVec) = \frac{1}{1+e^{-\zeta V_{C_0}(\xVec)}} \label{eq:sig_CLF_Vc0} 
 \end{align}
 
 \begin{align}
-    V(\xVec) = 
+    &V_{0_1}(\xVec) =    \sigma(\xVec) V_{C_0}(\xVec) + (1 - \sigma(\xVec))V_{N_0}(\xVec) \label{eq:1stPhase_2-CLF-S}   
+\end{align}
+
+\begin{align}
+    V_0(\xVec) = 
     \begin{cases}
-        V_1(\xVec) \quad \xVec \in \mathcal{S}\\
-        V_2(\xVec) = V_{N}(\xVec) \quad \xVec \in \bar{\mathcal{S}}
+        V_{0_1}(\xVec) \quad \xVec \in \mathcal{S}\\
+        V_{0_2}(\xVec) = V_{N_0}(\xVec) \quad \xVec \in \bar{\mathcal{S}}
     \end{cases}
     \label{eq:New_2-CLF-S}
 \end{align}
 
 \begin{equation}
-    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C}(\xVec) \geq tol \cap \dot{V}_{C}(\xVec, \uVec) \leq 0 \cap \delta \leq tol_2 \}
+    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C_0}(\xVec) \geq tol \cap \dot{V}_{C_0}(\xVec, \uVec) \leq 0 \cap \delta \leq tol_2 \}
     \label{eq:New_2-CLF-S_actuationPhaseSet}
 \end{equation}
 
-Where \(\sigma(V_C(\xVec))\) is a sigmoide function responsible to the transition between the \glsxtrshort{CLF} and \(\zeta \in \mathbb{R}_{\geq 0}\) is its slope. \(\mathcal{S}\) refers to the just one time activation set of the respective \glsxtrshort{CLF} \(V_1\), with \(\delta\) referent to the \glsxtrshort{CLF-CBF} \glsxtrshort{QP} optimized relaxation variable. 
+Where \(\sigma(V_{C_0}(\xVec))\) is a sigmoide function responsible to the transition between the \glsxtrshort{CLF} and \(\zeta \in \mathbb{R}_{\geq 0}\) is its slope. \(\mathcal{S}\) refers to the just one time activation set of the respective \glsxtrshort{CLF} \(V_{0_1}\), with \(\delta\) referent to the \glsxtrshort{CLF-CBF} \glsxtrshort{QP} optimized relaxation variable. 
 
-
-
-The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_1\) and assuming a high slope \(\zeta\) (\(\dot{\sigma}(\xVec, \uVec)\approx 0\)), is approximately:
+The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_{0_1}\) and assuming a high slope \(\zeta\) (\(\dot{\sigma}(\xVec, \uVec_0)\approx 0\)), is approximately:
 
 \begin{align}
-    K_{V_1}(\xVec) = \Bigl\{\uVec \in \mathbb{R}^m: \dot{V_1}(\xVec, \uVec) &= \dot{V}_{C}(\xVec, \uVec) \sigma(\xVec) + (1-\sigma(\xVec))\dot{V}_{N}(\xVec, \uVec) \notag \\
-    &\leq -\gamma( \mu \sigma(\xVec) V_{C}(\xVec) + (1 - \sigma(\xVec))V_{N}(\xVec)  )\Bigr\}
+    K_{V_{0_1}}(\xVec) = \Bigl\{\uVec_0 \in \mathbb{R}^m: \dot{V_{0_1}}(\xVec, \uVec_0) &= \sigma(\xVec) \dot{V}_{C_0}(\xVec, \uVec_0)  + (1-\sigma(\xVec))\dot{V}_{N_0}(\xVec, \uVec_0) \notag \\
+    &\leq -\gamma( \mu \sigma(\xVec) V_{C_0}(\xVec) + (1 - \sigma(\xVec))V_{N_0}(\xVec)  )\Bigr\}
     \label{eq:2-CLF-S_Constraint}
 \end{align}
 
-With \(\mu\) as a parameter with default value as \( \frac{V_{N}(\xVec)}{V_{C}(\xVec)} \). The set \(K_{V_2}(\xVec)\) is equivalent to \ref{eq:K-CLF}. \par
-
-Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm} adapt the \glsxtrfull{CBF} slope \(\alpha\) to the new \glsxtrfull{CLF} \(V\) and improve possibly even more the state convergence to the final equilibrium point.\\
+With \(\mu\) as a parameter with default value as \( \frac{V_{N_0}(\xVec)}{V_{C_0}(\xVec)} \). The set \(K_{V_{0_2}}(\xVec)\) is equivalent to \ref{eq:K-CLF}. \\
 
 
-FALAR QUE A PARTE ANTERIOR E PARA OS SISTEMAS DE PRIMEIRA ORDEM 
+\textbf{\underline{Second-Order Systems}}
+\label{subsubsubsec:CLFs_Summed_Algorithm_2nd_order}\\
 
-DEPOIS FALAR QUE NO CASO DOS ISTEMAS DE SEGUNDA ORDEM COMO E FORMULADO AS CLF MAS QUE s MANTEM SE IGUAL, COM AS MESMAS CLF DE PRIMEIORA ORDEM
+Given the backstepping formulation~\ref{sub:backstepping}, it is assumed the previous obtained \glsxtrshort{CLF}~\ref{eq:New_2-CLF-S} as the first-order formulation and \ref{eq:2-CLF-S_Constraint} as the condition.\par 
+Now, considering a second-order system \ref{eq:HH-NL-System}, the \glsxtrshort{CLF} that are trying to converge to \(\bar{\xVec}_C\) and  \(\bar{\xVec}_N\) respectively are:
 
-DEPOIS FALAR NO CASO DO POLYTOPIC FIT QUE SE RETORNA DOIS PONTOS PELO QUE SE DESCREVE COMO É, EM GERAL IGUAL AO NATERIOR MAS QUE O O GAMA default é Vn/Vc + Vultimo/(sig*Vc) - Vn/(sig*Vc)
+
+\begin{align}
+    &V_C(\xVec, \xi) = V_{C_0}(\xVec) + V_{\xi}(\xVec, \xi) \label{eq:hh_current_clf}\\
+    &V_N(\xVec, \xi) = V_{N_0}(\xVec) + V_{\xi}(\xVec, \xi) \label{eq:hh_next_clf}
+\end{align}
+
+Given \(V_C\) and \(V_N\) it is possible to obtain the new \glsxtrshort{CLF} \(V\) equally as \ref{eq:1stPhase_2-CLF-S}-\ref{eq:New_2-CLF-S} but keeping the first-order sigmoide function \(\sigma(\xVec)\) from \ref{eq:sig_CLF_Vc0}. That beeing said, it is possible to reduce the \glsxtrshort{CLF} \(V\) equation to:
+
+\begin{equation}
+    V(\xVec, \xi) = V_0(\xVec) + V_{\xi}(\xVec, \xi)
+    \label{eq:HH_New_2-CLF-S}
+\end{equation}\\
+
+\vspace{4em} %só para ajeitar
+
+The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_{1}\) and assuming a high slope \(\zeta\) (\(\dot{\sigma}(\xVec, \xi)\approx 0\)), is approximately:
+
+
+\begin{align}
+    K_{V_{1}}(\xVec, \xi) = \Bigl\{\uVec \in \mathbb{R}^m: \dot{V_{1}}(\xVec, \xi, \uVec) &= \dot{V}_{0_1}(\xVec, \xi \mathcolor{gray}{, \uVec}) + \dot{V}_{\xi}(\xVec, \xi, \uVec) \notag \\
+    &\leq -\gamma( \mu \sigma(\xVec) V_{C_0}(\xVec) + (1 - \sigma(\xVec))V_{N_0}(\xVec) + V_{\xi}(\xVec, \xi))\Bigr\}
+    \label{eq:HH_2-CLF-S_Constraint}
+\end{align}
+
+Keeping \(\mu\) as a parameter with default value as \( \frac{V_{N_0}(\xVec)}{V_{C_0}(\xVec)} \) and the set \(K_{V_{2}}(\xVec)\) equivalent to \ref{eq:K-CLF}. \textcolor{gray}{If it is a mixed-relative-degree-two system like the unicycle model used in \ref{eq:unicycle_model}.} \\
+
+Regarding the stability objective changing condition, it mantains equal to \ref{eq:New_2-CLF-S_actuationPhaseSet} using the first-order \glsxtrshort{CLF} and control input \(\mathbf{k}_0\):
+
+\begin{equation}
+    \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C_0}(\xVec) \geq tol \cap \dot{V}_{C_0}(\xVec, \mathbf{k}_0) \leq 0 \cap \delta \leq tol_2 \}
+    \label{eq:HH_New_2-CLF-S_actuationPhaseSet}
+\end{equation}\\
+
+
+Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}, using the cost function \ref{eq:Cost_Function_Alpha_last_state} adapt the \glsxtrshort{CBF} slope \(\alpha\) to the new low and high order \glsxtrshort{CLF}s and improve possibly even more the state convergence to the final equilibrium point.\\
+
+
+\textbf{\underline{Three Waypoints Version}}
+\label{subsubsubsec:CLFs_Summed_Algorithm_three_waypoints}\\
+
+If the unsafe set is restricted by a polytopic fit~\ref{eq:Polytope_fit} and the contour point obtaining algorithm is \ref{} then it is returned two equilibrium points. Those points are approximately two vertices of the polytope of a same edge or just one vertice if they are too close.  It keeps having a current point a \glsxtrshort{CLF} is trying to converge but the next one don't necessarily is the desired final equilibrium point \(\bar{\xVec}_F\) but the other computed point. 
+
+Then the first \glsxtrshort{CLF} are defined as:
+
+\begin{align}
+    V_{0_i}(\xVec) = 
+    \begin{cases}
+        \sigma_i(\xVec) V_{C_{0_i}}(\xVec) + (1 - \sigma_i(\xVec))V_{N_{0_i}}(\xVec) \\
+        \sigma_i(\xVec) = \frac{1}{1+e^{-\zeta V_{C_{0_i}}(\xVec)}} 
+    \end{cases}
+    \label{eq:1stPhase_2-CLF-S_multiple_waypoints}
+\end{align}
+
+\begin{align}
+    V_0(\xVec) = 
+    \begin{cases}
+        V_{0_i}(\xVec) \quad \xVec \in \mathcal{S}_i \qquad i \in {1,2}\\
+        V_{0_3}(\xVec) = V_{F_0}(\xVec) \quad \xVec \in \bigcup_{i = 1}^2 \bar{\mathcal{S}}_i
+    \end{cases}
+    \label{eq:New_2-CLF-S_multiple_waypoints}
+\end{align}
+
+
+With \(V_{C_{0_i}}\) and \(V_{C_{0_i}}\) the base \glsxtrshort{CLF} defining the stability of the current (the computed points(in order of wanted convergence)) and corresponding next (the intermediate and final) convergence points. \par
+The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_{0_i}\) and assuming a high slope \(\zeta\) (\(\dot{\sigma_i}(\xVec, \uVec_0)\approx 0\)),  are approximately:
+
+\begin{align}
+    K_{V_{0_i}}(\xVec) = \Bigl\{\uVec_0 \in \mathbb{R}^m: \dot{V}_{0_i}(\xVec, \uVec_0) &= \sigma_i(\xVec) \dot{V}_{C_{0_i}}(\xVec, \uVec_0)  + (1-\sigma_i(\xVec))\dot{V}_{N_{0_i}}(\xVec, \uVec_0) \notag \\
+    &\leq -\gamma( \mu \sigma_i(\xVec) V_{C_{0_i}}(\xVec) + (1 - \sigma_i(\xVec))V_{N_{0_i}}(\xVec))\Bigr\}
+    \label{eq:2-CLF-S_Constraint_multiple_waypoints}
+\end{align}
+
+Now with the default value of \(\mu =\frac{V_{F_{0}}(\xVec)- V_{N_{0_i}}(\xVec)(1 -\sigma_i(\xVec))}{\sigma_i(\xVec) V_{C_{0_i}}(\xVec)} \) .\\
+
+
+Now considering the second-order \glsxtrshort{CLF}:
+
+\begin{equation}
+    V(\xVec, \xi) = V_0(\xVec) + V_{\xi}(\xVec, \xi)
+    \label{eq:HH_New_2-CLF-S_multiple_waypoints}
+\end{equation}\\
+
+
+Given the new \glsxtrshort{CLF} \(V_{i}\) and assuming a high slope \(\zeta\) (\(\dot{\sigma_i}(\xVec, \xi)\approx 0\)):
+
+\begin{align}
+    K_{V_{i}}(\xVec, \xi) = \Bigl\{\uVec \in \mathbb{R}^m: \dot{V}_{i}(\xVec, \xi,  \uVec) &= \dot{V}_{0_i}(\xVec, \xi \mathcolor{gray}{, \uVec}) + \dot{V}_{\xi}(\xVec, \xi, \uVec) \notag \\
+    &\leq -\gamma( \mu \sigma_i(\xVec) V_{C_{0_i}}(\xVec) + (1 - \sigma_i(\xVec))V_{N_{0_i}}(\xVec) + V_{\xi}(\xVec, \xi))\Bigr\}
+    \label{eq:HH_2-CLF-S_Constraint_multiple_waypoints}
+\end{align}
+
+Beeing the default value of \(\mu =\frac{V_{F_{0}}(\xVec)- V_{N_{0_i}}(\xVec)(1 -\sigma_i(\xVec))}{\sigma_i(\xVec) V_{C_{0_i}}(\xVec)} \) .\\
+
+
+The transitive (\(i = i+1\)) condition is based on the first-order \glsxtrshort{CLF} \(V_{C_i}\) as it was already seen~\ref{eq:HH_New_2-CLF-S_actuationPhaseSet} given by:
+
+\begin{equation}
+    \mathcal{S}_i = \{\xVec \in \mathbb{R}^n: V_{C_{0_i}}(\xVec) \geq tol \cap \dot{V}_{C_{0_i}}(\xVec, \mathbf{k}_0) \leq 0 \cap \delta \leq tol_2 \}
+    \label{eq:HH_New_2-CLF-S_actuationPhaseSet}
+\end{equation}\\
 
 
 
