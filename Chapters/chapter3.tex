@@ -12,7 +12,7 @@
 \chapter{Results}
 \label{cha:results}
 
-The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{subsec:decision_algorithms} \glsxtrshort{A-JO}, \glsxtrshort{A-CLF-S} and \glsxtrshort{A-CLF-I},  are going to be implemented in different systems, in a unicycle~\ref{subsec:unicycle_simul_setup} and orbital system~\ref{subsec:orbital_simul_setup}, and subject to different types of experiments according to the system in question (unicycle~\ref{subsubsec:unicyle_type_of_experiments} or orbital~\ref{subsubsec:orbital_type_of_experiments}). In each of the contexts, there is an analisys of the techniques and a comparation between them highlingting some relevant data.
+The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{subsec:decision_algorithms} \glsxtrshort{A-JO} and \glsxtrshort{A-CLF-S},  are going to be implemented in different systems, in a unicycle~\ref{subsec:unicycle_simul_setup} and orbital system~\ref{subsec:orbital_simul_setup}, and subject to different types of experiments according to the system in question (unicycle~\ref{subsubsec:unicyle_type_of_experiments} or orbital~\ref{subsubsec:orbital_type_of_experiments}). In each of the contexts, there is a single whole \(10000\) samples horizon solution of an \glsxtrshort{MPC}, along with analisys of the techniques and a comparation between them highlingting some relevant data.
 
 \section{Setup}
 \label{sec:setup}
@@ -37,7 +37,7 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
    \rowcolor{Gainsboro}
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h, \hspace{0.25em} \alpha_{ini}$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{eq:orbital_dynamics_augmented}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+     \ref{eq:unicycle_model} or \ref{eq:orbital_dynamics_augmented}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -54,7 +54,7 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
    \rowcolor{Gainsboro}%
    $nS$ &  $devS$ & $dev$ & $g_{\xVec_0}(\alpha)$  & $\alpha_{ini}$  \\
    \midrule
-     3          &  0.01        & 0.005        &  \ref{eq:Cost_Function_Alpha}   &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+     3          &  0.01        & 0.005        &  \ref{eq:Cost_Function_Alpha}   &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -65,7 +65,7 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
  \subsubsection{\glsxtrshort{A-CLF-S}}
 \label{subsubsec:A-CLF-S_parameters}
 
-The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 0.2\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\\
+The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{eq:Cost_Function_Alpha_last_state}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 20\hspace{0.1em}N\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\\
 
 The \glsxtrshort{A-CLF-S} functions parameters are defined by:
 
@@ -78,7 +78,7 @@ The \glsxtrshort{A-CLF-S} functions parameters are defined by:
    \rowcolor{Gainsboro}%
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{orbital_dynamics_augmented}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{}\\
+     \ref{eq:unicycle_model} or \ref{orbital_dynamics_augmented}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -426,7 +426,7 @@ Where \(SPS\) (State Propagation Simulation) is the algorithm~\ref{alg:State_Pro
 \end{figure}
 
 
-Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps beeing purely based on a \glsxtrshort{CLF-CBF} technique which lacks a bigger prediction horizon and thus taking the unicycle close to the obstacle as it is the way that approximates more to the \(\mathbf{ref}\) in the moment (less state cost initially compared to A-CLF-summed), obligating eventually to higher input values to deviate from the barrier safely while forcing as much as possible a speed of convergence to \(\mathbf{ref}\).  The \glsxtrshort{A-CLF-S} following the other point first results in a initially not so fast approximation to \txtref but to a shorter countour path and that allows to avoid abrupt maneuvers leading to less input cost.  
+Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps beeing purely based on a \glsxtrshort{CLF-CBF} technique which lacks a bigger prediction horizon and thus taking the unicycle close to the obstacle as it is the way that approximates more to the \(\mathbf{ref}\) in the moment (less state cost initially compared to A-CLF-summed), obligating eventually to higher input values to deviate from the barrier safely while forcing as much as possible a speed of convergence to \(\mathbf{ref}\).  The \glsxtrshort{A-CLF-S} following the other point first results in a initially not so fast approximation to \txtref but to a shorter countour path and that allows to avoid abrupt maneuvers leading to less input cost. That slower approximation leads to higher control inputs at the start since the \(\gamma\) function, responsible to the speed of convergence, initially is higher than the one from \glsxtrshort{A-JO}. 
 
  \newpage %so para ajeiutar
 
@@ -440,14 +440,14 @@ Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps
    \midrule
     \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 1.89e-4 & 1.82 & 50 & 282.36 & 7101.2 & 7383.6 \\
     \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.29e-4 & 2.45 & 50 & 352.96 & 5224.5 & 5577.5 \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 15.65  & 6440  & 6448.8 & 2577.5 \\
+    \glsxtrshort{MPC} of 10000 horizon                                 & 8.34e-3 & 199.84  & 15.65  & 6440  & 6448.8 & 2577.5 \\
     \midrule
     \caption{Some UCC Data}
     \label{tab:Some_UCC_Data}\\
    \end{xltabular}
  \egroup
 
-The \glsxtrshort{A-JO} decion time taked is comparable to a typical \glsxtrshort{CLF-CBF}. It was less time consuming than \glsxtrshort{A-CLF-S} during the experiment and the optimization time too, as it happens an optimization of the \(\alpha\) parameter too along with the computation of the new reference point by \glsxtrshort{A-CLF-S}. The resulting cost of the \glsxtrshort{A-JO} is comparably way higher, as in the next experiments, the trajectories generated by it are longer reflecting particularly in the high input cost and the paths generally more conflicting with the obstacle verifying a greater softening of the \glsxtrshort{CLF} constraint and the presence in more expensive states. \\
+The \glsxtrshort{A-JO} decision time taked is comparable to a typical \glsxtrshort{CLF-CBF}. It was less time consuming than \glsxtrshort{A-CLF-S} during the experiment and the optimization time too, as it happens an optimization of the \(\alpha\) parameter too along with the computation of the new reference point by \glsxtrshort{A-CLF-S}. The resulting cost of the \glsxtrshort{A-JO} is comparably way higher, as in the next experiments, the trajectories generated by it are longer reflecting particularly in the high input cost and the paths generally more conflicting with the obstacle verifying a greater softening of the \glsxtrshort{CLF} constraint and the presence in more expensive states. \\
 
 
 \underline{UCF}
@@ -487,7 +487,7 @@ The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with
    \midrule
     \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 1.98e-4 & 2.06 & 50 & 487.21 & 14413 & 14900 \\
     \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.32e-4 & 2.83 & 50 & 1060.5 & 8668.7 & 9729.2 \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 14.855  & 2465.8  & 2469.4 & 4935.2 \\
+    \glsxtrshort{MPC}                                                  & 0.107   &176.36&14.855&2465.8& 2469.4 & 4935.2 \\
     \midrule
     \caption{Some UCF Data}
     \label{tab:Some_UCF_Data}\\
@@ -530,7 +530,7 @@ Now given an ellipsoidal obstacle, with this kind of axis configuration, the big
    \midrule
     \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 1.86e-4 & 1.90 & 50 & 547.1 & 19495 & 20042 \\
     \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.43e-4 & 2.37 & 50 & 1142.5 & 11604 & 12747 \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 14.81  & 3229.5  & 3234.4 & 6463.9 \\
+    \glsxtrshort{MPC}                                                  & 5.21e-3 & 234.48  & 14.81  & 3229.5  & 3234.4 & 6463.9 \\
     \midrule
     \caption{Some UEV Data}
     \label{tab:Some_UEV_Data}\\
@@ -577,7 +577,7 @@ If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relativ
    \midrule
     \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 1.92e-4 & 1.92 & 50 & 2958.5 & 13435  & 16394 \\
     \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.52e-4 & 2.73 & 50 & 574.53 & 10007 & 10582  \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 50  & 1053.9  & 9015.4 & 10069 \\
+    \glsxtrshort{MPC}                                                  & 7.98e-4 & 175.25  & 50  & 1053.9  & 9015.4 & 10069 \\
     \midrule
     \caption{Some UEH Data}
     \label{tab:Some_UEH_Data}\\
@@ -627,9 +627,9 @@ As in UEH~\ref{ssssec:UEH_experiments}, although the other techiniques don't kee
    \rowcolor{blue!6}%
    Algorithms   & DecisionTime & OPtiTime & ReachTime  & InputCost   & StateCost & Cost           \\
    \midrule
-    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 2.1e-4 & 2.12 & 50 & 9769.6 & 38910  & 48680 \\
+    \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 2.1e-4  & 2.12 & 50 & 9769.6 & 38910  & 48680 \\
     \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 3.18e-4 & 3.58 & 50 & 11497 & 77575 & 89073  \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---     & ---  & 50  & 4243 & 22267 & 26510 \\
+    \glsxtrshort{MPC}                                                  & 5.19e-3 & 161.81& 50  & 4243 & 22267 & 26510 \\
     \midrule
     \caption{Some UED Data}
     \label{tab:Some_UED_Data}\\
@@ -674,7 +674,7 @@ As in UEH~\ref{ssssec:UEH_experiments}, \glsxtrshort{A-JO} and \glsxtrshort{MPC}
    \midrule
     \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}           & 2.44e-4 & 1.48 & 30 & 45.901  & 4691.1  & 4737 \\
     \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 3e-4 & 2.2     & 30 & 10.015 & 2322.1 &  2332.1 \\
-    Optimal (\glsxtrshort{MPC} of 6000 horizon)                        & ---  & ---     & 30  & 131.36 & 3094.7 & 3226.1 \\
+    \glsxtrshort{MPC}                      & 6.97e-4  & 305.52     & 30  & 131.36 & 3094.7 & 3226.1 \\
     \midrule
     \caption{Some OPC Data}
     \label{tab:Some_OPC_Data}\\
@@ -685,13 +685,55 @@ As in UEH~\ref{ssssec:UEH_experiments}, \glsxtrshort{A-JO} and \glsxtrshort{MPC}
 The cost of the \glsxtrshort{A-CLF-S} showed to be even less than the supposed optimal solution.
 
 
+\newpage %só para ajeitar 
+
+\subsection{Other}
+\label{subsec:other_experiments}
+
+Following the results obtained previously, it is compared the \glsxtrshort{MPC} using the objective function \ref{eq:Cost_Function_Alpha} (\glsxtrshort{MPC-F}), with a \glsxtrshort{MPC} with the cost defined according to \ref{eq:Cost_Function_Alpha_last_state} (\glsxtrshort{MPC-L}) like \glsxtrshort{A-CLF-S}~\ref{subsubsec:A-CLF-S_parameters}.\\
+
+\underline{UCC}
+\label{UCC_other_experiments} %Unicycle Ellipse Vertical
 
 
+ \begin{figure}[htbp]
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{mpc_UCC.pdf}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:mpc_UCC_CostEvol}
+  \end{subfigure}
+  \begin{subfigure}{0.6\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{mpc_UCC_costs.pdf}
+  %\caption{A figure with two sub-figures!}
+  \label{fig:mpc_UCC_trajectory}
+  \end{subfigure}
+  \caption{UCC~\ref{ssssec:UCC}}
+\label{fig:mpc_UCCTrajectory_and_CostEvol}
+\end{figure}
 
 
+\glsxtrshort{MPC-L} shows the shortest path and less input consumed, however since the optimization is done based just on the last state from the horizon resulting in a reaching time close to the end of the horizon. This \glsxtrshort{MPC} version targets the end of the horzion with minimal consume, but if the horizon is too short, assuming the same weight on the last state, it can lead to really high control inputs to be as close to \txtref at the end of it. Meanwhile, the \glsxtrshort{A-CLF-S} optimization don't suffer from the same proble due to its baseline framework, more precisely, the static behaviour imposed by the \(\gamma\) function, i.e, the total input cost variation is impacted essentially by its the path which is effectively optimized by the respective cost function~\ref{eq:Cost_Function_Alpha_last_state}.
+
+  \bgroup
+ \rowcolors{1}{}{orange!4}
+ \begin{xltabular}{\textwidth}{|l|cccccc|}
+   \toprule
+   \rowcolor{blue!6}%
+   Algorithms   & DecisionTime & OPtiTime & ReachTime  & InputCost   & StateCost & Cost           \\
+   \midrule
+    \glsxtrshort{A-CLF-S}~\ref{subsubsec:CLFs_Summed_Algorithm}        & 2.29e-4 & 2.45 & 50 & 352.96 & 5224.5 & 5577.5 \\
+    \glsxtrshort{MPC-F}                                                & 8.34e-3 & 199.84  & 15.65  & 6440  & 6448.8 & 2577.5 \\
+    \glsxtrshort{MPC-L}                                                & 8.58e-3 & 180.1 & 49.57 & 183.13  & 11674  & 11857 \\
+    \midrule
+    \caption{Some UCC Data}
+    \label{tab:Some_mpc_UCC_Data}\\
+   \end{xltabular}
+ \egroup
 
 
-
+ Computationally wise, both \glsxtrshort{MPC} generally show similar times.
 
 
 

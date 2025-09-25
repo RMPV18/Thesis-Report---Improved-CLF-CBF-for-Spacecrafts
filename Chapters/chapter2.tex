@@ -936,7 +936,7 @@ The new point is obtained accounting with the natural movement direction of thos
   \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
     \KwData{$f$, $\xVec_0$, $tI$, $\Delta t$, $args^*$}
-    \KwResult{$dir$}
+    \KwResult{$dir$, $\xVec_{END}$}
     $(\xVec, \uVec) \gets \text{SPS}\hspace{0.1em}(f, \xVec_0, tI, \Delta t, args^*) \hspace{0.25em} \begin{bmatrix*}[c]  conditions^* \gets h(\xVec) > 0 \\ decision^* \\ integration^* \end{bmatrix*}$ \Comment*[r]{Algorithm \ref{alg:State_Propagation_Simulation}} 
     $dir \gets \frac{f(\xVec_{END}, \uVec_{END})}{||f(\xVec_{END}, \uVec_{END})||}$ \Comment*[r]{System Dynamic at (\(\xVec_{END}, \uVec_{END}\)) Normalized}
     \caption{Natural Convergence Direction Vector (\(NCDV\))} \label{alg:Natural_Convergence_Direction_Vector}
@@ -947,6 +947,9 @@ The new point is obtained accounting with the natural movement direction of thos
 
 \subsubsection{Constraint Tangent Point}
 \label{subsubsec:Constraint_Tangent_Point}
+
+\underline{Ellipsoidal}
+\label{sssec:Constraint_Tangent_Point_Ellipsoidal} \\
 
 From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmatrix} \bigr]\) obtained in \ref{alg:Natural_Convergence_Direction_Vector} (\(\mathbf{v} = \mathbf{O} \hspace{0.2em} dir\), with \(\mathbf{O}\) as the observer matrix of the two constrained states) is deduced a tangent point in the respective constraint. This point is the most far from the eminent of colliding unsafe set \(\mathcal{C}\) given a perpendicular direction to the obtained vector.%, therefore the new equilibrium point translates as the necessary variation the system states need in that perpendicular direction to pass the unsafe zone.                
  Assuming it's always used the ellipsoidal fit~\ref{eq:Ellipsoidal_fit}, where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{c \times c}_{\succ 0}\), \(\mathbf{O} \in \mathbb{R}^{c \times n}\) and \(\mathbf{p} \in \mathbb{R}^{c}\), the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:CL_Ellipsoide_Tangent_Point}):
@@ -990,6 +993,133 @@ The closest-point to the current state is chosed as the intermediate equilibrium
 \end{equation}
 
 
+\underline{Any}
+\label{sssec:Constraint_Tangent_Point_Any} \\
+
+
+The previous obtaining strategy is exclusive to ellipsoidal figures, while the purposed technique aims to be able to find the wanted point for any two dimensional shape. \par 
+It is characterized to a discrete behaviour as the search for the point is through steps along \(\mathbf{v} = \bigl[\begin{smallmatrix} \mathbf{v}_1 \\ \mathbf{v}_2 \end{smallmatrix}\bigr]\) and its perpendicular direction \(\mathbf{vp} = \bigl[\begin{smallmatrix} -\mathbf{v}_2 \\ \mathbf{v}_1 \end{smallmatrix}\bigr]\). 
+Given \(p = \mathbf{O}\xVec_{END}\) and \(v\) returned by \(NCDV\)~\ref{alg:Natural_Convergence_Direction_Vector}, the first order \glsxtrshort{CBF} \(h0\), arbirtrary steps sizes, \(step\) and \(stepP\), along \(v\) and \(vp\) respectively and a maximum of iterarions while searching through the respective directions. 
+
+
+  \SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$p$, $v$, $h_0$, $step$, $stepP$, $tI$}
+    \KwResult{$(p,q)$}
+
+    $vp = v_{\perp}$
+
+    $q \gets FI(p, v, h_0, step)$ \Comment*[r]{Algorithm \ref{alg:Find_Intersection}} 
+
+    $(p_l, q_l) \gets (p, q)$ \Comment*[r]{Initializing the left pait of points}
+     
+    $(p_r, q_r) \gets (p, q)$ \Comment*[r]{Initializing the right pait of points} 
+
+    \While{1}{   
+        $ (p, q) \gets FNLIs(p_l, q_l, v, vp, h_0, step, stepP, tI)$ \Comment*[r]{Algorithm \ref{alg:Find_Next_Layer_Intersections}} 
+
+        \eIf{$any(isempty(p)$ \textbf{OR} $isempty(q))$}{ 
+                $(p, q) \gets (p_l, q_l)$\;
+                $break$ \Comment*[r]{Reach the top on the left side first} 
+            }{
+                $(p_l, q_l) \gets (p, q)$\;
+            }       
+
+
+        $ (p, q) \gets FNLIs(p_r, q_r, v, \mathbf{-}vp, h_0, step, stepP, tI)$ \Comment*[r]{Algorithm \ref{alg:Find_Next_Layer_Intersections}} 
+        
+        \eIf{$any(isempty(p)$ \textbf{OR} $isempty(q))$}{ 
+                $(p, q) \gets (p_r, q_r)$\;
+                $break$ \Comment*[r]{Reach the top on the right side first} 
+            }{
+                $(p_r, q_r) \gets (p, q)$\;
+            }
+    }
+    
+    \caption{Find Contour Point (FCP)} \label{alg:Find_Contour_Point}
+  \end{algorithm}
+
+Depending how small the steps are and how big is the total number of searching iteration steps along \(v\) and \(vp\) (and their inverses \(-v\) and \(-vp\)), the more robust the algoritm is.\\
+
+
+
+  \SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$p0$, $q0$, $v$, $vp$ $h_0$, $step$, $stepP$, $tI$}
+    \KwResult{$(p_{new}, q_{new})$}
+    
+    $[p0, q0] \gets [p0, q0] + vp \times stepP$ \Comment*[r]{Jump of size $stepP$ to the next layer}
+    
+    
+    $(p_{new}, r) \gets FLI(p0, q0, v, h_0, step, [tI, tI])$
+        
+    \If{$not(isempty(p_{new}))$}{
+        \If{$r \geq 1$}{
+            $p0 \gets p_{new}$\;
+            \If{$r == 2$}{ 
+                $q0 \gets p0 + v \times step$
+            }
+        }
+        $(q_{new}, -) \gets FLI(q0, p0, -v, h_0, step, [tI, 0])$
+    }
+      
+    \caption{Find Next Layer Intersections (FNLIs)} \label{alg:Find_Next_Layer_Intersections}
+  \end{algorithm}
+
+  From \(FNLIs\) obtains both intersection points between the layer and the unsafe set according to the \glsxtrshort{CBF} \(h0\).\\
+
+    \SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$p0$, $q0$, $v$, $vp$ $h_0$, $step$, $stepP$, $tI(1:2)$}
+    \KwResult{$(p_{new}, reach)$}
+    $reach \gets 0$ \Comment*[r]{Indicates $p_{new}$ relative to $q0$}
+    $p \gets p0$ \Comment*[r]{Starting the search} 
+    \While{$i \leq tI(1)$}{      
+
+        \If{$h_0(xp)\leq 0$ ($\mathbf{O}xp = p$)}{
+            $p_{new} \gets FI(p, -v, h_0, step)$\Comment*[r]{Obligatory use of Algorithm \ref{alg:Find_Intersection}.}
+            $break$ \Comment*[r]{Here $step$ can be reduced if it's wanted more accuracy.}
+        }
+        
+        $p \gets p - v \times step$ \Comment*[r]{Search for the interior of the unsafe set along \(-v\)}
+    }
+
+    \If{$isempty(p_{new})$}{
+        $reach \gets 1$ \Comment*[r]{Searching in the direction of \(q0\)}
+        $p \gets p0$ \Comment*[r]{If didn't intersetc, it comebacks to the initial point}
+        \While{$i \leq tI(2) + \frac{||p0-q0||}{step}$}{      
+
+
+            \If{$h_0(xp)\leq 0$ ($\mathbf{O}xp = p$)}{
+                $p_{new} \gets FI(p, -v, h_0, step)$\Comment*[r]{Optional use of Algorithm \ref{alg:Find_Intersection}.} 
+                $break$ \Comment*[r]{Here $step$ can be reduced if it's wanted more accuracy.}
+            }
+
+            $p \gets p + v \times step$ \Comment*[r]{Search along \(v\) of the unsafe set interior}
+
+        }
+        \If{$i > \frac{||p0-q0||}{step}$}{
+                $reach \gets 2$ \Comment*[r]{It reached \(q0\)}
+            }
+    }
+      
+    \caption{Find Layer Intersection (FLI)} \label{alg:Find_Layer_Intersection}
+  \end{algorithm}
+
+  This algorithm is responsible to obtain one of the layer intersection for a chosen side according to the direction stipulated \(v\).\\
+
+    \SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$p$, $v$, $h_0$, $step$}
+    \KwResult{$p$}
+    \While{$h_0(p)\leq 0$ ($\mathbf{O}xp = p$)}{   
+        $p \gets p + v \times step$
+    }
+    $p \gets p - v \times step$\;
+    \caption{Find Intersection (FI)} \label{alg:Find_Intersection}
+  \end{algorithm}
+
+ It's function is to obtain the intersection point between a layer and boundary. It starts from a point already inside boundary and it is propagated through \(v\) direction. \\
 
 \newpage %Só para ajeitar
 
