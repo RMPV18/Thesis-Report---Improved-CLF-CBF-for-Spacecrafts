@@ -16,10 +16,11 @@
 
 
 
-%Aqui falar do modelo generico e de algumas coisas que serviram de base para os proximos topicos e que não valem a pena uma secção, alem de introduzir o que ai vem
 
 \section{\glsxtrshort{CLF-CBF}}
-\label{sec:clf_cbf}
+\label{sec:clf_cbf}  
+
+\glsxtrshort{CLF-CBF} is a control technique that via \glsxtrshort{CLF} and \glsxtrshort{CBF} conditions impose stability and safety to a system respectively. This framework decision is generally obtained through a \glsxtrshort{QP}, whose objective is to minimize the control inputs. The optimization problem has a closed-form solution that allows faster computational speeds. The baseline \glsxtrshort{CLF} and \glsxtrshort{CBF} time derivatives don't contain the control inputs for high-order systems so its conditions aren't able to affect the system and therefore it needs the Backstepping formulation. It considers a solution if it was a first-order system and the conditions had access to the control inputs, that the new \glsxtrshort{CLF} and \glsxtrshort{CBF} and its conditions try to converge to and like the first-order \glsxtrshort{CLF-CBF} have a closed-form solution. Finally, it is encoded logical operations capable to merge the safe states sets (and unsafe sets, e.g. obstacles) defined by multiple \glsxtrshort{CBF} enabling to achieve more complex shapes and more accurate of the unsafe set.\\  
 
 Considering a nonlinear control-affine system:
 
@@ -52,18 +53,52 @@ For any initial condition \(\xVec_0 \in \mathbb{R}^n\), there is a maximal time 
 \subsubsection{\glsxtrfull{CLF}}
 \label{subsub:control_lyapunov_function}
 
-Having the objective of global assymptotically stability of the system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, is desired for the system converge to an equilibrium point \( \bar{\mathbf{x}} \). A solution comes by designing a positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0} \) which converges to zero while the system converges to the respective equilibrium point, and for that, designing a control law that acts in order to achieve specifically the convergence of the function. Consequentially is pretended to the function \( V\mathbf(\mathbf{x}) \) to be continuos and differentiable:
+Having the objective of global asymptotically stability of the system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, is desired for the system converge to an equilibrium point \( \bar{\mathbf{x}} \). A solution comes by designing a positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0} \) which converges to zero while the system converges to the respective equilibrium point, and for that, designing a control law that acts in order to achieve specifically the convergence of the function. \\
 
-\[\dot{V} (\mathbf{x}, \mathbf{u}) = \frac{\partial V}{\partial x}\dot{x} = L_fV(\mathbf{x}) + L_GV(\mathbf{x})\mathbf{u} \]
+A Lyapunov function is a continuos scalar function \(V:\mathbb{D}^n \to \mathbb{R}\), designed to be positive definite, i.e, strictly positive with the exception of the equilibrium point \(\bar{\xVec}\) where it takes a null value.  
 
-where \(L_fV\) and \(L_GV\) are the Lie derivatives of \(V\) and \(\mathbf{u}\) the control input vector resposible to manipulate the function, more precisely, its convergence rate.\par
+\begin{equation}
+    \begin{array}{l}
+    V(\mathbf{\xVec}) > 0, \quad \xVec \in \mathbb{D}^n\setminus \{\mathbf{0}\} \\
+    V(\mathbf{\xVec}) = 0
+    \end{array}
+    \label{eq:LF_condition}
+\end{equation}
 
-That beeing said, a continuosly differentiable, positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0}  \) wich \( \lim_{\mathbf{x} \to \bar{\mathbf{x}}}{V(\mathbf{x})} = 0 \) is a \glsxtrshort{CLF} if there exists a \( \gamma \in \mathcal{K}^e_{\infty}  \)\footnote{If a continuos functions \(\alpha:[-b,a] \to \mathbb{R}\) with \((a,b) > 0\), strictly increasing and \(\alpha(0) = 0\) then \(\alpha \in \mathcal{K}^e\) and if it adds \(\lim_{r \to \infty} \alpha(r) = \infty\) then \(\alpha \in \mathcal{K}^e_{\infty}\)}  such that for all \( \mathbf{x} \in \mathbb{R}^n \setminus \{\bar{\mathbf{x}}\} \):
+And it is characterized by its time derivative beeing negative and and equal zero in \(\bar{\xVec}\).  
+
+\begin{equation}
+    \begin{array}{l}
+        \dot{V}(\xVec) = \nabla V(\xVec)\dot{\xVec} < 0, \quad \xVec \in \mathbb{D}^n\setminus \{\mathbf{0}\} \\
+        \dot{V}(\bar{\xVec}) = 0
+    \end{array}
+    \label{eq:LF_derivative_condition}
+\end{equation}
+
+%If the states of the system start relatively close to the origin and remains close forerever (\(V(\xVec) \leq \epsilon, \quad \epsilon \in \mathbb{R}_{\geq 0}\)) then it is Lyapunov stable and the origin is considered an equilibrium point. 
+If those conditions, \ref{eq:LF_derivative_condition} are verified it means the Lyapunov function \(V\) converges to zero while the system converges to the equilibrium point, hence the system is asymptotically (lyapunov) stable, which is the notion of stability considered along this thesis.\par
+If the Lyapunov function \(V\) domain \(\mathbb{D}^n\) is equivalent to the neighborhood of the equilibrium, where those conditions are just verified, then it is locally asymptotically stable while if it is equal to \(\mathbb{R}^n\) then \(V(\xVec)\) is radially unbounded, \(\lim_{||\mathbf{C}\hspace{0.1em}\xVec - \bar{\xVec}||\to \infty}V(\xVec) = \infty\) with \(\mathbf{C}\) as the observation matrix, and it is considered in the origin a globally asymptotically stable equilibrium. \\
+
+In order to generalize to controllable dinamical systems, it is introduced \glsxtrshort{CLF}, modeled just like the typical the lyapunov functions~\ref{eq:LF_condition} but able through the use of the given control inputs affect its derivative in order to achieve the stability conditions~\ref{eq:LF_derivative_condition}. That beeing said, it is pretended to the \glsxtrshort{CLF} function \( V\mathbf(\mathbf{x}) \) to be continuos and differentiable:
+
+\begin{equation}
+\begin{array}{ll}
+    \dot{V} (\mathbf{x}, \mathbf{u}) = \frac{\partial V}{\partial \xVec}\dot{\xVec} &= \frac{\partial V}{\partial \xVec}f(\xVec) + \frac{\partial V}{\partial \xVec}g(\xVec)\uVec \\
+                                     &=  L_fV(\mathbf{x}) + L_GV(\mathbf{x})\mathbf{u}
+\end{array}
+\label{eq:CLF_derivative}
+\end{equation}
+
+
+
+where \(L_fV\) and \(L_GV\) are the Lie derivatives of \(V\) and \(\mathbf{u}\) the control input vector responsible for manipulating the function, more precisely, to affect its stabilizing convergence rate \(\dot{V}(\xVec, \uVec)\).\par
+
+Therefore, a continuosly differentiable, positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0}  \) wich \( \lim_{\mathbf{x} \to \bar{\mathbf{x}}}{V(\mathbf{x})} = 0 \) is a \glsxtrshort{CLF} if there exists a \( \gamma \in \mathcal{K}^e_{\infty}  \)\footnote{If a continuos functions \(\alpha:[-b,a] \to \mathbb{R}\) with \((a,b) > 0\), strictly increasing and \(\alpha(0) = 0\) then \(\alpha \in \mathcal{K}^e\) and if it adds \(\lim_{r \to \infty} \alpha(r) = \infty\) then \(\alpha \in \mathcal{K}^e_{\infty}\)}  such that for all \( \mathbf{x} \in \mathbb{R}^n \setminus \{\bar{\mathbf{x}}\} \):
 
 \begin{equation}
  \inf_{\mathbf{u} \in \mathbb{R}^m} [L_fV(\mathbf{x}) + L_GV(\mathbf{x})\mathbf{u}] \leq -\gamma(V(\mathbf{x}))
  \label{eq:CLF}
-\end{equation}
+\end{equation}\\
 
 From \glsxtrshort{CLF} \(V\) and an adequate tuning of \( \gamma \) parameter results a control law followed by the controller \(K_{CLF}\):
 
@@ -72,29 +107,28 @@ From \glsxtrshort{CLF} \(V\) and an adequate tuning of \( \gamma \) parameter re
  \label{eq:K-CLF}
 \end{equation}
 
-The stets generated by \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) refer to the possible control input values necessary to the \glsxtrshort{CLF} \(V(\mathbf{x})\) continuosly converge to zero while the closed-loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} to the equilibrium point, but more slowly as is close to reach the objective. \\
+The stets generated by \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) refer to the possible control input values necessary to the \glsxtrshort{CLF} \(V(\mathbf{x})\) continuosly converge to zero while the closed-loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} to the equilibrium point, but more slowly as is close to reach the objective and the \(\gamma(V(\xVec))\) function decreases. \\
 
 
 \subsubsection{\glsxtrfull{CBF}}
 \label{subsub:control_barrier_function}
 
-Now having the objective of garantee safety to system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, is aimed to keep the state inside a safe set \(\mathcal{C}\) (foward invariant\footnote{A set \(\mathcal{S}\) is said foward invariant if the initial system state \( x_0 \in \mathcal{S}\) and so \(x(t) \in \mathcal{S} \hspace{0.25em} \forall t \geq 0\) }) defined accordingly the problem needs. The notion of safety, i.e., the safe set \(\mathcal{C}\) is defined as the 0-superlevel\footnote{For function \(f: \mathbb{R}^n \to \mathbb{R}\), its superlevel set is given by \(\mathcal{S}(f) = \{(x_1,...,x_n): f(x_1,...,x_n) \geq c\}\), where having \(c = 0\) corresponds to the 0-superlevel set of \(f\)} set of a continuosly differentiable function \( h: \mathbb{R}^n \rightarrow \mathbb{R}  \):
+While the \glsxtrshort{CLF} imposes an "acttracting" behaviour to the system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, the \glsxtrshort{CBF} a "repelling" one. Having the objective of garantee safety to system, is aimed to keep the state inside a safe set \(\mathcal{C}\) (forward invariant\footnote{A set \(\mathcal{S}\) is said forward invariant if the initial system state \( x_0 \in \mathcal{S}\) and so \(x(t) \in \mathcal{S} \hspace{0.25em} \forall t \geq 0\) }) defined accordingly the problem needs (e.g. in the context autonomous vehicles, the outside space occupied by an obstacle).\par 
+The notion of safety, i.e., the safe set \(\mathcal{C}\) is defined as the 0-superlevel\footnote{For function \(f: \mathbb{R}^n \to \mathbb{R}\), its superlevel set is given by \(\mathcal{S}(f) = \{(x_1,...,x_n): f(x_1,...,x_n) \geq c\}\), where having \(c = 0\) corresponds to the 0-superlevel set of \(f\)} set of a continuously differentiable function \( h: \mathbb{R}^n \rightarrow \mathbb{R}  \):
 
-\begin{equation}
-    \begin{array}{l}
-        \qquad   \mathcal{C} = \{ \mathbf{x} \in \mathbb{R}^n : h( \mathbf{x} )\geq 0\} \\
-        \qquad \hspace{-0.5em}  \partial\mathcal{C} = \{ \mathbf{x} \in \mathbb{R}^n : h( \mathbf{x} ) = 0\} \\
-        int(\mathcal{C}) = \{ \mathbf{x} \in \mathbb{R}^n : h( \mathbf{x} ) > 0\}
-    \end{array}
- \label{eq:safe-set}
-\end{equation}
+\begin{align}
+        \mathcal{C} &= \{ \mathbf{x} \in \mathbb{R}^n : h( \mathbf{x} )\geq 0\} \label{eq:safe-set}\\
+        \partial\mathcal{C} &= \{ \mathbf{x} \in \mathbb{R}^n : h( \mathbf{x} ) = 0\} \label{eq:boundary_safe_set}\\
+        int(\mathcal{C}) &= \{ \mathbf{x} \in \mathbb{R}^n : h( \mathbf{x} ) > 0\} \label{eq:interior_safe_set} \\
+        \bar{\mathcal{C}} &= \{ \mathbf{x} \in \mathbb{R}^n : h( \mathbf{x} ) < 0\} \label{eq:unsafe_set}
+\end{align}
 
 
-In order to mantain \(h( \mathbf{x} )\) positive, there is a need to have a control law and but first to be able to interface with the function. Since \(h( \mathbf{x} )\) is differentiable:  
+In order to maintain  \(h( \mathbf{x} )\) positive, there is a need to have a control law but first to be able to interface with the function. Since \(h( \mathbf{x} )\) is differentiable:  
 
 \[\dot{h}(\mathbf{x}, \mathbf{u}) = \frac{\partial h}{\partial x}\dot{x} = L_fh(\mathbf{x}) + L_Gh(\mathbf{x})\mathbf{u} \]
 
-where \(L_fh\) and \(L_Gh\) are the Lie derivatives of \(h\) and \(\mathbf{u}\) the control input vector resposible to manipulate the function, more precisely, its time derivative.\par
+where \(L_fh\) and \(L_Gh\) are the Lie derivatives of \(h\) and \(\mathbf{u}\) the control input vector responsible to manipulate the function, more precisely, its time derivative.\par
 
 So, a differentiable function \( h: \mathbb{R}^n \rightarrow \mathbb{R}  \) is a \glsxtrshort{CBF} if there exists a \( \alpha \in \mathcal{K}^e_{\infty}  \) such that for all \( \mathbf{x} \in \mathbb{R}^n \setminus \{\bar{\mathbf{x}}\} \):
 
@@ -110,9 +144,12 @@ Similar to the \glsxtrshort{CLF}, from \glsxtrshort{CBF} \(h\) and an adequate t
  \label{eq:K-CBF}
 \end{equation}
 
-\newpage %Só para ajeitar
 
-The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} safe with respect to the set \(\mathcal{C}\). The controller by defenition is able to evolve the closed-loop system more freely when \(\dot{h}( \mathbf{x} ) > 0\) and more cautiously as \(h( \mathbf{x} ) \) shortens and \(\dot{h}( \mathbf{x} ) < 0\), if \(h( \mathbf{x} ) < 0\) it means is in the unsafe region, so \(\dot{h}( \mathbf{x}) > 0\) implies converging continuosly to the safe set \(\mathcal{C}\). \\ 
+The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} safe with respect to the set \(\mathcal{C}\). \par
+
+By applying the control law to a system, the far from the boundary~\ref{eq:boundary_safe_set} it is (the bigger \(h(\xVec)\) and \(\alpha(h(\xVec))\)) or the bigger the value \(L_fh( \mathbf{x} )\) it takes, the greater the freedom to control the system or approximate to the unsafe set~\ref{eq:unsafe_set}, while the contrary requires a more caution reflecting in a smaller set \(K_{CBF}(\xVec)\). If \(h( \mathbf{x} ) < 0\) it means the system is in the unsafe region~\ref{eq:unsafe_set}, so \(\dot{h}( \mathbf{x}) > 0\), which implies control actions leading the closed-loop system continuously to the safe set \(\mathcal{C}\). Although, safety is a critical factor, having the system in the unsafe set don't necessarily mean collapse as the fit of the region (while defining the \glsxtrshort{CBF}) can be over conservative, already counting with unmodeled perturbations, discrete behaviour (or integrative periods)... \\ 
+
+% \newpage %Só para ajeitar
 
 
 
