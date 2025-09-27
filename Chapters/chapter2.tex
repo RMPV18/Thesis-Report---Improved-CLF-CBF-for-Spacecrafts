@@ -147,7 +147,7 @@ Similar to the \glsxtrshort{CLF}, from \glsxtrshort{CBF} \(h\) and an adequate t
 
 The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} safe with respect to the set \(\mathcal{C}\). \par
 
-By applying the control law to a system, the far from the boundary~\ref{eq:boundary_safe_set} it is (the bigger \(h(\xVec)\) and \(\alpha(h(\xVec))\)) or the bigger the value \(L_fh( \mathbf{x} )\) it takes, the greater the freedom to control the system or approximate to the unsafe set~\ref{eq:unsafe_set}, while the contrary requires a more caution reflecting in a smaller set \(K_{CBF}(\xVec)\). If \(h( \mathbf{x} ) < 0\) it means the system is in the unsafe region~\ref{eq:unsafe_set}, so \(\dot{h}( \mathbf{x}) > 0\), which implies control actions leading the closed-loop system continuously to the safe set \(\mathcal{C}\). Although, safety is a critical factor, having the system in the unsafe set don't necessarily mean collapse as the fit of the region (while defining the \glsxtrshort{CBF}) can be over conservative, already counting with unmodeled perturbations, discrete behaviour (or integrative periods)... \\ 
+By applying the control law to a system, the far from the boundary~\ref{eq:boundary_safe_set} it is (the bigger \(h(\xVec)\) and \(\alpha(h(\xVec))\)) or the bigger the value \(L_fh( \mathbf{x} )\) it takes, the greater the freedom to control the system or approximate to the unsafe set~\ref{eq:unsafe_set}, while the contrary requires a more caution reflecting in a smaller set \(K_{CBF}(\xVec)\). If \(h( \mathbf{x} ) < 0\) it means the system is in the unsafe region~\ref{eq:unsafe_set}, so \(\dot{h}( \mathbf{x}) > 0\), which implies control actions leading the closed-loop system continuously to the safe set \(\mathcal{C}\). Although, safety is a critical factor, having the system in the unsafe set don't necessarily mean collapse as the fit of the region (while defining the \glsxtrshort{CBF}) can be over conservative, already counting with unmodeled perturbations, a discrete behaviour (or integrative periods) as the \glsxtrshort{CBF} conditions just accounts with the given instant,... \\ 
 
 % \newpage %Só para ajeitar
 
@@ -157,9 +157,8 @@ By applying the control law to a system, the far from the boundary~\ref{eq:bound
 \subsubsection{Quadratic Program Formulation}
 \label{subsub:quadratic_program_formulation}
 
-Now having the objective of not only achieve safety but also assymptotically stability through the usage of \glsxtrshort{CLF} and \glsxtrshort{CBF} it renders a set of control inputs able to achieve the respective purposes.  
-
-Using the conditions imposed by \glsxtrshort{CLF} and \glsxtrshort{CBF} as constraints, is presented an optimization problem  via \glsxtrfull{QP}~\footnote{\glsxtrlong{QP} consists of solving a mathematical optimization problem with a quadratic objective function}, given a locally Lipschitz continuos controller \(k: \mathbb{R}^n \rightarrow \mathbb{R}^m \):
+Now having the objective of not only achieving  safety but also asymptotically  stability through the usage of \glsxtrshort{CLF} and \glsxtrshort{CBF} it renders a set of control inputs able to achieve the respective purposes. Using the conditions imposed by \glsxtrshort{CLF} and \glsxtrshort{CBF} as constraints, is presented an constrained optimization problem via \glsxtrfull{QP}~\footnote{\glsxtrlong{QP} consists of solving a mathematical optimization problem with a convex quadratic objective function and affine constraints}, relative faster than higher degree objective functions. This particular optimization problem aims minimal control actions and it is characterized for penalizing quadratically the control input deviations between each other. \par
+Given a locally Lipschitz continuos controller \(k: \mathbb{R}^n \rightarrow \mathbb{R}^m \), which control law is described by the specified \glsxtrshort{QP}:
 
 \begin{equation}
     \begin{array}{l}
@@ -170,9 +169,11 @@ Using the conditions imposed by \glsxtrshort{CLF} and \glsxtrshort{CBF} as const
  \label{eq:CLF-CBF-QP}
 \end{equation}
 
-The sets of control inputs restricted to the optimization problem are given by \(K_{CLF-CBF}(\xVec) = K_{CLF}(\xVec) \cap  K_{CBF}(\xVec)\) hopefully non-empty which can happen if the conditions are in conflict. \par
+Where \(R \in \mathbb{R}^{m \times m}_{0}\) corresponds to the inputs weight matrix. \par
 
-In case of conditions' conflict, in order to the closed loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} controller have a solution from the \glsxtrshort{QP}, since safety is critical, using a slack variable \(\delta\)  allows to relax the stability condition imposed by the \glsxtrshort{CLF} and highly contribute to obtaining a solution while keeping system safe:
+The sets of control inputs restricted to the optimization problem are given by \(K_{CLF-CBF}(\xVec) = K_{CLF}(\xVec) \cap  K_{CBF}(\xVec)\) hopefully non-empty which can happen if the conditions are in conflict.  \par
+
+For a given instant if the minimal speed of convergence to the equilibrium point implies a too fast approximation speed towards the unsafe set then there is a conflict between both active constraints and it is prioritized system safety over stability. So, in order to the closed loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} controller have a solution from the \glsxtrshort{QP}, since safety is critical, using a slack variable \(\delta\)  allows to relax the stability condition imposed by the \glsxtrshort{CLF} and highly contribute to obtaining a solution while keeping system safe:
 
 \begin{equation}
     \begin{array}{l}
@@ -183,7 +184,11 @@ In case of conditions' conflict, in order to the closed loop system~\ref{eq:Nonl
  \label{eq:CLF-CBF-QP-relaxed}
 \end{equation}
 
-Having \(\delta\) as an optimization variable not only allows to balance between the input values exceed usage and the level of relaxation but also to not have a fixed \(\delta\) value which would result for all states not so faster convergence and to the neighborhood of the equilibrium point instead of the actual target point. \\
+With \(p \in \mathbb{R}_{>0}\) as the slack variable weight. If \(p = 0\) then the \glsxtrshort{CLF} is disabled. \par
+
+\newpage %so para ajeitar
+
+Having \(\delta\) as an optimization variable not only allows to balance between the input values exceed usage and the level of relaxation but also not having a fixed \(\delta\) results for a not so fast convergence even when the \glsxtrshort{CBF} is not active as the \glsxtrshort{QP} aims minimal control actions, which is enhanced by the \glsxtrshort{CLF} condition softening, therefore is usually opted a higher \(p\) relative to the inputs weights. \\
 
 %tikz daquele esquema
 % \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
@@ -192,7 +197,7 @@ Having \(\delta\) as an optimization variable not only allows to balance between
 % \end{itemize}
 % \end{tcolorbox}
 
-\newpage %Só para ajeitar
+%\newpage %Só para ajeitar
 
 
 \subsection{Backstepping (Second-Order Formulation)}
@@ -201,7 +206,7 @@ Having \(\delta\) as an optimization variable not only allows to balance between
 \subsubsection{Second-Order Systems}
 \label{subsub:higher_order_systems}
 
-Usually control systems are governed by higher-order systems, such as some second-order cyber-physical systems controlling the position by applying some force to manipulate the speed that is felt in the position just instants after.  Higher order systems' outputs variation is felt by an multiple integrative effect, by an integration of each state affecting the next state dynamic until reach the so wanted output. Considering a non-linear system in strict-feedback form:
+Usually control systems are governed by higher-order systems, such as some second-order cyber-physical systems controlling the position by applying some force to manipulate the speed that is felt in the position just instants after.  Higher order systems' output variation is felt by an multiple integrative effect, by an integration of each state affecting the next state dynamic until reaching the so wanted output. Considering a non-linear system in strict-feedback form:
 
 \begin{subequations}
     
@@ -231,14 +236,16 @@ for any initial states \((\xVec_0, \mathbf{\xi}_0) \in \mathbb{R}^n \times \math
 \subsubsection{Purposal Solution Obtaining}
 \label{subsub:quadratic_program_formulation}
 
-Having a second order system~\ref{eq:HH-NL-System} the output dynamic don't have direct access to control \(\uVec\) or even is able to control \(\mathbf{\xi}\). In order to affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\), the strategy passes by obtaining the solution if it was a first order system~\ref{eq:Nonlinear-First-Order-System} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input), so given a differentiable and locally Lipschitz continuos \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
+Having a second order system~\ref{eq:HH-NL-System} the output dynamic don't have direct access to control \(\uVec\) or even is able to control \(\mathbf{\xi}\). In order to affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\), the strategy passes by obtaining the solution if it was a first order system~\ref{eq:Nonlinear-First-Order-System} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input). \par
+
+Given a differentiable and locally Lipschitz continuos \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
 
 \begin{equation}
     \dot{\xVec} = f_0(\xVec) + g_0(\xVec) k_0(\xVec)\\ 
  \label{eq:NL-CL-System-0Backstep}
 \end{equation}
 
-That beeing said, the first order solution could be obtained via \glsxtrshort{QP}, so supposing a \glsxtrshort{CLF} \(V_0\),  \glsxtrshort{CBF} \(h_0\),  a differentiable and locally Lipschitz continuos described just now \(k_0(\xVec)\) and \((\gamma_0, \alpha_0) \in \mathcal{K}^e_\infty \times \mathcal{K}^e_\infty\):
+That being said, the first order solution could be obtained via \glsxtrshort{QP}, so supposing a \glsxtrshort{CLF} \(V_0\),  \glsxtrshort{CBF} \(h_0\),  a differentiable and locally Lipschitz continuos described just now \(k_0(\xVec)\) and \((\gamma_0, \alpha_0) \in \mathcal{K}^e_\infty \times \mathcal{K}^e_\infty\):
 
 \begin{equation}
     \begin{array}{l}
@@ -250,7 +257,9 @@ That beeing said, the first order solution could be obtained via \glsxtrshort{QP
 \end{equation}
 
 
-The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability not only to the first-order system~\ref{eq:NL-CL-System-0Backstep} but also to the actual second-order system. Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order trying to converge to the first order solution. Now considering the second-order system \ref{eq:HH-NL-System}, supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
+The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability according to the \glsxtrshort{CBF} and \glsxtrshort{CLF} respectively, not only to the first-order system~\ref{eq:NL-CL-System-0Backstep} but also to the actual second-order system.\par
+Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order system trying to converge to the first order solution, which already targets the desired equilibrium point while maintaining  safety. Now considering the second-order system \ref{eq:HH-NL-System}, supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
+
 \begin{subequations}
     \label{eq:Backstepp_CF}
     \begin{align}
@@ -264,7 +273,8 @@ The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal 
 \end{subequations}
 
 
-With \(\eta \in \mathbb{R}_{\geq 0}\). Finally, via \Glsxtrshort{QP}, given a differentiable and locally Lipschitz continuos \(k(\xVec, \mathbf{\xi}):\mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m\):
+With \(\eta \in \mathbb{R}_{\geq 0}\). By subtracting \(\eta V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})\) to the \Glsxtrshort{CBF} \(h_0(\xVec)\) makes relatively \(h(\xVec, \xi)\) more conservative allowing, even though the delayed effect of the control inputs, to keep the system safe by targeting the obtained solution. Meanwhile, the \Glsxtrshort{CLF} \(V(\xVec, \xi)\) becomes bigger as the value taken by \(\gamma(V((\xVec, \xi)))\), rushing the convergence to \(\mathbf{k}_0(\xVec)\) followed by the desired equilibrium point. \par
+Finally, via \Glsxtrshort{QP}, given a differentiable and locally Lipschitz continuous  \(k(\xVec, \mathbf{\xi}):\mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m\):
 
 \begin{equation}
     \begin{array}{l}
@@ -275,11 +285,11 @@ With \(\eta \in \mathbb{R}_{\geq 0}\). Finally, via \Glsxtrshort{QP}, given a di
  \label{eq:CLF-CBF-QP-relaxed-1Backstep}
 \end{equation}
 
-It's expected that  \( \gamma << \gamma'\)  contributing to a faster convergence of \(\xi\) and more similar behaviour of the system~\ref{eq:HH-NL-CL-System} relative to the first-order system~\ref{eq:NL-CL-System-0Backstep} and mitigate the chances of the system~\ref{eq:HH-NL-CL-System} not be safe in relation to \(\mathcal{C}_0\). \\
+It's expected that  \( \gamma' >> \gamma >> 0\) or specially to \(\eta >>0\) contributing to a faster convergence of \(\xi\) and more similar behaviour of the system~\ref{eq:HH-NL-CL-System} relative to the first-order system~\ref{eq:NL-CL-System-0Backstep} and mitigate the chances of the system~\ref{eq:HH-NL-CL-System} not be safe in relation to \(\mathcal{C}_0\). \\
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
-    \item If it's not pretended to enforce stability or safety, just remove from both optimization problem (\ref{eq:CLF-CBF-QP-relaxed-0Backstep} and \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) the respective constraint responsible to it
+    \item If it's not pretended to enforce stability or safety, then it is removed from both optimization problem (\ref{eq:CLF-CBF-QP-relaxed-0Backstep} and \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) the respective constraint responsible to it
     %\item If it's a higher-order (than second) system, then, assuming it's a third-order system, the solution obtained in \ref{eq:CLF-CBF-QP-relaxed-1Backstep} is the "new \(k_0\)" and the third-order solution tries to converge to the second-order one (while this one is converging to the first-order solution)
 \end{itemize}
 \end{tcolorbox} 
@@ -289,7 +299,8 @@ It's expected that  \( \gamma << \gamma'\)  contributing to a faster convergence
 \subsection{Closed Form Solution}
 \label{sub:closed_form}
 
-The objective of this thesis is to purpose a set of low computational effort techniques suitable to spacecrafts. Aiming a faster computation of the optimization problems solutions, any of the previous \glsxtrshort{QP}s (\ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) have a closed-form\footnote{An closed-form expression is expressed by a limit number and well defined operations (elementary functions)} solution which allows to calculate directly the respective solution instead of depending of a numerical solver. Given the \glsxtrshort{QP} optimization problem and a controller \(k(\xVec, \mathcolor{gray}{\mathbf{\xi}}): \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p} \to \mathbb{R}^m\) \textcolor{gray}{(if it is a second-order system)}:
+The objective of this thesis is to purpose a set of low computational effort techniques suitable for spacecrafts. Aiming a faster computation of the optimization problems solutions, any of the previous \glsxtrshort{QP}s (\ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) have a closed-form\footnote{An closed-form expression is expressed by a limit number and well defined operations (elementary functions)} solution allowing to calculate directly the respective optimal solution and faster than a numerical solver.\par
+Given the \glsxtrshort{QP} optimization problem and a controller \(k(\xVec, \mathcolor{gray}{\mathbf{\xi}}): \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p} \to \mathbb{R}^m\) \textcolor{gray}{(if it is a second-order system)}:
 
 \begin{equation}
     \begin{array}{l}
@@ -303,7 +314,7 @@ The objective of this thesis is to purpose a set of low computational effort tec
 With a \glsxtrshort{CLF} \(V\), \glsxtrshort{CBF} \(h\), \(\mathbf{x}\in\mathbb{R}^n\), \textcolor{orange}{the first-order system \glsxtrshort{CLF}} \(\mathcolor{orange}{V_0} ( = V\) like in \ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed} and \ref{eq:CLF-CBF-QP-relaxed-0Backstep}) \textcolor{gray}{, and if it is a second-order system with} \(\mathcolor{gray}{\mathbf{\xi}\in\mathbb{R}^p}\) \textcolor{gray}{(equivalent to the \glsxtrshort{QP} seen while doing Backstepping~\ref{eq:CLF-CBF-QP-relaxed-1Backstep})}. \\
 
 
-Using \cite{matias2025hybrid} as a reference, assuming equal control input wheights relative to each other (\(R = \mathbf{I}_{m \times m}\)) and just one \glsxtrshort{CLF} and \glsxtrshort{CBF} each, according to the \glsxtrfull{KKT} conditions\footnote{\href{https://en.wikipedia.org/wiki/Karush-Kuhn-Tucker_conditions}{KKT Conditions Wikipedia (Click here to be Redirected)} \label{foot: KKT_Conditions}} (to see the full deduction \ref{app:CL_QP_CLF-CBF}):
+Assuming equal control input weights relative to each other (\(R = \mathbf{I}_{m \times m}\)) and just one \glsxtrshort{CLF} and \glsxtrshort{CBF} each, according to the \glsxtrfull{KKT} conditions\footnote{\href{https://en.wikipedia.org/wiki/Karush-Kuhn-Tucker_conditions}{KKT Conditions Wikipedia (Click here to be Redirected)} \label{foot: KKT_Conditions}} (to see the full deduction \ref{app:CL_QP_CLF-CBF}):
 
 \begin{equation}
     \mathbf{k}(\xVec \mathcolor{gray}{, \mathbf{\xi}}) =
@@ -317,7 +328,7 @@ Using \cite{matias2025hybrid} as a reference, assuming equal control input wheig
 \end{equation}
 
 
-Where each controller \(\mathbf{k}_i\), for \( i = 1, ..., 4 \), corresponds to the closed-form equation depending which constraints (\glsxtrshort{CLF} or \glsxtrshort{CBF}) are active what can be inferred by \(\mathcal{S}_i\), for \( i = 1, ..., 4 \). Via \glsxtrshort{KKT} conditions the respectives controllers and domains are obtained due to the \glsxtrshort{KKT} multipliers.\\
+Where each controller \(\mathbf{k}_i\), for \( i = 1, ..., 4 \), corresponds to the closed-form equation depending which constraints (\glsxtrshort{CLF} or \glsxtrshort{CBF}) are active what can be inferred by \(\mathcal{S}_i\), for \( i = 1, ..., 4 \). Via \glsxtrshort{KKT} conditions the respective  controllers and domains are obtained with the help of \glsxtrshort{KKT} multipliers.\\
 
 Auxiliary Variables:
 
@@ -326,7 +337,11 @@ Auxiliary Variables:
     & \Delta = L \sOrderArgB^2 (p^{-1} + ||L_Gh\sOrderArgB||^2)  \hspace{0.2em} || L_Gh\sOrderArgB||^2
 \end{align*}
 
-\glsxtrshort{KKT} multipliers:
+
+The constraint activation subdomains \(\mathcal{S}_i\) are respective  based on the dual feasibilities  condition~\footref{foot: KKT_Conditions}, which states that an constraint is active if its respective optimal \glsxtrshort{KKT} multiplier is positive \(\lambda_i^* > 0\), while the inactivation of those constraints are stated by the null value taken by the optimal \(\lambda_i^*\)  (\(\lambda_i^* = 0\)). However, since it is not known which constraints are active, it isn't possible to have \(\lambda_i^*\) and vice versa. The solution comes from the dual problem solution considering the \glsxtrshort{CLF} and \glsxtrshort{CBF} conditions active, such that if \(\lambda_i <0\) the respective constraint is inactive. 
+
+
+\glsxtrshort{KKT} multipliers if \glsxtrshort{CLF} and \glsxtrshort{CBF} are active (dual problem solution):
 
 \begin{align}
     & \lambda_1(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = \Delta^{-1} (L \sOrderArgB \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} - ||L_Gh\sOrderArgB||^2  \hspace{0.2em}F_V \sOrderArgB)
@@ -335,42 +350,37 @@ Auxiliary Variables:
     \label{eq:KKT-Multipliers_formulas}
 \end{align}
 
-Controller \(\mathbf{k}_i\) closed-form equation:
-
-\begin{equation}
-    \begin{array}{l}
-    \mathbf{k}_1(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -(p^{-1} + ||L_GV \sOrderArgB||^2)^{-1} \hspace{0.2em} F_V\sOrderArgB \hspace{0.2em} L_GV\sOrderArgB^{\top} \vspace{0.5em} \\ 
-    \mathbf{k}_2(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -||L_Gh \sOrderArgB||^{-2} \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} L_Gh \sOrderArgB^{\top} \vspace{0.5em} \\ 
-    \mathbf{k}_3(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -\lambda_1\sOrderArgB L_GV \sOrderArgB^{\top} + \lambda_2\sOrderArgB L_Gh \sOrderArgB^{\top} \vspace{1.5em}
-    \label{eq:closed-form_controller_formulas}
-    \end{array} 
-\end{equation}
-
-
-
-Constraint Activation Subdomains \(\mathcal{S}_i\) ( based on the dual feasibilitie condition~\footref{foot: KKT_Conditions}):
 
 \begin{align}
     \intertext{\hspace{4em} If CLF is active: }
     \mathcal{S}_1 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p}: \lambda_1 \geq 0 \cap \lambda_2 < 0 \}
-    \notag \\
+    \label{eq:Constraints_Activation_Subdomain_1} \\
     \intertext{\hspace{4em} If CBF is active:}
     \mathcal{S}_2 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p}: \lambda_1 < 0 \cap \lambda_2 \geq 0 \}
-    \notag \\
-    \label{eq:Constraints_Activation_Subdomains}
+    \label{eq:Constraints_Activation_Subdomain_2} \\
     \intertext{\hspace{4em} If CLF and CBF is active:}
     \mathcal{S}_3 \sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p}: \lambda_1 \geq 0 \cap \lambda_2 \geq 0 \}
-    \notag\\
+    \label{eq:Constraints_Activation_Subdomain_3} \\
     \intertext{\hspace{4em} If Any is active:}
     \mathcal{S}_4\sOrderArgB = \{ \sOrderArgB \in \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p}: \lambda_1 < 0 \cap \lambda_2 < 0 \}
-    \notag
+    \label{eq:Constraints_Activation_Subdomain_4} 
 \end{align}
 
+
+For each activation subdomain, corresponds a closed-form control law \(\mathbf{k}_i\):
+
+\begin{align}
+    &\mathbf{k}_1(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -(p^{-1} + ||L_GV \sOrderArgB||^2)^{-1} \hspace{0.2em} F_V\sOrderArgB \hspace{0.2em} L_GV\sOrderArgB^{\top} \label{eq:closed-form_controller_k1_formula} \\ 
+    &\mathbf{k}_2(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -||L_Gh \sOrderArgB||^{-2} \hspace{0.2em} F_h \sOrderArgB \hspace{0.2em} L_Gh \sOrderArgB^{\top}  \label{eq:closed-form_controller_k2_formula}\\ 
+    &\mathbf{k}_3(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -\lambda_1\sOrderArgB L_GV \sOrderArgB^{\top} + \lambda_2\sOrderArgB L_Gh \sOrderArgB^{\top} \label{eq:closed-form_controller_k3_formula}
+\end{align}
+
+In the \(\mathbf{k}_3(\xVec \mathcolor{gray}{, \mathbf{\xi}})\) control law~\ref{eq:closed-form_controller_k3_formula} \(\lambda_1, \lambda_2 \in \mathbb{R}_{\geq 0}\) are optimal dual solutions and verified strong duality. 
 
 \subsection{Unifying \glsxtrshort{CBF}}
 \label{sub:unifying_CBF}
 
-The previous controllers synthesized control inputs based on just one \glsxtrshort{CBF}, i.e., those controllers garantee safety w.r.t. a single safe set \(\mathcal{C}\), but given diffrent scenarios, it could exist more complex safety specifications and the need to impose more than one safety contraints simultaneously such as \glsxtrshort{CBF} \(h_i(\xVec)\), for \(i \in  \mathcal{I}=\{1,...N\}\):
+The previous controllers synthesized control inputs based on just one \glsxtrshort{CBF}, i.e., those controllers guarantee safety w.r.t. a single safe set \(\mathcal{C}\), but given different scenarios, it could exist more complex safety specifications and the need to impose more than one safety contraints simultaneously such as \glsxtrshort{CBF} \(h_i(\xVec)\), for \(i \in  \mathcal{I}=\{1,...N\}\):
 
 \begin{align}
     & \mathcal{C}_i = \{ \xVec \in \mathbb{R}_n: h_i(\xVec) \geq 0\}
@@ -380,7 +390,7 @@ The previous controllers synthesized control inputs based on just one \glsxtrsho
     \label{eq:Safe_Set_of_multiple}
 \end{align}
 
-But like it was said before regarding having more than one constraint could leave to conflict problems, empty safe sets (\(\mathcal{C} = \emptyset\)) and an inexistent set of acceptable control inputs (\(\mathbf{k}\sOrderArgB = \emptyset\)). Using \cite{molnar2023composing} as guidance, in order to avoid conflicts, merges all \glsxtrshort{CBF} into a single one that is able to capture all those safety notions and allow for even more complex safety specifications and to the resultant constraint fit the already obtained \glsxtrshort{CLF-CBF} closed-form solution~\ref{eq:closed-form_controller}. \\
+Having more than one constraint could leave to conflict problems, an inexistent set of acceptable control inputs (\(\mathbf{k}\sOrderArgB = \emptyset\)) when the system is in the resultant unsafe set, incapable to converge to the resultant safe set \(\mathcal{C} \neq \emptyset\). In order to avoid conflicts, \cite{molnar2023composing} showed a way to merge all \glsxtrshort{CBF} into a single one that is able to capture all those safety notions and allow for even more complex safety specifications. \\
 
 
 \subsubsection{First-Order System}
@@ -398,7 +408,7 @@ The more complex safety specifications are defined via boolean logical operation
  \label{eq:CLF-MultipleCBF-QP-relaxed-generic}
 \end{equation}
 
-Where the resultant safe set~\ref{eq:Safe_Set_of_multiple} of the system refers to the intersection of all safe sets~\ref{eq:Multiple_Safe_Sets}. More than be propitious to be not solvable, the formulation itself of the optimization problem~\ref{eq:CLF-MultipleCBF-QP-relaxed-generic} is limitated by no other logical operation than AND. \par
+Where the resultant safe set~\ref{eq:Safe_Set_of_multiple} of the system refers to the intersection of all safe sets~\ref{eq:Multiple_Safe_Sets}. More than be propitious to be not solvable, the formulation itself of the optimization problem~\ref{eq:CLF-MultipleCBF-QP-relaxed-generic} is limitated by no other logical operation than AND. \\
 
 Among the the logical operations that could be applied to \glsxtrshort{CBF}s, there are:
 
@@ -412,7 +422,6 @@ Among the the logical operations that could be applied to \glsxtrshort{CBF}s, th
                           &= \{\xVec \in \mathbb{R}^n: h_i(\xVec) \geq 0\}
             \label{eq:Gen_Safe_set} 
         \end{align}
-        
     \end{subequations}
 
     \item[Complement Set (Negation):] 
@@ -443,7 +452,7 @@ Among the the logical operations that could be applied to \glsxtrshort{CBF}s, th
         \end{equation}
 \end{description}
 
-The logical operations identity, complement, intersection and union are represented by respectively, class-\(\mathcal{K}^e\) functions, negation, min and max operations. Although the class-\(\mathcal{K}^e\) (\(\alpha_i(h_i(\xVec))\)) and negation (\(-h_i(\xVec)\)) functions which are continuosly differentiable and valid as \glsxtrshort{CBF}, contrary to the AND and OR functions, \(\min_{ i \in \mathcal{I}} (h_i(\xVec))\) and \(\max_{ i \in \mathcal{I}} (h_i(\xVec))\) that aren't continuosly differentiable and therefore not \glsxtrshort{CBF} candidates.  The \(\max\) and \(\min\) functions capacitate combining safe sets defined by multiple \glsxtrshort{CBF} (accordingly to the operation) and to obtain a new safety specification as is expected to see while merging multiple \glsxtrshort{CBF} into a single one. So, in order to viablize the AND and OR operation and achieve the merge of \glsxtrshort{CBF}s, the \(min\) and \(max\) functions can be replaced via smooth-aproximation, keeping their properties with just a relative small degradation of accuracy, by continuosly differentiable \textbf{log-sum-exp functions}:
+The logical operations identity, complement, intersection and union are represented by respectively, class-\(\mathcal{K}^e\) functions, negation, min and max operations. The class-\(\mathcal{K}^e\) (\(\alpha_i(h_i(\xVec))\)) and negation (\(-h_i(\xVec)\)) functions are continuosly differentiable and valid as \glsxtrshort{CBF}, contrary to the AND and OR functions, \(\min_{ i \in \mathcal{I}} (h_i(\xVec))\) and \(\max_{ i \in \mathcal{I}} (h_i(\xVec))\) that aren't continuosly differentiable and therefore not \glsxtrshort{CBF} candidates.  The \(\max\) and \(\min\) functions capacitate combining safe sets defined by multiple \glsxtrshort{CBF} (accordingly to the operation) and to obtain a new safety specification as is expected to see while merging multiple \glsxtrshort{CBF} into a single one. So, in order to viablize the AND and OR operation and achieve the merge of \glsxtrshort{CBF}s, the \(min\) and \(max\) functions can be replaced via smooth-aproximation, keeping their properties with just a relative small degradation of accuracy, by continuosly differentiable \underline{log-sum-exp functions}:
 
 
 \begin{description}
@@ -457,7 +466,7 @@ The logical operations identity, complement, intersection and union are represen
         \notag  
     \end{align}
 
-    Beeing \(k \in \mathbb{R}_{>0}\) as smoothing parameter (if \(k<0\) then is equivalent to the smooth-aproximation of \(\max_{i \in \mathcal{I}}(h_i(\xVec))\) ). 
+    Being  \(k \in \mathbb{R}_{>0}\) a smoothing parameter. The safe set fit isn't perfect unless \(k \to \infty\) ( which could lead computationally to an error) as can be seen more clearly in \cite{molnar2023composing} figure 1. If \(k<0\) then is equivalent to the smooth-aproximation of \(\max_{i \in \mathcal{I}}(h_i(\xVec))\). 
 
     \begin{subequations}
         \begin{align}
@@ -482,7 +491,7 @@ The logical operations identity, complement, intersection and union are represen
 
     But, \(\hspace{0.4em} \lim_{k \to \infty} h(\xVec) = {\min}_{i \in \mathcal{I}} (h_i(\xVec)) \hspace{0.4em}\) and \( \hspace{0.4em} \lim_{k \to \infty} \mathcal{C} = \bigcap_{i \in \mathcal{I}} \mathcal{C}_i\) \par
 
-    On par with that, the new \glsxtrshort{CBF} \(h(\xVec)\) \ref{eq:Min_smoothFunc} could restrain too much the closed-loop system in comparison to theoretical \glsxtrshort{CBF} \( \lim_{k \to \infty} h(\xVec)\). In order to relax the safe set \(\mathcal{C}\) and potentially contain \( \bigcap_{i \in \mathcal{I}} \mathcal{C}_i\): 
+    On par with that, the new intersected \glsxtrshort{CBF} \(h(\xVec)\) \ref{eq:Min_smoothFunc} could restrict too much the closed-loop system in comparison to theoretical \glsxtrshort{CBF} \( \lim_{k \to \infty} h(\xVec)\). In order to tight the unsafe set \(\bar{\mathcal{C}}\) and potentially the safe set contain \( \bigcap_{i \in \mathcal{I}} \mathcal{C}_i\): 
     
     \begin{equation}
         h(\xVec) = \frac{-1}{k}ln(\sum_{i \in \mathcal{I}} e^{-k \hspace{0.2em} h_i(\xVec)}) + \frac{b}{k}
@@ -491,7 +500,7 @@ The logical operations identity, complement, intersection and union are represen
 
 
 
-    Beeing \(b\) a parameter tuned according with the problem needs, knowing that if \(b = ln (N)\):
+    Being \(b\) a parameter tuned according with the problem needs, knowing that if \(b = ln (N)\):
 
     \begin{subequations}
         \begin{align}
@@ -502,7 +511,7 @@ The logical operations identity, complement, intersection and union are represen
         \end{align}
     \end{subequations}
 
-    Making the closed-loop system less constrained but not as safe.
+    Making the closed-loop system less constrained but not as safe, which can be seen more clearly in \cite{molnar2023composing} figure 1.
 
     \item[Union of Sets \(\setminus\) OR \(\setminus\) Maximum]
 
@@ -513,7 +522,7 @@ The logical operations identity, complement, intersection and union are represen
         \notag  
     \end{align}
 
-    Beeing \(k \in \mathbb{R}_{>0}\) as smoothing parameter. The derivative of \(h(\xVec)\) is equal to \ref{eq:Min_smooth_derivative} but:
+    Being \(k \in \mathbb{R}_{>0}\) a smoothing parameter and serving the same purposes as \ref{eq:Min_smoothFunc}. The derivative of \(h(\xVec)\) is equal to \ref{eq:Min_smooth_derivative} but:
 
     \begin{equation}
         \lambda_i(\xVec) = e^{k(h_i(\xVec)-h(\xVec))}
@@ -521,7 +530,7 @@ The logical operations identity, complement, intersection and union are represen
     \end{equation}
 
     With also \(\sum_{i \in \mathcal{I}} \lambda_i(\xVec) = 1\). \par
-    Due to an over-aproximation of \(h\) relative to the \(\max\) function, given the safe set \(\mathcal{C}\) defined based on \ref{eq:safe-set} it verifies:
+    Due to an over-approximation of \(h\) relative to the \(\max\) function, given the safe set \(\mathcal{C}\) defined based on \ref{eq:safe-set} it verifies:
 
     \begin{subequations}
         \begin{align}
@@ -534,14 +543,14 @@ The logical operations identity, complement, intersection and union are represen
 
     But, \(\hspace{0.4em} \lim_{k \to \infty} h(\xVec) = {\max}_{i \in \mathcal{I}} (h_i(\xVec)) \hspace{0.4em}\) and \( \hspace{0.4em} \lim_{k \to \infty} \mathcal{C} = \bigcup_{i \in \mathcal{I}} \mathcal{C}_i\) \par
 
-    Now showing a different point of view, safety is a critical factor, so in order to tight the safe set \(\mathcal{C}\) and potentially be contained within \( \bigcup_{i \in \mathcal{I}} \mathcal{C}_i\): 
+    Now showing a different point of view, safety is a critical factor, so in order to make the safe set \(\mathcal{C}\) more conservative, potentially be contained within \( \bigcup_{i \in \mathcal{I}} \mathcal{C}_i\): 
     
     \begin{equation}
         h(\xVec) = \frac{1}{k}ln(\sum_{i \in \mathcal{I}} e^{k \hspace{0.2em} h_i(\xVec)}) - \frac{b}{k}
         \label{eq:Max_smoothFunc_tighted} \\  
     \end{equation}
 
-    Beeing \(b\) a tunable parameter. Taking \(b = ln (N)\):
+    Being  \(b\) a tunable parameter. Taking \(b = ln (N)\):
 
     \begin{subequations}
         \begin{align}
@@ -552,7 +561,7 @@ The logical operations identity, complement, intersection and union are represen
         \end{align}
     \end{subequations}
 
-    Therefore the higher \(b\), the safer the system~\ref{eq:NL-CL-System-0Backstep} but possibly too constrained by the new \glsxtrshort{CBF} \(h(\xVec)\) \ref{eq:Max_smoothFunc_tighted}. 
+    Therefore the higher \(b\), the safer the system~\ref{eq:NL-CL-System-0Backstep} but possibly too constrained by the new \glsxtrshort{CBF} \(h(\xVec)\) \ref{eq:Max_smoothFunc_tighted} (figure 1 from \cite{molnar2023composing}). 
 \end{description}
 
 
@@ -562,7 +571,7 @@ The logical operations identity, complement, intersection and union are represen
 
 Following the explanations given in the previous subsubsection~\ref{subsub:uniCBF_firstOrder_system}, now applying for a second-order system~\ref{eq:HH-NL-System}, more precisely, for a Backstepping~\ref{sub:backstepping} situation. \\
 
-Given a \glsxtrshort{CLF} \(V_0(\xVec): \) and multiple \glsxtrshort{CBF} \(h0_i(\xVec) \quad \forall i \in \mathcal{I}\) combined into a \glsxtrshort{CBF} \(h_0(\xVec)\) via \ref{eq:Min_smoothFunc_tighted} or \ref{eq:Max_smoothFunc_tighted} (according it is an AND or OR operation), through the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-0Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}) is obtained a differentiable and locally Lipschitz continuos theoretical controller \(k_0(\xVec): \mathbb{R}^n \to \mathbb{R}\). \\
+Given a \glsxtrshort{CLF} \(V_0(\xVec): \) and multiple \glsxtrshort{CBF} \(h0_i(\xVec) \quad \forall i \in \mathcal{I}\) combined into a \glsxtrshort{CBF} \(h_0(\xVec)\) via \ref{eq:Min_smoothFunc_tighted} (intersection) or \ref{eq:Max_smoothFunc_tighted} (union) (they can be combined using both operations), through the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-0Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}) is obtained a differentiable and locally Lipschitz continuos theoretical controller \(k_0(\xVec): \mathbb{R}^n \to \mathbb{R}\). \\
 
 In order to the second-order system~\ref{eq:HH-NL-CL-System} dynamic converge to \(k_0(\xVec)\) imposed dynamic, given multiple \glsxtrshort{CBF} \(h_i(\xVec) \quad \forall i \in \mathcal{I} \):
 
@@ -578,7 +587,7 @@ In order to the second-order system~\ref{eq:HH-NL-CL-System} dynamic converge to
     \end{align}
 \end{subequations}
 
-The resultant \glsxtrshort{CBF} \(h_i(\xVec, \mathbf{\xi}) \quad \forall i \in \mathcal{I}\), one more time can be merged via \ref{eq:Min_smoothFunc_tighted} or \ref{eq:Max_smoothFunc_tighted} (according it is an AND or OR operation) into a single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\). However there is another way in this case to have the new single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\), so, considering the second-order system~\ref{eq:HH-NL-System} and \(lo \in \{\max, \min\}\):
+The resultant \glsxtrshort{CBF} \(h_i(\xVec, \mathbf{\xi}) \quad \forall i \in \mathcal{I}\), one more time can be merged via \ref{eq:Min_smoothFunc_tighted} or \ref{eq:Max_smoothFunc_tighted} (according it is an AND or an OR operation, or even both) into a single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\). However there is another and more direct way in this case to have the new single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\), so, considering the second-order system~\ref{eq:HH-NL-System} and \(lo \in \{\max, \min\}\):
 
 \begin{align}
         \underset{ i \in \mathcal{I}}{lo}(h0_i(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})) &= \underset{ i \in \mathcal{I}}{lo}(h0_i(\xVec)) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) \approx 
@@ -622,8 +631,8 @@ The optimization of the respective parameter is based on minimizing a cost funct
 \subsection{Gradient of the Cost Function - Discretization}
 \label{subsec:Gradient_Cost_Function_Discretization}
 
-In both algorithms is make use of \(g(x)\) gradient in order to essentially indicate the direction the optimization variable \(x\) must take in order to minimize the cost. More than that, if \(g(x)\) is a quasi-convex function to quantifie the proximity to a local optimal point. \par
-If the \(\nabla g(x)\) extact equation is not possible to obtain then:
+In both algorithms is made use of \(g(x)\) gradient in order to essentially indicate the direction the optimization variable \(x\) must take in order to minimize the cost. Beyond that, if \(g(x)\) is a convex function, to quantify the proximity to a optimal point and possibly vary the variable proportionally to its value taken in that point, as \(\nabla g(x)\) converges to zero while it gets close to a minimum. \par
+If the \(\nabla g(x)\) exact equation is not accessible to obtain then:
 
 \begin{equation}
     \nabla g(x) = \lim_{dev \to 0} \frac{g(x + dev) - g(x)}{dev}
@@ -639,7 +648,7 @@ Is approximated by:
 
 With \(dev \in \mathbb{R}\) sufficiently close to \(0\). \par
 
-If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g(x)\), it could be needed increase the number of samples (\(nS \in \mathbb{R}\)) in the neighborhood of \(x\) separated by \(devN\) between them, so digitally:
+If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g(x)\), it could be needed increase the number of samples (\(nS \in \mathbb{R}\)) in the neighborhood of \(x\) separated by \(devN\) between them, and do a weighted mean, so digitally:
 \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
     \KwData{$nS$, $devN$, $dev$, $g$, $x$}
@@ -655,7 +664,7 @@ If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
-    \item It is possible to digitally obtain \(\nabla g : \mathbb{R}^n \to \mathbb{R}^n\) by otaining each row \(r\) separately with \(dev_r \in \{ dev_1, ..., dev_n \} \). Beeing \(dev_r \) a column vector, just equal to the divisor \(dev\) in the respective row element (\(dev = ||dev_r||\)).
+    \item It is possible to digitally obtain \(\nabla g : \mathbb{R}^n \to \mathbb{R}^n\) by otaining each row \(r\) separately with \(dev_r \in \{ dev_1, ..., dev_n \} \). Being \(dev_r \) a column vector, just equal to the divisor \(dev\) in the respective row element (\(dev = ||dev_r||\)).
 \end{itemize}
 \end{tcolorbox} 
 
@@ -665,16 +674,16 @@ If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g
 \subsection{Gradient Descent}
 \label{subsec:Gradient_Descent} 
 
-This method is characterized by an iterative update of the optimization variable \(x\), based on the current variable value and function \(g(x)\) gradient responsible to indicate the evolution direction of \(x\) in order to minimize the cost:
+This method is characterized by an iterative update of the optimization variable \(x\), based on the current variable value and function \(g(x)\) gradient responsible to indicate the evolution direction of \(x\) in order to minimize the cost and adjust proportionally the step intensity:
 
 \begin{equation}
     x_{k+1} = x_k + \underbrace{(- a \nabla g(x_k))}_{step_{k}}
     \label{eq:Gradient_Descent_Normal}
 \end{equation}
 
-where \(a\) is an arbitrary constant for the step intensity adjustment . Assuming \(g(x)\) is a quasi-convex function, the closure to local minimum the smaller the gradient (or step) module. \par
+where \(a\) is an arbitrary constant for the step intensity adjustment . Assuming \(g(x)\) is a quasi-convex function, it is expected the closure to local minimum the smaller the gradient (or step) module. \par
 
-However, this method has another variations including adding "\underline{momentum}" where is had in account the previous iteration step applied:
+However, this method has another variations including adding "\underline{momentum}" which has in account the previous iteration step applied:
 
 \begin{equation}
     x_{k+1} = x_k + b \underbrace{(x_k - x_{k-1})}_{step_{k-1}} - a \nabla g(x_k)
@@ -682,7 +691,7 @@ However, this method has another variations including adding "\underline{momentu
 \end{equation}
 
 where \(b\) is an argument of this algorithm like \(a\) responsible to tune the previous step intensity. \par
-According to \cite{hao2025analysis} there are also another two methods. Refering to one of them, this expands on the idea of momentum called \underline{Nesterov's Accelerated Gradient}, using a predictive step based on the previous one: 
+According to \cite{hao2025analysis} there are also another two methods. Referring  to one of them, this expands on the idea of momentum called \underline{Nesterov's Accelerated Gradient}, using a step based on the previous one prediction: 
 
 \begin{equation}
     \begin{array}{rl}
@@ -722,20 +731,20 @@ where \(a, b, c, d\) are the respective steps intensity tuning parameter. \\
 
 
 
-%\newpage %Só para ajeitar
+\newpage %Só para ajeitar
 
 
 \subsection{Binary Search}
 \label{subsec:Binary_Search}
 
-This method is composed by two phases, beeing the first one resposible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Bolzano's theorem says that given the continuos function \(f:[a;b] \subset \mathbb{R} \to \mathbb{R}\) and \(f(a)f(b) < 0\), then \(\exists x \in  ]a; b[\) such that \(f(x) = 0\)} is verified for the continuos gradient funtion (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used an variation of the gradient descent method~\ref{eq:Gradient_Descent_Normal}, with a starting point \(x_0\):
+This method is composed by two phases, being  the first one responsible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Bolzano's theorem says that given the continuos function \(f:[a;b] \subset \mathbb{R} \to \mathbb{R}\) and \(f(a)f(b) < 0\), then \(\exists x \in  ]a; b[\) such that \(f(x) = 0\)} is verified for the continuos gradient function (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used a variation of the gradient descent method~\ref{eq:Gradient_Descent_Normal}:
 
 \begin{equation}
-    x_{k+1} = x_k + \underbrace{(- a \nabla g(x_0))}_{step}
+    x_{k+1} = x_k + \underbrace{(- a \nabla g(x_{k}))}_{step}
     \label{eq:Binary_Search_Phase1_gradDesc}
 \end{equation}
 
-Where the \(step\) is always equal. That beeing said, the phase 1 algorithm: 
+Where the \(step\) is always equal. That being  said, the phase 1 algorithm: 
 
 \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -750,12 +759,14 @@ Where the \(step\) is always equal. That beeing said, the phase 1 algorithm:
   \end{algorithm}
 
 
-The second phase consists in iteratively taking the extreme points and do a weighted mean obtaining a new delimiter that replace one of the previous points while preserving the application of the Bolzano theorem for next iterations, narrowing the interval and approximating the points to a local minimum. Moreover, the weight from the mean is updated, according to the interval evolution, given by the function:
+The second phase consists in iteratively taking the extreme points and doing a weighted mean obtaining a new delimiter that replaces one of the previous points while preserving the application of the Bolzano theorem for next iterations, narrowing the interval and approximating the points to a local minimum. Moreover, the weight from the mean is updated, according to the interval evolution, given by the function:
 
 \begin{equation}
     sig_{\pm}(x) = \frac{0.125}{1+e^{\pm5(x-0.5)}} -0.0125
     \label{eq:binsea_weight_update_function}
 \end{equation}
+
+Assuming a quasi-convex function, if there is a tendency to recurrently approximate to an interval limit, updating the weight it is possible to narrow the interval even more and converge faster to a local minimum.
 
 \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
