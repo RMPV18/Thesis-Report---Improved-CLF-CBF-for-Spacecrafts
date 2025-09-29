@@ -12,7 +12,7 @@
 \chapter{Results}
 \label{cha:results}
 
-The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{subsec:decision_algorithms} \glsxtrshort{A-JO} and \glsxtrshort{A-CLF-S},  are going to be implemented in different systems, in a unicycle~\ref{subsec:unicycle_simul_setup} and orbital system~\ref{subsec:orbital_simul_setup}, and subject to different types of experiments according to the system in question (unicycle~\ref{subsubsec:unicyle_type_of_experiments} or orbital~\ref{subsubsec:orbital_type_of_experiments}). In each of the contexts, there is a single \(10000\) samples horizon solution of an \glsxtrshort{MPC}, along with analisys of the techniques and a comparation between them highlingting some relevant data.
+The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{subsec:decision_algorithms} \glsxtrshort{A-JO} and \glsxtrshort{A-CLF-S},  are going to be implemented in different systems, in a unicycle~\ref{subsec:unicycle_simul_setup} and orbital system~\ref{subsec:orbital_simul_setup}, and subject to different types of experiments according to the system in question (unicycle~\ref{subsubsec:unicyle_type_of_experiments} or orbital~\ref{subsubsec:orbital_type_of_experiments}). In each of the contexts, there is a single \(10000\) sample horizon solution of an \glsxtrshort{MPC}, along with analysis of the techniques and a comparison  between them highlighting  some relevant data.
 
 \section{Setup}
 \label{sec:setup}
@@ -104,12 +104,12 @@ With \(V_C(\xVec)\) and \(V_N(\xVec)\) following the same formulation but differ
 \subsection{Unicycle}
 \label{subsec:unicycle_simul_setup}
 
-This example consists in drive a unicycle to a specific location \(\mathbf{ref} \in \mathbb{R}^2\). Drive a vehicle implies the possibilitie of founding some obstacles, and while a collision could mean a fatality there are other factors as the fuel/energy consumed and how fast to achieve the wanted location, that beeing said, this represents an example of safety-critical control subject to an optimization of its path. \par
+This example consists in driving  a unicycle to a specific location \(\mathbf{ref} \in \mathbb{R}^2\). driving  a vehicle implies the possibility of finding  some obstacles, and while a collision could mean a fatality there are other factors as the fuel/energy consumption and how fast to achieve the wanted location, that being said, this represents an example of safety-critical control subject to an optimization of its path. \par
 
 \subsubsection{Dynamics}
 \label{subsec:unicycle_dynamics}
 
-This unicycle doesn't loose traction in its wheels, and it is not constrained by its control inputs or its consume. It is also not affected by any perturbation such as drag force characteristic from the enviroment. It can be modeled mathematically as a relative two degree system:
+This unicycle doesn't lose traction in its wheels, and it is not constrained by its control inputs or its consumption. It is also not affected by any perturbation such as drag force characteristic from the environment. It can be modeled mathematically as a relative two degree system:
 
 \begin{equation}
     \begin{bmatrix} \dot{x} \\ \dot{y} \\ \dot{\theta} \end{bmatrix} = \begin{bmatrix} \frac{1}{2}cos \theta & \frac{1}{2}cos \theta \\  \frac{1}{2}sin \theta & \frac{1}{2}sin \theta \\ -L & L  \end{bmatrix} \begin{bmatrix} v_l \\ v_r\end{bmatrix}
@@ -122,7 +122,7 @@ Where the states are the \((x,y)\) 2D position and \(\theta\) the orientation, a
 \subsubsection{\glsxtrshort{CLF-CBF} Formulation}
 \label{subsubsec:Unicyle_CLF-CBF_Experiment_Setup}
 
-As the decision algoritms subject to comparations~\ref{subsec:decision_algorithms} are governed by the \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf} backstepping technique~\ref{sub:backstepping}, the system can be written as:
+As the decision algorithms subject to comparations~\ref{subsec:decision_algorithms} are governed by the \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf} backstepping technique~\ref{sub:backstepping}, the system can be written as:
 
 
 \begin{equation}
@@ -244,12 +244,12 @@ During the experiments the \glsxtrshort{CLF-CBF} provide a new solution each \(0
 \subsection{Orbital}
 \label{subsec:orbital_simul_setup}
 
-The satellites, space ships... orbiting around a celestial body are vulnerable to found sapce debris, other ships, among other space elements that could put in risk the highly regarded safety of the ships, and to avoid them demanding more of the limited resources such as fuel, energy consume... Given that like in the unicycle case this represents an example of safety-critical control subject to an optimization of its path.  More than that, the computers presented on the vehicles are designed to demand low energy consume, they need to have an suited shielding but also low weight, among other specifications which results in lower power processors, receptive to lower-effort control techniques.     
+The satellites, space ships... orbiting around a celestial body are vulnerable to found space debris, other ships, among other space elements that could put in risk the highly regarded safety of the ships, and to avoid them demanding more of the limited resources such as fuel, energy consumption... Given that like in the unicycle case this represents an example of safety-critical control subject to an optimization of its path.  More than that, the computers presented on the vehicles are designed to demand low energy consumption, they need to have a suited shielding but also low weight, among other specifications which results in lower power processors, receptive to lower-effort control techniques.     
 
 \subsubsection{Dynamics}
 \label{subsubsec:orbital_dynamics}
 
-The vehicle is trying to converge to a formation position, following an theoretical circular Kepler orbit~\footnote{A Kepler orbit  is the elliptical, circular or hyperbolic movement of a body relative to another. This orbits are characterized for neglecting perturbations.} with constant null latitude, in a environment not subject to perturbations such as the \(J_2\)~\footnote{ The \(J_2\) perturbation \cite{curtis2019orbital} is originated from  the oblate spheroidal shapes of celestial bodies, resulting from the centrifugal force due to their axial rotation. Beeing \(J\) a component corresponding to a zonal harmonic obtained from observations dependent of the respective celestial body, and \(J_2\) the most relevant one. }, due to the high accuracy of the model used and short separations praticed relative to the orbit radius \cite{kaczmarek2023autonomous}. It has thrusters in all directions, with unconstrained power or some variation of it, and also without a fuel/energy limitation. That beeing said, the control inputs are designed to be the accelerations in the given directions, as it is abstracted the mass of the vehicle that is considered constant because of the short experiment. It is considered a chaser spacecraft with equal null latitude as the reference \txtref is trying to rendezvous~\footnote{ Rendezvous \cite{luo2014survey} consists of making two spacecraft meet each other (target and chaser), i.e, converging to a point where the orbital trajectories of them coincide. This maneuver is characterized by two autonomous control phases, where are implemented the purposed algorithms.}, and is assumed the obstacles encountered, or preferebly the other ship in formation, with infinite length in the direction perpedicular to the equatorial plane, disabling the possibilitie of the ship to move in that direction to avoid them, providing a problem with just two-dimensional Euclidian Space safety contraints.  The model, based on the second-order \glsxtrshort{NERM} \cite{sullivan2017comprehensive}, is:
+The vehicle is trying to converge to a formation position, following an theoretical circular Kepler orbit~\footnote{A Kepler orbit  is the elliptical, circular or hyperbolic movement of a body relative to another. These orbits are characterized for neglecting perturbations.} with constant null latitude, in an environment not subject to perturbations such as the \(J_2\)~\footnote{ The \(J_2\) perturbation \cite{curtis2019orbital} is originated from  the oblate spheroidal shapes of celestial bodies, resulting from the centrifugal force due to their axial rotation. being \(J\) a component corresponding to a zonal harmonic obtained from observations dependent on the respective celestial body, and \(J_2\) the most relevant one. }, due to the high accuracy of the model used and short separations practiced relative to the orbit radius \cite{kaczmarek2023autonomous}. It has thrusters in all directions, with unconstrained power or some variation of it, and also without a fuel/energy limitation. That being said, the control inputs are designed to be the accelerations in the given directions, as it is abstracted from thethe mass of the vehicle that is considered constant because of the short experiment. It is considered a chaser spacecraft with equal null latitude as the reference \txtref is trying to rendezvous~\footnote{ Rendezvous \cite{luo2014survey} consists of making two spacecraft meet each other (target and chaser), i.e, converging to a point where the orbital trajectories of them coincide. This maneuver is characterized by two autonomous control phases, where are implemented the proposed algorithms.}, and is assumed the obstacles encountered, or preferably the other ship in formation, with infinite length in the direction perpendicular to the equatorial plane, disabling the possibility of the ship to move in that direction to avoid them, providing a problem with just two-dimensional Euclidean Space safety constraints.  The model, based on the second-order \glsxtrshort{NERM} \cite{sullivan2017comprehensive}, is:
 
 \begin{equation}
   \begin{bmatrix} \partial \dot{x} \\ \partial \dot{y} \\  \partial\ddot{ x } \\ \partial\ddot{ y} \end{bmatrix} = \begin{bmatrix}
@@ -260,7 +260,7 @@ The vehicle is trying to converge to a formation position, following an theoreti
   \label{eq:orbital_dynamics}
 \end{equation}
 
-With (\( \partial x, \partial y\)) as the position of the chaser relative to the target in the \glsxtrshort{LVLH} frame, (\(\dot{\partial x}, \dot{\partial y}\)) as the relative speed, \(\theta_t\) equal to the target true anomaly and \(\dot{\theta_t} = \sqrt{\frac{\mu}{r_t^3}}\) equivalent to the (mean) orbital rate, with \(\mu = GM\) (\(G\) the gravitational constant and \(M\) the celestial body mass), \(r_t\) is the radius of the target orbit. The thrusters\(\mathbf{T}\) corresponds to the controllable input values.
+With (\( \partial x, \partial y\)) as the position of the chaser relative to the target in the \glsxtrshort{LVLH} frame, (\(\dot{\partial x}, \dot{\partial y}\)) as the relative speed, \(\theta_t\) equal to the target true anomaly and \(\dot{\theta_t} = \sqrt{\frac{\mu}{r_t^3}}\) equivalent to the (mean) orbital rate, with \(\mu = GM\) (\(G\) the gravitational constant and \(M\) the celestial body mass), \(r_t\) is the radius of the target orbit. The thrusters\(\mathbf{T}\) correspond to the controllable input values.
 
 \newpage
 
@@ -427,7 +427,7 @@ Where \(SPS\) (State Propagation Simulation) is the algorithm~\ref{alg:State_Pro
 \end{figure}
 
 
-Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps beeing purely based on a \glsxtrshort{CLF-CBF} technique which lacks a bigger prediction horizon and thus taking the unicycle close to the obstacle as it is the way that approximates more to the \(\mathbf{ref}\) in the moment (less state cost initially compared to A-CLF-summed), obligating eventually to higher input values to deviate from the barrier safely while forcing as much as possible a speed of convergence to \(\mathbf{ref}\).  The \glsxtrshort{A-CLF-S} following the other point first results in a initially not so fast approximation to \txtref but to a shorter countour path and that allows to avoid abrupt maneuvers leading to less input cost. That slower approximation leads to higher control inputs at the start since the \(\gamma\) function, responsible to the speed of convergence, initially is higher than the one from \glsxtrshort{A-JO}. 
+Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps being purely based on a \glsxtrshort{CLF-CBF} technique which lacks a bigger prediction horizon and thus taking the unicycle close to the obstacle as it is the way that approximates more to the \(\mathbf{ref}\) in the moment (less state cost initially compared to A-CLF-summed), obligating eventually to higher input values to deviate from the barrier safely while forcing as much as possible a speed of convergence to \(\mathbf{ref}\).  The \glsxtrshort{A-CLF-S} following the other point first results in an initially not so fast approximation to \txtref but to a shorter contour path and that allows to avoid abrupt maneuvers leading to less input cost. That slower approximation leads to higher control inputs at the start since the \(\gamma\) function, responsible for the speed of convergence, initially is higher than the one from \glsxtrshort{A-JO}. 
 
  \newpage %so para ajeiutar
 
@@ -448,7 +448,7 @@ Although \glsxtrshort{A-JO} \(\alpha\) parameter is optimized its decision keeps
    \end{xltabular}
  \egroup
 
-The \glsxtrshort{A-JO} decision time taked is comparable to a typical \glsxtrshort{CLF-CBF}. It was less time consuming than \glsxtrshort{A-CLF-S} during the experiment and the optimization time too, as it happens an optimization of the \(\alpha\) parameter too along with the computation of the new reference point by \glsxtrshort{A-CLF-S}. The resulting cost of the \glsxtrshort{A-JO} is comparably way higher, as in the next experiments, the trajectories generated by it are longer reflecting particularly in the high input cost and the paths generally more conflicting with the obstacle verifying a greater softening of the \glsxtrshort{CLF} constraint and the presence in more expensive states. \\
+The \glsxtrshort{A-JO} decision time taken  is comparable to a typical \glsxtrshort{CLF-CBF}. It was less time consuming than \glsxtrshort{A-CLF-S} during the experiment and the optimization time too, as it happens an optimization of the \(\alpha\) parameter too along with the computation of the new reference point by \glsxtrshort{A-CLF-S}. The resulting cost of the \glsxtrshort{A-JO} is comparably way higher, as in the next experiments, the trajectories generated by it are longer reflecting particularly in the high input cost and the paths generally more conflicting with the obstacle verifying a greater softening of the \glsxtrshort{CLF} constraint and the presence in more expensive states. \\
 
 
 \underline{UCF}
@@ -474,7 +474,7 @@ The \glsxtrshort{A-JO} decision time taked is comparable to a typical \glsxtrsho
 
 
 
-The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with \glsxtrshort{A-CLF-S} as it was seen in UCC\ref{ssssec:UCC_experiment}, but in this case is more evident the higher input due to the initial turning of the unicyle and other relative abrupt ones due to the change of convergence point. The \glsxtrshort{A-CLF-S} reveals a relatively similar path to the optimal solution but a slower convergence to \txtref as the \(\gamma\) parameter value (not subject to an optimization) is too low and static, which results in lower inputs but expensive states penalizing in the total cost. \\ 
+The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with \glsxtrshort{A-CLF-S} as it was seen in UCC\ref{ssssec:UCC_experiment}, but in this case is more evident the higher input due to the initial turning of the unicycle and other relative abrupt ones due to the change of convergence point. The \glsxtrshort{A-CLF-S} reveals a relatively similar path to the optimal solution but a slower convergence to \txtref as the \(\gamma\) parameter value (not subject to an optimization) is too low and static, which results in lower inputs but expensive states penalizing in the total cost. \\ 
 
 \vspace{5em}
 
@@ -495,7 +495,7 @@ The \glsxtrshort{A-JO} keeps showing the same characteristics in comparison with
    \end{xltabular}
  \egroup
 
-Even though the input cost of the \glsxtrshort{A-JO} is lower than \glsxtrshort{A-CLF-S}, its sate cost is even more higher. Relative to the computational times, decision and optimization wise the comparation between them keeps the same. \\
+Even though the input cost of the \glsxtrshort{A-JO} is lower than \glsxtrshort{A-CLF-S}, its state cost is even higher. Relative to the computational times, decision and optimization wise the comparison between them keeps the same. \\
 
  %\newpage %so para ajeiutar
 
@@ -539,7 +539,7 @@ Now given an ellipsoidal obstacle, with this kind of axis configuration, the big
  \egroup
 
 
- \glsxtrshort{A-JO} computational time keeps beeing lower than \glsxtrshort{A-CLF-S} and now for an not so worst cost.
+ \glsxtrshort{A-JO} computational time keeps being lower than \glsxtrshort{A-CLF-S} and now for a not so worst cost.
 
 
   \newpage %so para ajeiutar
@@ -566,7 +566,7 @@ Now given an ellipsoidal obstacle, with this kind of axis configuration, the big
 \end{figure}
 
 
-If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relative worst performance, in this case its path cost is comparatively to it considerably better than \glsxtrshort{A-JO}. Beyond that, important to say that against this type of ellipsoides and orientation againts it and the \txtref, or specially against straight surfaces, the best solution given by the \glsxtrshort{CLF-CBF} is to get the system as close to the obstacle, converging to the its surface, as the \glsxtrshort{CLF-CBF} keeps providing control inputs that lead the system as much closer as possible to the \txtref for each exclusive moment, while the \glsxtrshort{A-CLF-S} converging to the contour point is capable to free from it. The \glsxtrshort{MPC} solution presented corresponds to a local minimum, but its path reveals a similar problem to \glsxtrshort{A-JO} due to the finite horizon and its objective function trying to approximate the system as much to \txtref instead of actually optimize its reaching time, or like \glsxtrshort{A-CLF-S}, although not as effective, make an optimization purely based of the last theoretical state.  
+If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relative worst performance, in this case its path cost is comparatively to it considerably better than \glsxtrshort{A-JO}. Beyond that, important to say that against this type of ellipsoides and orientation against it and the \txtref, or specially against straight surfaces, the best solution given by the \glsxtrshort{CLF-CBF} is to get the system as close to the obstacle, converging to the its surface, as the \glsxtrshort{CLF-CBF} keeps providing control inputs that lead the system as much closer as possible to the \txtref for each exclusive moment, while the \glsxtrshort{A-CLF-S} converging to the contour point is capable to free from it. The \glsxtrshort{MPC} solution presented corresponds to a local minimum, but its path reveals a similar problem to \glsxtrshort{A-JO} due to the finite horizon and its objective function trying to approximate the system as much to \txtref instead of actually optimize its reaching time, or like \glsxtrshort{A-CLF-S}, although not as effective, make an optimization purely based of the last theoretical state.  
 
 
   \bgroup
@@ -587,7 +587,7 @@ If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relativ
 
  %\vspace{5em}
 
- The cost don't necessarily means a better performance. As it is possible to see, the \glsxtrshort{A-CLF-S} is the only one of the them beeing able to surpass the obstacle although its cost is the lower.
+ The cost doesn't necessarily mean better performance. As it is possible to see, the \glsxtrshort{A-CLF-S} is the only one of them being able to surpass the obstacle although its cost is the lower.
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
@@ -618,7 +618,7 @@ If in UEV~\ref{ssssec:UEV_experiments} the \glsxtrshort{A-CLF-S} shows a relativ
 \end{figure}
 
 
-As in UEH~\ref{ssssec:UEH_experiments}, although the other techiniques don't keep stuck, they keep the same characteristics and go for the longest side. While the \glsxtrshort{A-CLF-S} keeps showing a better result.
+As in UEH~\ref{ssssec:UEH_experiments}, although the other techniques don't keep stuck, they keep the same characteristics and go for the longest side. While the \glsxtrshort{A-CLF-S} keeps showing a better result.
 
 
   \bgroup
@@ -715,7 +715,7 @@ Following the results obtained previously, it is compared the \glsxtrshort{MPC} 
 \end{figure}
 
 
-\glsxtrshort{MPC-L} shows the shortest path and less input consumed, however since the optimization is done based just on the last state from the horizon resulting in a reaching time close to the end of the horizon. This \glsxtrshort{MPC} version targets the end of the horzion with minimal consume, but if the horizon is too short, assuming the same weight on the last state, it can lead to really high control inputs to be as close to \txtref at the end of it. Meanwhile, the \glsxtrshort{A-CLF-S} optimization don't suffer from the same proble due to its baseline framework, more precisely, the static behaviour imposed by the \(\gamma\) function, i.e, the total input cost variation is impacted essentially by its the path which is effectively optimized via \(\alpha_d\) optimization by the respective cost function~\ref{eq:Cost_Function_Alpha_last_state}.
+\glsxtrshort{MPC-L} shows the shortest path and less input consumed, however since the optimization is done based just on the last state from the horizon resulting in a reaching time close to the end of the horizon. This \glsxtrshort{MPC} version targets the end of the horizon with minimal consumption, but if the horizon is too short, assuming the same weight on the last state, it can lead to really high control inputs to be as close to \txtref at the end of it. Meanwhile, the \glsxtrshort{A-CLF-S} optimization doesn't suffer from the same problem due to its baseline framework, more precisely, the static behaviour imposed by the \(\gamma\) function, i.e, the total input cost variation is impacted essentially by its the path which is effectively optimized via \(\alpha_d\) optimization by the respective cost function~\ref{eq:Cost_Function_Alpha_last_state}.
 
   \bgroup
  \rowcolors{1}{}{orange!4}
@@ -734,7 +734,7 @@ Following the results obtained previously, it is compared the \glsxtrshort{MPC} 
  \egroup
 
 
- Computationally wise, both \glsxtrshort{MPC} generally show similar times.
+ Computationally, both \glsxtrshort{MPC} generally show similar times.
 
 
 

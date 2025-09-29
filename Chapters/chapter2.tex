@@ -29,7 +29,7 @@ Considering a nonlinear control-affine system:
     \label{eq:Nonlinear-First-Order-System} 
 \end{equation}
 
-with state \(\xVec \in \mathbb{R}^n\), control input \(\uVec \in \mathbb{R}^m\), and locally Lipschitz continuous\footnote{Given two metric spaces (\(X, d_X\)) and (\(Y, d_Y\)), where \(d_X\) and \(d_Y\)  represent the \(X\) and \(Y\) metrics respectively, a function \(f:X \to Y\) is Lipschitz continuos if there exist a constant \(L \geq 0\) such that \(\forall (x_1,x_2) \in X\), \hspace{0.4em} \(d_Y(f(x_1),f(x_2))\leq L \hspace{0.2em} d_X(x_1,x_2)\)} functions \(f: \mathbb{R}^n \to \mathbb{R}^n\) and \(g: \mathbb{R}^n \to \mathbb{R}^{n \times m}\). Given a locally Lipschitz continuos \(k: \mathbb{R}^n \to \mathbb{R}^m\), it results in the closed-loop system:
+with state \(\xVec \in \mathbb{R}^n\), control input \(\uVec \in \mathbb{R}^m\), and locally Lipschitz continuous\footnote{Given two metric spaces (\(X, d_X\)) and (\(Y, d_Y\)), where \(d_X\) and \(d_Y\)  represent the \(X\) and \(Y\) metrics respectively, a function \(f:X \to Y\) is Lipschitz continuous if there exist a constant \(L \geq 0\) such that \(\forall (x_1,x_2) \in X\), \hspace{0.4em} \(d_Y(f(x_1),f(x_2))\leq L \hspace{0.2em} d_X(x_1,x_2)\)} functions \(f: \mathbb{R}^n \to \mathbb{R}^n\) and \(g: \mathbb{R}^n \to \mathbb{R}^{n \times m}\). Given a locally Lipschitz continuous \(k: \mathbb{R}^n \to \mathbb{R}^m\), it results in the closed-loop system:
 
 \begin{equation}
     \dot{\xVec} = f(\xVec) + g(\xVec)k(\xVec)
@@ -55,7 +55,7 @@ For any initial condition \(\xVec_0 \in \mathbb{R}^n\), there is a maximal time 
 
 Having the objective of global asymptotically stability of the system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, is desired for the system converge to an equilibrium point \( \bar{\mathbf{x}} \). A solution comes by designing a positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0} \) which converges to zero while the system converges to the respective equilibrium point, and for that, designing a control law that acts in order to achieve specifically the convergence of the function. \\
 
-A Lyapunov function is a continuos scalar function \(V:\mathbb{D}^n \to \mathbb{R}\), designed to be positive definite, i.e, strictly positive with the exception of the equilibrium point \(\bar{\xVec}\) where it takes a null value.  
+A Lyapunov function is a continuous scalar function \(V:\mathbb{D}^n \to \mathbb{R}\), designed to be positive definite, i.e, strictly positive with the exception of the equilibrium point \(\bar{\xVec}\) where it takes a null value.  
 
 \begin{equation}
     \begin{array}{l}
@@ -79,7 +79,7 @@ And it is characterized by its time derivative beeing negative and and equal zer
 If those conditions, \ref{eq:LF_derivative_condition} are verified it means the Lyapunov function \(V\) converges to zero while the system converges to the equilibrium point, hence the system is asymptotically (lyapunov) stable, which is the notion of stability considered along this thesis.\par
 If the Lyapunov function \(V\) domain \(\mathbb{D}^n\) is equivalent to the neighborhood of the equilibrium, where those conditions are just verified, then it is locally asymptotically stable while if it is equal to \(\mathbb{R}^n\) then \(V(\xVec)\) is radially unbounded, \(\lim_{||\mathbf{C}\hspace{0.1em}\xVec - \bar{\xVec}||\to \infty}V(\xVec) = \infty\) with \(\mathbf{C}\) as the observation matrix, and it is considered in the origin a globally asymptotically stable equilibrium. \\
 
-In order to generalize to controllable dinamical systems, it is introduced \glsxtrshort{CLF}, modeled just like the typical the lyapunov functions~\ref{eq:LF_condition} but able through the use of the given control inputs affect its derivative in order to achieve the stability conditions~\ref{eq:LF_derivative_condition}. That beeing said, it is pretended to the \glsxtrshort{CLF} function \( V\mathbf(\mathbf{x}) \) to be continuos and differentiable:
+In order to generalize to controllable dinamical systems, it is introduced \glsxtrshort{CLF}, modeled just like the typical the lyapunov functions~\ref{eq:LF_condition} but able through the use of the given control inputs affect its derivative in order to achieve the stability conditions~\ref{eq:LF_derivative_condition}. That beeing said, it is pretended to the \glsxtrshort{CLF} function \( V\mathbf(\mathbf{x}) \) to be continuous and differentiable:
 
 \begin{equation}
 \begin{array}{ll}
@@ -93,7 +93,7 @@ In order to generalize to controllable dinamical systems, it is introduced \glsx
 
 where \(L_fV\) and \(L_GV\) are the Lie derivatives of \(V\) and \(\mathbf{u}\) the control input vector responsible for manipulating the function, more precisely, to affect its stabilizing convergence rate \(\dot{V}(\xVec, \uVec)\).\par
 
-Therefore, a continuosly differentiable, positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0}  \) wich \( \lim_{\mathbf{x} \to \bar{\mathbf{x}}}{V(\mathbf{x})} = 0 \) is a \glsxtrshort{CLF} if there exists a \( \gamma \in \mathcal{K}^e_{\infty}  \)\footnote{If a continuos functions \(\alpha:[-b,a] \to \mathbb{R}\) with \((a,b) > 0\), strictly increasing and \(\alpha(0) = 0\) then \(\alpha \in \mathcal{K}^e\) and if it adds \(\lim_{r \to \infty} \alpha(r) = \infty\) then \(\alpha \in \mathcal{K}^e_{\infty}\)}  such that for all \( \mathbf{x} \in \mathbb{R}^n \setminus \{\bar{\mathbf{x}}\} \):
+Therefore, a continuosly differentiable, positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0}  \) wich \( \lim_{\mathbf{x} \to \bar{\mathbf{x}}}{V(\mathbf{x})} = 0 \) is a \glsxtrshort{CLF} if there exists a \( \gamma \in \mathcal{K}^e_{\infty}  \)\footnote{If a continuous functions \(\alpha:[-b,a] \to \mathbb{R}\) with \((a,b) > 0\), strictly increasing and \(\alpha(0) = 0\) then \(\alpha \in \mathcal{K}^e\) and if it adds \(\lim_{r \to \infty} \alpha(r) = \infty\) then \(\alpha \in \mathcal{K}^e_{\infty}\)}  such that for all \( \mathbf{x} \in \mathbb{R}^n \setminus \{\bar{\mathbf{x}}\} \):
 
 \begin{equation}
  \inf_{\mathbf{u} \in \mathbb{R}^m} [L_fV(\mathbf{x}) + L_GV(\mathbf{x})\mathbf{u}] \leq -\gamma(V(\mathbf{x}))
@@ -113,7 +113,7 @@ The stets generated by \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathb
 \subsubsection{\glsxtrfull{CBF}}
 \label{subsub:control_barrier_function}
 
-While the \glsxtrshort{CLF} imposes an "acttracting" behaviour to the system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, the \glsxtrshort{CBF} a "repelling" one. Having the objective of garantee safety to system, is aimed to keep the state inside a safe set \(\mathcal{C}\) (forward invariant\footnote{A set \(\mathcal{S}\) is said forward invariant if the initial system state \( x_0 \in \mathcal{S}\) and so \(x(t) \in \mathcal{S} \hspace{0.25em} \forall t \geq 0\) }) defined accordingly the problem needs (e.g. in the context autonomous vehicles, the outside space occupied by an obstacle).\par 
+While the \glsxtrshort{CLF} imposes an "acttracting" behaviour to the system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, the \glsxtrshort{CBF} a "repelling" one. Having the objective of guarantee safety to system, is aimed to keep the state inside a safe set \(\mathcal{C}\) (forward invariant\footnote{A set \(\mathcal{S}\) is said forward invariant if the initial system state \( x_0 \in \mathcal{S}\) and so \(x(t) \in \mathcal{S} \hspace{0.25em} \forall t \geq 0\) }) defined accordingly the problem needs (e.g. in the context autonomous vehicles, the outside space occupied by an obstacle).\par 
 The notion of safety, i.e., the safe set \(\mathcal{C}\) is defined as the 0-superlevel\footnote{For function \(f: \mathbb{R}^n \to \mathbb{R}\), its superlevel set is given by \(\mathcal{S}(f) = \{(x_1,...,x_n): f(x_1,...,x_n) \geq c\}\), where having \(c = 0\) corresponds to the 0-superlevel set of \(f\)} set of a continuously differentiable function \( h: \mathbb{R}^n \rightarrow \mathbb{R}  \):
 
 \begin{align}
@@ -158,7 +158,7 @@ By applying the control law to a system, the far from the boundary~\ref{eq:bound
 \label{subsub:quadratic_program_formulation}
 
 Now having the objective of not only achieving  safety but also asymptotically  stability through the usage of \glsxtrshort{CLF} and \glsxtrshort{CBF} it renders a set of control inputs able to achieve the respective purposes. Using the conditions imposed by \glsxtrshort{CLF} and \glsxtrshort{CBF} as constraints, is presented an constrained optimization problem via \glsxtrfull{QP}~\footnote{\glsxtrlong{QP} consists of solving a mathematical optimization problem with a convex quadratic objective function and affine constraints}, relative faster than higher degree objective functions. This particular optimization problem aims minimal control actions and it is characterized for penalizing quadratically the control input deviations between each other. \par
-Given a locally Lipschitz continuos controller \(k: \mathbb{R}^n \rightarrow \mathbb{R}^m \), which control law is described by the specified \glsxtrshort{QP}:
+Given a locally Lipschitz continuous controller \(k: \mathbb{R}^n \rightarrow \mathbb{R}^m \), which control law is described by the specified \glsxtrshort{QP}:
 
 \begin{equation}
     \begin{array}{l}
@@ -219,8 +219,8 @@ Usually control systems are governed by higher-order systems, such as some secon
     \end{align}
 \end{subequations}
 
-with \(\mathbf{x} \in \mathbb{R}^n \), \(\mathbf{\xi} \in \mathbb{R}^p \), and \(\mathbf{u} \in \mathbb{R}^m \), and functions \(f_0: \mathbb{R}^n \to \mathbb{R}^n \), \(g_0: \mathbb{R}^n \to \mathbb{R}^{n \times p} \), \(f_1: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^p \) and \(g_1: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^{ p \times m} \) locally Lipschitz continuos on their respective domains. \par
-Given a locally Lipschitz continuos feedback controller \(\mathbf{k}: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m  \) the closed-loop system is:
+with \(\mathbf{x} \in \mathbb{R}^n \), \(\mathbf{\xi} \in \mathbb{R}^p \), and \(\mathbf{u} \in \mathbb{R}^m \), and functions \(f_0: \mathbb{R}^n \to \mathbb{R}^n \), \(g_0: \mathbb{R}^n \to \mathbb{R}^{n \times p} \), \(f_1: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^p \) and \(g_1: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^{ p \times m} \) locally Lipschitz continuous on their respective domains. \par
+Given a locally Lipschitz continuous feedback controller \(\mathbf{k}: \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}^m  \) the closed-loop system is:
 
 \begin{equation}
     \begin{array}{l}
@@ -238,14 +238,14 @@ for any initial states \((\xVec_0, \mathbf{\xi}_0) \in \mathbb{R}^n \times \math
 
 Having a second order system~\ref{eq:HH-NL-System} the output dynamic don't have direct access to control \(\uVec\) or even is able to control \(\mathbf{\xi}\). In order to affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\), the strategy passes by obtaining the solution if it was a first order system~\ref{eq:Nonlinear-First-Order-System} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input). \par
 
-Given a differentiable and locally Lipschitz continuos \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
+Given a differentiable and locally Lipschitz continuous \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
 
 \begin{equation}
     \dot{\xVec} = f_0(\xVec) + g_0(\xVec) k_0(\xVec)\\ 
  \label{eq:NL-CL-System-0Backstep}
 \end{equation}
 
-That being said, the first order solution could be obtained via \glsxtrshort{QP}, so supposing a \glsxtrshort{CLF} \(V_0\),  \glsxtrshort{CBF} \(h_0\),  a differentiable and locally Lipschitz continuos described just now \(k_0(\xVec)\) and \((\gamma_0, \alpha_0) \in \mathcal{K}^e_\infty \times \mathcal{K}^e_\infty\):
+That being said, the first order solution could be obtained via \glsxtrshort{QP}, so supposing a \glsxtrshort{CLF} \(V_0\),  \glsxtrshort{CBF} \(h_0\),  a differentiable and locally Lipschitz continuous described just now \(k_0(\xVec)\) and \((\gamma_0, \alpha_0) \in \mathcal{K}^e_\infty \times \mathcal{K}^e_\infty\):
 
 \begin{equation}
     \begin{array}{l}
@@ -571,7 +571,7 @@ The logical operations identity, complement, intersection and union are represen
 
 Following the explanations given in the previous subsubsection~\ref{subsub:uniCBF_firstOrder_system}, now applying for a second-order system~\ref{eq:HH-NL-System}, more precisely, for a Backstepping~\ref{sub:backstepping} situation. \\
 
-Given a \glsxtrshort{CLF} \(V_0(\xVec): \) and multiple \glsxtrshort{CBF} \(h0_i(\xVec) \quad \forall i \in \mathcal{I}\) combined into a \glsxtrshort{CBF} \(h_0(\xVec)\) via \ref{eq:Min_smoothFunc_tighted} (intersection) or \ref{eq:Max_smoothFunc_tighted} (union) (they can be combined using both operations), through the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-0Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}) is obtained a differentiable and locally Lipschitz continuos theoretical controller \(k_0(\xVec): \mathbb{R}^n \to \mathbb{R}\). \\
+Given a \glsxtrshort{CLF} \(V_0(\xVec): \) and multiple \glsxtrshort{CBF} \(h0_i(\xVec) \quad \forall i \in \mathcal{I}\) combined into a \glsxtrshort{CBF} \(h_0(\xVec)\) via \ref{eq:Min_smoothFunc_tighted} (intersection) or \ref{eq:Max_smoothFunc_tighted} (union) (they can be combined using both operations), through the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-0Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}) is obtained a differentiable and locally Lipschitz continuous theoretical controller \(k_0(\xVec): \mathbb{R}^n \to \mathbb{R}\). \\
 
 In order to the second-order system~\ref{eq:HH-NL-CL-System} dynamic converge to \(k_0(\xVec)\) imposed dynamic, given multiple \glsxtrshort{CBF} \(h_i(\xVec) \quad \forall i \in \mathcal{I} \):
 
@@ -604,7 +604,7 @@ The resultant \glsxtrshort{CBF} \(h_i(\xVec, \mathbf{\xi}) \quad \forall i \in \
 \end{equation}
 
 
-Having \glsxtrshort{CBF} \(h\), the second-order solution, a differentiable and locally Lipschitz continuos controller \(k(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}\) is obtained using the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-1Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}). \\
+Having \glsxtrshort{CBF} \(h\), the second-order solution, a differentiable and locally Lipschitz continuous controller \(k(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}\) is obtained using the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-1Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}). \\
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
@@ -737,7 +737,7 @@ where \(a, b, c, d\) are the respective steps intensity tuning parameter. \\
 \subsection{Binary Search}
 \label{subsec:Binary_Search}
 
-This method is composed by two phases, being  the first one responsible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Bolzano's theorem says that given the continuos function \(f:[a;b] \subset \mathbb{R} \to \mathbb{R}\) and \(f(a)f(b) < 0\), then \(\exists x \in  ]a; b[\) such that \(f(x) = 0\)} is verified for the continuos gradient function (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used a variation of the gradient descent method~\ref{eq:Gradient_Descent_Normal}:
+This method is composed by two phases, being  the first one responsible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Bolzano's theorem says that given the continuous function \(f:[a;b] \subset \mathbb{R} \to \mathbb{R}\) and \(f(a)f(b) < 0\), then \(\exists x \in  ]a; b[\) such that \(f(x) = 0\)} is verified for the continuous gradient function (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used a variation of the gradient descent method~\ref{eq:Gradient_Descent_Normal}:
 
 \begin{equation}
     x_{k+1} = x_k + \underbrace{(- a \nabla g(x_{k}))}_{step}
@@ -905,7 +905,7 @@ The low and high order solution are based equally on \ref{eq:Update_RKbased}:
     \label{eq:Update_Adaptive-RK}  
 \end{subequations}
 
-Where the intermediate derivatives \(k_i\) functions keep the same equation \ref{eq:Derivatives_Explicit-RK} and are equal for both (low and hig order methods) reducing some computing time. The local truncature error estimations ig given by:
+Where the intermediate derivatives \(k_i\) functions keep the same equation \ref{eq:Derivatives_Explicit-RK} and are equal for both (low and high order methods) reducing some computing time. The local truncature error estimations ig given by:
 
 \begin{equation}
     e_{n+1} = |z_{n+1} - y_{n+1}|
@@ -942,7 +942,7 @@ With \(\epsilon\) as the error tolerance equal to \(10^{-5}\) in the default ver
 \subsubsection{State Propagation Simulation Algorithm}
 \label{subsub:State_Propagation_Simulation_Algorithm}
 
-Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state convergence. Aiming to simulate a system evolution using a decision algorithm, given the ordinary diferential states dynamics equations \(\dot{\xVec} = f(\xVec,\uVec)\) propagated via a runge-kutta method~\ref{subsub:Runge-Kutta_Methods}:
+Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulating state convergence. Aiming to simulate a system evolution using a decision algorithm, given the ordinary differential states dynamics equations \(\dot{\xVec} = f(\xVec,\uVec)\) propagated via a runge-kutta method~\ref{subsub:Runge-Kutta_Methods}:
 
   \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -996,7 +996,7 @@ The new point is obtained accounting with the natural movement direction of thos
 \subsubsection{Constraint Tangent Point}
 \label{subsubsec:Constraint_Tangent_Point}
 
-Both algorithms are responsible to obtain the farest point (or points \ref{sssec:Constraint_Tangent_Point_Any}), restricted to the two-dimensional Euclidian Space, given the perpendicular direction of \(dir\), obtained using algorithm \ref{alg:Natural_Convergence_Direction_Vector}.\par
+Both algorithms are responsible to obtain the farest point (or points \ref{sssec:Constraint_Tangent_Point_Any}), restricted to the two-dimensional Euclidean Space, given the perpendicular direction of \(dir\), obtained using algorithm \ref{alg:Natural_Convergence_Direction_Vector}.\par
 The distance along \(dir_{\perp}\) between the starting state \(\xVec_0\) and \(\bar{\xVec_I}\) (\(dp_{min} = v_{\perp}^{\top}(\xVec_0 - \bar{\xVec_I})\)) corresponds to the minimal distance along \(dir_{\perp}\) necessary to contour the unsafe set towards the desired equilibrium point. And the distance along \(dir\) between \(\xVec_0\) and \(\bar{\xVec_I}\) (\(d = v^{\top}(\xVec_0 - \bar{\xVec_I})\))  proportional to the urgency to move along \(dir_{\perp}\), i.e, \(\frac{dp_{min}}{d}\) is equivalent to the rate of change of \(dp\) along \(dir\), imposed by the new equilibrium point \(\bar{\xVec_I}\). %the slope of the rect containing \(\xVec_0\) and \(\xVec_I\), given the change of basis \([v, \hspace{0.1em}v_{\perp}]\), is equivalent to the imposed turning rate by the new equilibrium point \(\xVec_I\).\\
  
 
@@ -1037,7 +1037,7 @@ With \(\mathbf{r} = \bigl[\begin{smallmatrix} \mathbf{r}_1&\mathbf{r}_2\end{smal
     \label{eq:Constraint_Tangent_Points}
 \end{equation}
 
-The closest-point to the current state is chosed as the intermediate equilibrium point:
+The closest-point to the current state is chosen as the intermediate equilibrium point:
 
 \begin{equation}
     \mathbf{O}\bar{\xVec_I} = \argminA_{\mathbf{s}_j \in \mathbb{R}^2} ||\mathbf{s}_j - \xVec|| 
@@ -1049,9 +1049,9 @@ The closest-point to the current state is chosed as the intermediate equilibrium
 \label{sssec:Constraint_Tangent_Point_Any} \\
 
 
-The previous obtaining strategy is exclusive to ellipsoidal figures, while the purposed technique aims to be able to find the wanted point for any two dimensional shape. \par 
+The previous obtaining strategy is exclusive to ellipsoidal figures, while the proposed  technique aims to be able to find the wanted point for any two dimensional shape. \par 
 It is characterized to a discrete behaviour as the search for the point is through steps along \(\mathbf{v} = \bigl[\begin{smallmatrix} \mathbf{v}_1 \\ \mathbf{v}_2 \end{smallmatrix}\bigr]\) and its perpendicular direction \(\mathbf{vp} = \bigl[\begin{smallmatrix} -\mathbf{v}_2 \\ \mathbf{v}_1 \end{smallmatrix}\bigr]\).  \par
-Given \(\mathbf{p} = \mathbf{O}\xVec_{END}\) and \(\mathbf{v}\) returned by \(NCDV\)~\ref{alg:Natural_Convergence_Direction_Vector}, the first order \glsxtrshort{CBF} \(h0\), arbirtrary steps sizes, \(step\) and \(stepP\) along \(\mathbf{v}\) and \(\mathbf{vp}\) respectively and a maximum of iterarions while searching through the respective directions. 
+Given \(\mathbf{p} = \mathbf{O}\xVec_{END}\) and \(\mathbf{v}\) returned by \(NCDV\)~\ref{alg:Natural_Convergence_Direction_Vector}, the first order \glsxtrshort{CBF} \(h0\), arbitrary  steps sizes, \(step\) and \(stepP\) along \(\mathbf{v}\) and \(\mathbf{vp}\) respectively and a maximum of iterations while searching through the respective directions. 
 
 \newpage %so para ajeitar
 
@@ -1092,9 +1092,9 @@ Given \(\mathbf{p} = \mathbf{O}\xVec_{END}\) and \(\mathbf{v}\) returned by \(NC
     \caption{Find Contour Point (FCP)} \label{alg:Find_Contour_Point}
   \end{algorithm}
 
-This algorithm is generally applied to polytopes, which could have multiple farest points, e.g., an edge. So those points could be approximately two vertices of the polytope of a same edge or considered just one vertice if they are too close. \par
-Depending how small the steps are and how big is the total number of searching iteration steps along \(v\) and \(vp\) (and their inverses \(-v\) and \(-vp\)), the more robust the algoritm is.\par
-The algorithm starts by obtaining \(q\) at the intersection of the boundary with the half-line \(p + v\times b, \quad b \in \mathbb{R}_{>0}\). Following with a iterative search through the layers of each side (pointed by \(\mathbf{vp}\) and its symetric) separated by a distance equal to \(stepP\) until reach the peak of one of the sides indicated by the inexistence of intersections returned by \(FNLIs\).\\
+This algorithm is generally applied to polytopes, which could have multiple farest points, e.g., an edge. So those points could be approximately two vertices of the polytope of the same edge or considered just one vertice if they are too close. \par
+Depending how small the steps are and how big is the total number of searching iteration steps along \(v\) and \(vp\) (and their inverses \(-v\) and \(-vp\)), the more robust the algorithm  is.\par
+The algorithm starts by obtaining \(q\) at the intersection of the boundary with the half-line \(p + v\times b, \quad b \in \mathbb{R}_{>0}\). Following with a iterative  search through the layers of each side (pointed by \(\mathbf{vp}\) and its symmetric) separated by a distance equal to \(stepP\) until reach the peak of one of the sides indicated by the inexistence of intersections returned by \(FNLIs\).\\
 
 
   \SetKwComment{Comment}{/* }{ */}
@@ -1140,7 +1140,7 @@ The algorithm starts by obtaining \(q\) at the intersection of the boundary with
 
     \If{$isempty(p_{new})$}{
         $reach \gets 1$ \Comment*[r]{Searching in the direction of \(q0\)}
-        $p \gets p0$ \Comment*[r]{If didn't intersetc, it comebacks to the initial point}
+        $p \gets p0$ \Comment*[r]{If didn't intersect, it comebacks to the initial point}
         \While{$i \leq tI(2) + \frac{||p0-q0||}{step}$}{      
 
 
@@ -1160,7 +1160,7 @@ The algorithm starts by obtaining \(q\) at the intersection of the boundary with
     \caption{Find Layer Intersection (FLI)} \label{alg:Find_Layer_Intersection}
   \end{algorithm}
 
-  This algorithm is responsible to obtain one of the layer intersection for a chosen direction \(v\). It starts by searching along the layer, propgated by steps of size \(step\) and with \(-v\) direction. If it isn't capable to found any point it follows the symetric direction \(v\).\\
+  This algorithm is responsible for obtaining one of the layer intersections for a chosen direction \(v\). It starts by searching along the layer, propagated by steps of size \(step\) and with \(-v\) direction. If it isn't capable to find any point it follows the symmetric direction \(v\).\\
 
     \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -1180,13 +1180,13 @@ The algorithm starts by obtaining \(q\) at the intersection of the boundary with
 \section{Proposed Decision Algorithms}
 \label{sec:Proposed_Decision_Algorithms}
 
-All the proposed algorithms are based on \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf} decision algorithm, having the objective of stabilizing a system while prioritizing its safety. Using \glsxtrshort{CLF-CBF} allows a relative lower computational effort, in particular its closed form solution~\ref{sub:closed_form}, compared to other techniques, however it lacks adaptive power as its constant parameters consistently dictates an inneficient system behavior for probably the majority of the encoutered scenarios. \\    
+All the proposed algorithms are based on \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf} decision algorithm, having the objective of stabilizing a system while prioritizing its safety. Using \glsxtrshort{CLF-CBF} allows a relative lower computational effort, in particular its closed form solution~\ref{sub:closed_form}, compared to other techniques, however it lacks adaptive power as its constant parameters consistently dictates an inefficient system behavior for probably the majority of the encountered  scenarios. \\    
 
 
 \subsection{\glsxtrfull{A-JO}}
 \label{subsec:Just_Optimized_Algorithm}
 
-Optimizing parameters can improve the system behaviour for the scenario is deparing with. And an eventual optimization make its behaviour more suited to actuate in an multi-scenario environment. \par
+Optimizing parameters can improve the system behaviour for the scenario it is deparing with. And an eventual optimization makes its behaviour more suited to actuate in an multi-scenario environment. \par
 Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, the proposed technique is centered on the slope \(\alpha_d\) of the \glsxtrshort{CBF} constraint function \(\alpha:\mathbb{R} \to \mathbb{R}\) (\glsxtrshort{CLF-CBF} \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed}) as an optimization variable:
 
 \begin{equation}
@@ -1194,7 +1194,7 @@ Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, t
     \label{eq:CBF_Alpha_Formulation_AJO}
 \end{equation}
 
-The parameter is optimized using the binary search algorithm \ref{subsec:Binary_Search} but for that is required a cost function \(g_{\xVec_0}:\mathbb{R} \to \mathbb{R}\) which accounts with a whole predction horizon:
+The parameter is optimized using the binary search algorithm \ref{subsec:Binary_Search} but for that is required a cost function \(g_{\xVec_0}:\mathbb{R} \to \mathbb{R}\) which accounts with a whole prediction horizon:
 
 \begin{equation}
     \begin{array}{ll}
@@ -1209,7 +1209,7 @@ The parameter is optimized using the binary search algorithm \ref{subsec:Binary_
 
 Where \(N\) is equivalent to the total of samples, \(\xVec_0\) the present state, \(\mathbf{Q} \in \mathbb{R}^n_{\succ 0}\) is the states cost weight matrix, \(\mathbf{R} \in \mathbb{R}^m_{\succ 0}\) is the inputs cost weight matrix.  \par
 
-Because of the unknow states and inputs continuos differential solution (\(\xVec(t) and \uVec(t)\)), potentialized by the conditioned control input values given by CLF-CBF closed-form controller~\ref{eq:closed-form_controller}, the gradient \(\nabla g_{\xVec_0}(\alpha_d)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha_d)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly.\par 
+Because of the n states and inputs continuous differential solution (\(\xVec(t) and \uVec(t)\)), potentialized by the conditioned control input values given by CLF-CBF closed-form controller~\ref{eq:closed-form_controller}, the gradient \(\nabla g_{\xVec_0}(\alpha_d)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha_d)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly.\par 
 Digitally, through the \(SPS\) algorithm \ref{alg:Discrete_Gradient_Function} is computed the approximated states \(\mathbf{X}(\alpha_d,\xVec_0)\) and inputs \(\mathbf{U}(\alpha_d,\xVec_0)\) along the horizon. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\). Meanwhile, given the control action \(\uVec_k\), \(\xVec_{k+1}\) is propagated by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\ref{eq:RK4_Tableu}, more accurate than the Euler method~\ref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}. So given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
 
 \begin{equation}
@@ -1236,7 +1236,7 @@ Among the presented single parameter optimization techniques there are:
 \end{itemize}
 
 The Binary Search is preferred due to be suited to quasi-convex specters, which was verified for the given problems.\par 
-Theoretically the CBF should garantee safety, however due to not be a continuos system (or integration errors), having a high \(\alpha_d\) can lead to unsafe sets and can also provide a demand on a not possible control input values to keep the system safe, but if that happens is expected to reflect on the path taken, control inputs and therefore penalize in the cost function as in the gradient, although it could be reflected as noise during the optimization.\\
+Theoretically the CBF should guarantee safety, however due to not be a continuous system (or integration errors), having a high \(\alpha_d\) can lead to unsafe sets and can also provide a demand on a not possible control input values to keep the system safe, but if that happens is expected to reflect on the path taken, control inputs and therefore penalize in the cost function as in the gradient, although it could be reflected as noise during the optimization.\\
 
 Afterwards, having the optimized \(\alpha_d\), it is used the typical \glsxtrshort{CLF-CBF} framework, more precisely the closed-form controller \ref{eq:closed-form_controller} as decision algorithm to speed up.
 
@@ -1245,7 +1245,7 @@ Afterwards, having the optimized \(\alpha_d\), it is used the typical \glsxtrsho
 \subsection{Other Cost Function}
 \label{subsubsec:Other Cost Function}
 
-The purposed algorithm follows an optimization based on a cost function given a whole horizon of states, yet changing it could give different results \ref{sec:experiments}. 
+The proposed algorithm follows an optimization based on a cost function given a whole horizon of states, yet changing it could give different results \ref{sec:experiments}. 
 
 \begin{equation}
     \begin{array}{ll}
@@ -1256,7 +1256,7 @@ The purposed algorithm follows an optimization based on a cost function given a 
     \label{eq:Cost_Function_Alpha_last_state}
 \end{equation}
 
-This cost function just takes into account the last state from the horizon, i.e., pathes where the last system sate is as close as possible to the desired state at the end of the horizon, or even reached it return lower costs, and between those pathes the less input consuming and generally the shortest paths are the optimal ones. Compared to \ref{eq:Cost_Function_Alpha} it demands a higher \(\mathbf{Q}\), so the cost value returned could be relatively high according how far from the stability objective the system is.
+This cost function just takes into account the last state from the horizon, i.e., paths where the last system state is as close as possible to the desired state at the end of the horizon, or even reached it return lower costs, and between those paths the less input consuming and generally the shortest paths are the optimal ones. Compared to \ref{eq:Cost_Function_Alpha} it demands a higher \(\mathbf{Q}\), so the cost value returned could be relatively high according to how far from the stability objective the system is.
 
 
 \begin{equation}
@@ -1273,10 +1273,10 @@ Where \(det(\mathbf{Q}_i) \leq  det(\mathbf{Q}_{i+1})\), in order to keep a simi
 \label{subsec:CLFs_Summed_Algorithm}
 
 
-The \glsxtrshort{CLF-CBF} returns control input values based on purely the current state, resulting in global (infinite horizon) suboptimal solutions that could lead to states relatively close to the barrier (given some safety tunable defenitions) and unwanted inputs to deviate from it. So, changing the notion of stability by making the system follow another equilibrium point first could help mitigate the problems. This technique focus on the transition between two \glsxtrshort{CLF} aiming to converge for each of the equilibrium points, the current and next. \par
+The \glsxtrshort{CLF-CBF} returns control input values based on purely the current state, resulting in global (infinite horizon) suboptimal solutions that could lead to states relatively close to the barrier (given some safety tunable definitions) and unwanted inputs to deviate from it. So, changing the notion of stability by making the system follow another equilibrium point first could help mitigate the problems. This technique focuses  on the transition between two \glsxtrshort{CLF} aiming to converge for each of the equilibrium points, the current and next. \par
 
 
-With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Algorithm} is obtained the new equilibrium point \(\bar{\xVec_C} \in \mathbb{R}^n\). Given a system, with dynamics \(f:\mathbb{R}^n \times \mathbb{R}^m \rightarrow \mathbb{R}^n \), at the sate \(\xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) that targets \(\bar{\xVec_N} \in \mathbb{R}^n\) and \glsxtrshort{CBF} \(h\), the new equilibrium point could be obtained:
+With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Algorithm} is obtained the new equilibrium point \(\bar{\xVec_C} \in \mathbb{R}^n\). Given a system, with dynamics \(f:\mathbb{R}^n \times \mathbb{R}^m \rightarrow \mathbb{R}^n \), at the state \(\xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) that targets \(\bar{\xVec_N} \in \mathbb{R}^n\) and \glsxtrshort{CBF} \(h\), the new equilibrium point could be obtained:
 
 
 \begin{equation}
@@ -1289,14 +1289,14 @@ With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Alg
 
 
 
-Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natural_Convergence_Direction_Vector}, and \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) the constrained states oberver matrix. Regarding the choice of \glsxtrshort{RK}4 over other methods is because as it was said before, since it is more accurate than the Euler method~\ref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}. \par
+Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natural_Convergence_Direction_Vector}, and \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) the constrained states observer matrix. Regarding the choice of \glsxtrshort{RK}4 over other methods is because as it was said before, since it is more accurate than the Euler method~\ref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}. \par
 Given the direction vector \(\mathbf{v}\), assuming an ellipsoidal fit \ref{eq:Ellipsoidal_fit}, with the constraint tangent point  closed form solution~\ref{subsubsec:Constraint_Tangent_Point} like this obtain \(\bar{\xVec_C}\). If the system is deparing with a polytope \glsxtrshort{CBF} \(h_0\), then using algorithm \ref{alg:Find_Contour_Point} with \(\mathbf{v}\) and \(\xVec_{int}\) as arguments is obtained the new equilibrium point(s).\\
 
 
 \subsubsection{Baseline Framework}
 \label{subsubsec:CLFs_Summed_Algorithm_Baseline_Framework}
 
-From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_{C_0}\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_{N_0}\) stabilizing in \(\bar{\xVec_N}\). By doing a wheighted mean between both \glsxtrshort{CLF} is defined a new one (a generalization for multiple \glsxtrshort{CLF} can be found in \ref{app:M_CLF_Transition_Formulation}):
+From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_{C_0}\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_{N_0}\) stabilizing in \(\bar{\xVec_N}\). By doing a weighted  mean between both \glsxtrshort{CLF} is defined a new one (a generalization for multiple \glsxtrshort{CLF} can be found in \ref{app:M_CLF_Transition_Formulation}):
 
 \begin{align}
     &\sigma(\xVec) = \frac{1}{1+e^{-\zeta V_{C_0}(\xVec)}} \label{eq:sig_CLF_Vc0} 
@@ -1363,7 +1363,7 @@ The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_{1}\) a
 
 Keeping \(\mu\) as a parameter with default value as \( \frac{V_{N_0}(\xVec)}{V_{C_0}(\xVec)} \) and the set \(K_{V_{2}}(\xVec)\) equivalent to \ref{eq:K-CLF}. \textcolor{gray}{If it is a mixed-relative-degree-two system like the unicycle model used in \ref{eq:unicycle_model}.} \\
 
-Regarding the stability objective changing condition, it mantains equal to \ref{eq:New_2-CLF-S_actuationPhaseSet} using the first-order \glsxtrshort{CLF} and control input \(\mathbf{k}_0\):
+Regarding the stability objective changing condition, it maintains equal to \ref{eq:New_2-CLF-S_actuationPhaseSet} using the first-order \glsxtrshort{CLF} and control input \(\mathbf{k}_0\):
 
 \begin{equation}
     \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C_0}(\xVec) \geq tol \cap \dot{V}_{C_0}(\xVec, \mathbf{k}_0) \leq 0 \cap \delta \leq tol_2 \}
@@ -1498,8 +1498,8 @@ The set \(K_{V_N}(\xVec)\) is is defined by \ref{eq:K-CLF}. \par
 \subsubsection{Last Control Phase \(\mathbf{k}_N\)}
 \label{subsubsec:Last_Control_Phase}
 
-Using \glsxtrfull{A-CLF-S} and other \glsxtrfull{CLF-CBF} based controllers, as the system gets closer to the equilibrium point, its speed of convergence slows down, possibly not reaching the point in an acceptible time as can be seen in the results~\ref{sec:experiments}. \par
-The \glsxtrshort{A-CLF-S} last phase control is governed by a typical \glsxtrshort{CLF-CBF}, which its \glsxtrshort{CLF} stability objective is just the final equilibrium point, which can be replaced by other control techniques, preferebly when there is no possible collision on sight.
+Using \glsxtrfull{A-CLF-S} and other \glsxtrfull{CLF-CBF} based controllers, as the system gets closer to the equilibrium point, its speed of convergence slows down, possibly not reaching the point in an acceptable time as can be seen in the results~\ref{sec:experiments}. \par
+The \glsxtrshort{A-CLF-S} last phase control is governed by a typical \glsxtrshort{CLF-CBF}, which its \glsxtrshort{CLF} stability objective is just the final equilibrium point, which can be replaced by other control techniques, preferably when there is no possible collision on sight.
 
 Aiming low cost resources, there are optimal control techniques such as:
 
