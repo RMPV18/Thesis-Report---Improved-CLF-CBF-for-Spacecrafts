@@ -23,7 +23,9 @@ It was verified that the \glsxtrshort{A-JO}, thanks to its based framework, give
 
 That beeing said, giving the low-computation effort, along with the safety and performance objective, the \glsxtrshort{A-CLF-S} showed consistently better results than \glsxtrshort{A-JO} although the relative higher computational times. Compared to \glsxtrshort{MPC}, it presented the more positive results, relatively close performance wise but particularly lower computationally, around two and three orders of magnitude. The purposed techniques validated for different systems and scenarios, a unicycle against circular and ellipsoidal obstacles, and a spacecraft in a keep in formation scenario demanding contour other spacecraft delimited by a polytope.  
 
-The \glsxtrshort{CLF-CBF} based algorithms suffer from slower convergence as it approaches the desired state so future work passes by correcting it for example implementing a \glsxtrshort{LQR} when there is no eminent possibility of collision with the unsafe set. 
+The \glsxtrshort{CLF-CBF} based algorithms suffer from slower convergence as it approaches the desired state, so a solution comes by changing the controller. The \glsxtrshort{A-CLF-S} reveal in later stages some difficulty reaching the desired location, governed by a typical \glsxtrshort{CLF-CBF} which consistently show negative results compared to the \glsxtrshort{MPC} which has proven the ability to reach the equilibrium point.
+
+In addition, future work can pass by implementing a filter based on the cost evaluation as outliers, aiming to increase the accuracy and speed up the optimization algorithms.
 
 Another way to continue this project is by devoloping an an waypoint obtaining algorithm to a three dimensional unsafe set and make it viable to more applications like in space. 
 

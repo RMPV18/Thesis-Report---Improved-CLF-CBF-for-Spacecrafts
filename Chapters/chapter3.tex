@@ -12,7 +12,7 @@
 \chapter{Results}
 \label{cha:results}
 
-The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{subsec:decision_algorithms} \glsxtrshort{A-JO} and \glsxtrshort{A-CLF-S},  are going to be implemented in different systems, in a unicycle~\ref{subsec:unicycle_simul_setup} and orbital system~\ref{subsec:orbital_simul_setup}, and subject to different types of experiments according to the system in question (unicycle~\ref{subsubsec:unicyle_type_of_experiments} or orbital~\ref{subsubsec:orbital_type_of_experiments}). In each of the contexts, there is a single whole \(10000\) samples horizon solution of an \glsxtrshort{MPC}, along with analisys of the techniques and a comparation between them highlingting some relevant data.
+The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{subsec:decision_algorithms} \glsxtrshort{A-JO} and \glsxtrshort{A-CLF-S},  are going to be implemented in different systems, in a unicycle~\ref{subsec:unicycle_simul_setup} and orbital system~\ref{subsec:orbital_simul_setup}, and subject to different types of experiments according to the system in question (unicycle~\ref{subsubsec:unicyle_type_of_experiments} or orbital~\ref{subsubsec:orbital_type_of_experiments}). In each of the contexts, there is a single \(10000\) samples horizon solution of an \glsxtrshort{MPC}, along with analisys of the techniques and a comparation between them highlingting some relevant data.
 
 \section{Setup}
 \label{sec:setup}
@@ -23,7 +23,8 @@ The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{su
 \subsubsection{\glsxtrshort{A-JO}}
 \label{subsubsec:A-JO_parameters}
 
-The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{eq:Cost_Function_Alpha}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 0.2\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\\
+The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{eq:Cost_Function_Alpha}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 0.2\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\par  
+The gradient module of the cost function \(|\nabla g_{\xVec_0}(\alpha_d)|\) presents high amplitude noisy peaks, so having a neutralizing \(a\) helps mitigating extremes values of \(\alpha_d\) could possibly jump to.\\
 
 The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discrete_gradient_function} parameters used in these experiments are given by:
 
@@ -37,7 +38,7 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
    \rowcolor{Gainsboro}
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h, \hspace{0.25em} \alpha_{ini}$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{eq:orbital_dynamics_augmented}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
+     \ref{eq:unicycle_model} or \ref{eq:orbital_dynamics}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -78,7 +79,7 @@ The \glsxtrshort{A-CLF-S} functions parameters are defined by:
    \rowcolor{Gainsboro}%
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{orbital_dynamics_augmented}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
+     \ref{eq:unicycle_model} or \ref{eq:orbital_dynamics}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -662,7 +663,7 @@ As in UEH~\ref{ssssec:UEH_experiments}, although the other techiniques don't kee
 \end{figure}
 
 
-As in UEH~\ref{ssssec:UEH_experiments}, \glsxtrshort{A-JO} and \glsxtrshort{MPC}  kept stuck. While the \glsxtrshort{A-CLF-S} keeps showing a better result, proving the efficiency of it and in particular the polytopic contour points obtaining algorithm. 
+As in UEH~\ref{ssssec:UEH_experiments}, \glsxtrshort{A-JO} and \glsxtrshort{MPC}  kept stuck. While the \glsxtrshort{A-CLF-S} keeps showing a better result, proving the efficiency of it, even for multiple waypoints, and in particular the polytopic contour points obtaining algorithm by returning approximately the two above vertices. 
 
 
   \bgroup
@@ -714,7 +715,7 @@ Following the results obtained previously, it is compared the \glsxtrshort{MPC} 
 \end{figure}
 
 
-\glsxtrshort{MPC-L} shows the shortest path and less input consumed, however since the optimization is done based just on the last state from the horizon resulting in a reaching time close to the end of the horizon. This \glsxtrshort{MPC} version targets the end of the horzion with minimal consume, but if the horizon is too short, assuming the same weight on the last state, it can lead to really high control inputs to be as close to \txtref at the end of it. Meanwhile, the \glsxtrshort{A-CLF-S} optimization don't suffer from the same proble due to its baseline framework, more precisely, the static behaviour imposed by the \(\gamma\) function, i.e, the total input cost variation is impacted essentially by its the path which is effectively optimized by the respective cost function~\ref{eq:Cost_Function_Alpha_last_state}.
+\glsxtrshort{MPC-L} shows the shortest path and less input consumed, however since the optimization is done based just on the last state from the horizon resulting in a reaching time close to the end of the horizon. This \glsxtrshort{MPC} version targets the end of the horzion with minimal consume, but if the horizon is too short, assuming the same weight on the last state, it can lead to really high control inputs to be as close to \txtref at the end of it. Meanwhile, the \glsxtrshort{A-CLF-S} optimization don't suffer from the same proble due to its baseline framework, more precisely, the static behaviour imposed by the \(\gamma\) function, i.e, the total input cost variation is impacted essentially by its the path which is effectively optimized via \(\alpha_d\) optimization by the respective cost function~\ref{eq:Cost_Function_Alpha_last_state}.
 
   \bgroup
  \rowcolors{1}{}{orange!4}

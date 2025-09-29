@@ -687,7 +687,7 @@ However, this method has another variations including adding "\underline{momentu
 
 \begin{equation}
     x_{k+1} = x_k + b \underbrace{(x_k - x_{k-1})}_{step_{k-1}} - a \nabla g(x_k)
-    \label{eq_Gradient_Descent_Momentum}
+    \label{eq:Gradient_Descent_Momentum}
 \end{equation}
 
 where \(b\) is an argument of this algorithm like \(a\) responsible to tune the previous step intensity. \par
@@ -698,7 +698,7 @@ According to \cite{hao2025analysis} there are also another two methods. Referrin
       y_k &=  x_k + b (x_k - x_{k-1})  \\
       x_{k+1} &= y_k + (\underbrace{- a \nabla g(y_k)}_{predictive  \hspace{0.2em}step})
     \end{array}
-    \label{eq_Gradient_Descent_Nesterov}
+    \label{eq:Gradient_Descent_Nesterov}
 \end{equation}
 
 where \(a\) now tunes the predictive step. \par
@@ -711,7 +711,7 @@ Finally the \underline{Triple-Momentum} method which presents an output equation
       y_k &=  x_k + c (x_k - x_{k-1})  \\
       x_{k+1} &= x_k + b(x_k - x_{k-1}) - a \nabla g(y_k)
     \end{array}
-    \label{eq_Gradient_Descent_Nesterov}
+    \label{eq:Gradient_Triple_Momentum}
 \end{equation}
 
 where \(a, b, c, d\) are the respective steps intensity tuning parameter. \\
@@ -744,7 +744,7 @@ This method is composed by two phases, being  the first one responsible to obtai
     \label{eq:Binary_Search_Phase1_gradDesc}
 \end{equation}
 
-Where the \(step\) is always equal. That being  said, the phase 1 algorithm: 
+That being  said, the phase 1 algorithm: 
 
 \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -793,12 +793,14 @@ Assuming a quasi-convex function, if there is a tendency to recurrently approxim
 \section{Constraint Contour Point}
 \label{sec:Constraint_Contour_Point}
 
-Having the objective of global assympyotically stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain decision algorithms, such as \ref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to be a better fit for problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\).\\
+Having the objective of global asymptotically  stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain decision algorithms, such as \ref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to be a better fit for problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\), e.g., following a safer and shorter path.\\
 
 \subsection{Constraint Fit}
 \label{subsec:Constraint_Fit}
 
-The program formulated in \ref{subsubsec:Constraint_Tangent_Point} responsible to obtain a new equilibrium point is characterized by its application in two-dimensional Euclidian Space safety \underline{constraints}. Since the safe set \(\bar{\mathcal{B}}\) (complement of \(\mathcal{B}\)) corresponds to the 0-superlevel set of an unkown safety function \(h_{unkown}: \mathbb{R}^n \to \mathbb{R}\), then via logical operations~\ref{sub:unifying_CBF} smoth-approximations (AND~\ref{eq:Min_smoothFunc_tighted}, OR~\ref{eq:Max_smoothFunc_tighted}), combining the different 0-superlevel sets \(\mathcal{C}_i \subset \mathbb{R}^n \quad \forall i \in \mathcal{I} = \{1,...,p\}\) of the the functions \(h_i: \mathbb{R}^n \to \mathbb{R}\):
+The program formulated in \ref{subsubsec:Constraint_Tangent_Point} responsible to obtain a new equilibrium point is characterized by the use of \glsxtrshort{CBF}. Since the safe set \(\bar{\mathcal{B}}\) (complement of \(\mathcal{B}\)) corresponds to the 0-superlevel set of an unkown safety function \(h_{unkown}: \mathbb{R}^n \to \mathbb{R}\), then:
+
+By doing a \underline{polytopic fit}, via logical operations~\ref{sub:unifying_CBF} smooth-approximations (AND~\ref{eq:Min_smoothFunc_tighted}, OR~\ref{eq:Max_smoothFunc_tighted}), is combined the different 0-superlevel sets \(\mathcal{C}_i \subset \mathbb{R}^n \quad \forall i \in \mathcal{I} = \{1,...,p\}\) of the functions \(h_i: \mathbb{R}^n \to \mathbb{R}\):
 
 \begin{equation}
     \begin{array}{l}
@@ -808,14 +810,15 @@ The program formulated in \ref{subsubsec:Constraint_Tangent_Point} responsible t
     \label{eq:Polytope_fit}
 \end{equation}
 
-\(\bar{\mathcal{B}}\) can also be approximated by an ellipsoide:
+And minimized the size of the set \(\bar{\mathcal{C} }\cap \bar{\mathcal{B}}\). \par
+\(\bar{\mathcal{B}}\) can also be approximated by an \underline{ellipsoide fit}:
 
 \begin{align}
         h_{unkown}(\xVec) \approx h(\xVec) &= \frac{1}{2}((\mathbf{O}\xVec - p)^{\top}\mathbf{A_{xis}}(\mathbf{O}\xVec - p) - 1) \label{eq:Ellipsoidal_fit} \\
         &st. \quad \bar{\mathcal{B}} \subseteq \mathcal{C} \label{eq:Ellipsoidal_fit_Condition}
 \end{align}
 
-With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer (\(c\) equal to the constrained states), \(\mathbf{A_{xis}} \in \mathbb{R}^{c \times c}_{\succ 0}\) and \(p \in \mathbb{R}^{c}\) susceptible to an optimization that tries to minimize the size of the set \(\mathcal{C} \cap \mathcal{B}\) or at least choosing them such that is garanteed \ref{eq:Ellipsoidal_fit_Condition}. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
+With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer, \(\mathbf{A_{xis}} \in \mathbb{R}^{c \times c}_{\succ 0}\) and \(p \in \mathbb{R}^{c}\) susceptible to an optimization that tries to minimize the size of the set \(\bar{\mathcal{C} }\cap \bar{\mathcal{B}}\) or at least choosing them such that is guaranteed \ref{eq:Ellipsoidal_fit_Condition} and accepting a fit potentially more conservative. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
 
 
 \subsection{State Propagation Simulation}
@@ -826,15 +829,14 @@ With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer (
 
 Its a technique used to solve \glsxtrfull{ODE}s~\footnote{An \glsxtrshort{ODE} is characterized by having a independent variable \(x \in \mathbb{R}\) (commonly time \(t\)) and dependent variables \(y \in \mathbb{R}^n\) and its derivatives relative to \(x\), such that an \glsxtrshort{ODE} corresponds to an equation equivalent to \(g(x,y, \frac{dy}{dx}, ... \frac{d^{n}y}{dx^n})= 0\)  } initial-value problems~\footnote{A initial-value-problem is an \glsxtrshort{ODE} \(\dot{\mathbf{y}}(t) = f(t, \mathbf{y}(t))\) with \( f: \mathbb{R} \times \mathbb{R}^n \to \mathbb{R}^n\) with an initial condition \(t_0,y_0\)} (\(\frac{dy}{dx} = f(x,y)\) with \((x_0, y_0)\)), i.e., to obtain an approximation of a non-linear system solution \(y(x)\) at some point in its domain without using the higher order derivatives of it. \\
 
-The \underline{\textbf{Euler}} method shows the most degradation of local truncature error\footnote{A local truncature error corresponds to the error caused by the integrative effect of an iteration of a Runge-Kutta method} as the required (arbitrary valued) step \(\Delta x = x_{n+1} - x_n, \hspace{0.2em} n \in \mathbb{N}_0\) increases but quicker to compute.
+The \underline{\textbf{Euler}} method is the quickest one to compute. It shows the most degradation of local truncature error\footnote{A local truncature error corresponds to the error caused by the integrative effect of an iteration of a Runge-Kutta method} as the required (arbitrary valued) step \(\Delta x = x_{n+1} - x_n \hspace{0.2em} (n \in \mathbb{N}_0)\) increases.
 
 \begin{equation}
     y_{n+1} = y_{n} + \Delta x f(x_{n}, y_{n})
     \label{eq:Euler_Method}
 \end{equation}
 
-This method has just one stage, while the next \glsxtrfull{RK}s expanded on it such that allow more. Those stages correspond to intermediate point derivatives based on predictive steps. Introducing to the \textbf{Explictit \glsxtrlong{RK}} \label{subsubsub:RK_Explicit}:
-
+This method has just one stage, while the next \glsxtrfull{RK}is expanded on it such that it allows more. Those stages correspond to intermediate point derivatives based on predictive steps. Introducing to the \textbf{Explictit \glsxtrlong{RK}} \label{subsubsub:RK_Explicit}:
 
 \begin{subequations}
     \begin{align}
@@ -878,9 +880,8 @@ The \underline{\glsxtrshort{RK} 4th order} is defined by \ref{eq:Explicit-RK} an
     \label{eq:RK4_Tableu}
 \end{equation}
 
-Although this method solution is slower comparatively to Euler~\ref{eq:Euler_Method}, its accuracy is higher. \par
-The \textbf{Adaptive \glsxtrlong{RK}} \label{subsubsub:RK_Adaptive} method, with a adaptive step size \(\Delta x\) according to the estimated local truncature error. If its lower than some treshold, the step size increases and the solutions obtained faster since that point, while if it increases is reduced promoting a accurate solution, but with \(\Delta x \in [\Delta x_{min}; \Delta x_{max}]\).  The error estimations are calculated based on two different methods of one order more than the other. For this new \glsxtrlong{RK} variation the Butcher Tableau is: 
-
+Although this method solution is slower compared to Euler~\ref{eq:Euler_Method}, its accuracy is higher. \par
+The \textbf{Adaptive \glsxtrlong{RK}} \label{subsubsub:RK_Adaptive} method, with a adaptive step size \(\Delta x\) according to the estimated local truncature error. If its lower than some threshold, the step size increases and the solutions obtained faster since that point, while if it increases is reduced promoting a accurate solution, but with \(\Delta x \in [\Delta x_{min}; \Delta x_{max}]\).  The error estimations are calculated based on two different methods of one order more than the other. For this new \glsxtrlong{RK} variation the Butcher Tableau is:
 %If the error is higher than some defined relative tolerance then the step size is reduced and the solution given the new step recomputed at the point, while if its lower than some treshold, the step size increases and the solutions obtained faster sice that point.
 
 \begin{equation} 
@@ -941,7 +942,7 @@ With \(\epsilon\) as the error tolerance equal to \(10^{-5}\) in the default ver
 \subsubsection{State Propagation Simulation Algorithm}
 \label{subsub:State_Propagation_Simulation_Algorithm}
 
-Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state convergence. Aiming to simulate a system evolution based on a decision algorithm, given the ordinary diferential states dynamics equations \(\dot{\xVec} = f(\xVec,\uVec)\):
+Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state convergence. Aiming to simulate a system evolution using a decision algorithm, given the ordinary diferential states dynamics equations \(\dot{\xVec} = f(\xVec,\uVec)\) propagated via a runge-kutta method~\ref{subsub:Runge-Kutta_Methods}:
 
   \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -965,7 +966,7 @@ Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulate the state co
 \subsubsection{Natural Convergence Direction}
 \label{subsubsec:Intersection_Vector}
 
-The new point is obtained accounting with the natural movement direction of those states when they would reach the unsafe zone, which is provided approximately by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the safety constraint defined by \(h\) (\ref{eq:Polytope_fit} or \ref{eq:Ellipsoidal_fit}) was inactive. 
+The new point is obtained accounting with the natural movement direction of those states when they would reach the unsafe zone, which is provided approximately by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the \glsxtrshort{CBF} was inactive. 
 
 % \SetKwComment{Comment}{/* }{ */}
 %   \begin{algorithm}
@@ -990,17 +991,20 @@ The new point is obtained accounting with the natural movement direction of thos
     \caption{Natural Convergence Direction Vector (\(NCDV\))} \label{alg:Natural_Convergence_Direction_Vector}
   \end{algorithm}
 
-  This vector points to the direction where the system can aproximate more of \(\bar{\xVec}_F\) given some decision algorithm and assuming is always safe.
-
+\(\xVec_{END}\) is approximately the intersection point with the boundary. The vector \(dir\) points the system evolution direction at \(\xVec_{END}\), where the system can aproximate more of \(\bar{\xVec}_F\) given some decision algorithm and assuming always safety. 
 
 \subsubsection{Constraint Tangent Point}
 \label{subsubsec:Constraint_Tangent_Point}
 
+Both algorithms are responsible to obtain the farest point (or points \ref{sssec:Constraint_Tangent_Point_Any}), restricted to the two-dimensional Euclidian Space, given the perpendicular direction of \(dir\), obtained using algorithm \ref{alg:Natural_Convergence_Direction_Vector}.\par
+The distance along \(dir_{\perp}\) between the starting state \(\xVec_0\) and \(\bar{\xVec_I}\) (\(dp_{min} = v_{\perp}^{\top}(\xVec_0 - \bar{\xVec_I})\)) corresponds to the minimal distance along \(dir_{\perp}\) necessary to contour the unsafe set towards the desired equilibrium point. And the distance along \(dir\) between \(\xVec_0\) and \(\bar{\xVec_I}\) (\(d = v^{\top}(\xVec_0 - \bar{\xVec_I})\))  proportional to the urgency to move along \(dir_{\perp}\), i.e, \(\frac{dp_{min}}{d}\) is equivalent to the rate of change of \(dp\) along \(dir\), imposed by the new equilibrium point \(\bar{\xVec_I}\). %the slope of the rect containing \(\xVec_0\) and \(\xVec_I\), given the change of basis \([v, \hspace{0.1em}v_{\perp}]\), is equivalent to the imposed turning rate by the new equilibrium point \(\xVec_I\).\\
+ 
+
 \underline{Ellipsoidal}
 \label{sssec:Constraint_Tangent_Point_Ellipsoidal} \\
 
-From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmatrix} \bigr]\) obtained in \ref{alg:Natural_Convergence_Direction_Vector} (\(\mathbf{v} = \mathbf{O} \hspace{0.2em} dir\), with \(\mathbf{O}\) as the observer matrix of the two constrained states) is deduced a tangent point in the respective constraint. This point is the most far from the eminent of colliding unsafe set \(\mathcal{C}\) given a perpendicular direction to the obtained vector.%, therefore the new equilibrium point translates as the necessary variation the system states need in that perpendicular direction to pass the unsafe zone.                
- Assuming it's always used the ellipsoidal fit~\ref{eq:Ellipsoidal_fit}, where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{c \times c}_{\succ 0}\), \(\mathbf{O} \in \mathbb{R}^{c \times n}\) and \(\mathbf{p} \in \mathbb{R}^{c}\), the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:CL_Ellipsoide_Tangent_Point}):
+From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmatrix} \bigr]\) (\(\mathbf{v} = \mathbf{O} \hspace{0.2em} dir\), with \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) as the observer matrix of the two constrained states) is deduced a tangent point in the respective constraint. This point is the most far from the eminent of colliding unsafe set \(\bar{\mathcal{C}}\) given a perpendicular direction to the obtained vector.%, therefore the new equilibrium point translates as the necessary variation the system states need in that perpendicular direction to pass the unsafe zone.                
+Assuming it's used a ellipsoidal fit~\ref{eq:Ellipsoidal_fit} for the construction of a \glsxtrshort{CBF} \(h_0\), where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{2 \times 2}_{\succ 0}\) is the ellipse axis defining matrix and \(\mathbf{p} \in \mathbb{R}^{2}\) the center of it, the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:CL_Ellipsoide_Tangent_Point}):
 
 
 \begin{align}
@@ -1013,7 +1017,7 @@ From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmat
     &\mathbf{z}_i = \begin{bmatrix}  v_2 q \\ v_1 q \end{bmatrix} \quad i \in \{1,2,3,4\} \label{eq:Constraint_Tangent_Point_auxVector} 
 \end{align}
 
-In order to obtain both solutions from the perpedincular vectors to \(\mathbf{v}\):
+In order to obtain both solutions from the perpedincular vectors \(\mathbf{v}_{\perp}\):
 
 \begin{subequations}
     \begin{align}
@@ -1046,9 +1050,10 @@ The closest-point to the current state is chosed as the intermediate equilibrium
 
 
 The previous obtaining strategy is exclusive to ellipsoidal figures, while the purposed technique aims to be able to find the wanted point for any two dimensional shape. \par 
-It is characterized to a discrete behaviour as the search for the point is through steps along \(\mathbf{v} = \bigl[\begin{smallmatrix} \mathbf{v}_1 \\ \mathbf{v}_2 \end{smallmatrix}\bigr]\) and its perpendicular direction \(\mathbf{vp} = \bigl[\begin{smallmatrix} -\mathbf{v}_2 \\ \mathbf{v}_1 \end{smallmatrix}\bigr]\). 
-Given \(p = \mathbf{O}\xVec_{END}\) and \(v\) returned by \(NCDV\)~\ref{alg:Natural_Convergence_Direction_Vector}, the first order \glsxtrshort{CBF} \(h0\), arbirtrary steps sizes, \(step\) and \(stepP\), along \(v\) and \(vp\) respectively and a maximum of iterarions while searching through the respective directions. 
+It is characterized to a discrete behaviour as the search for the point is through steps along \(\mathbf{v} = \bigl[\begin{smallmatrix} \mathbf{v}_1 \\ \mathbf{v}_2 \end{smallmatrix}\bigr]\) and its perpendicular direction \(\mathbf{vp} = \bigl[\begin{smallmatrix} -\mathbf{v}_2 \\ \mathbf{v}_1 \end{smallmatrix}\bigr]\).  \par
+Given \(\mathbf{p} = \mathbf{O}\xVec_{END}\) and \(\mathbf{v}\) returned by \(NCDV\)~\ref{alg:Natural_Convergence_Direction_Vector}, the first order \glsxtrshort{CBF} \(h0\), arbirtrary steps sizes, \(step\) and \(stepP\) along \(\mathbf{v}\) and \(\mathbf{vp}\) respectively and a maximum of iterarions while searching through the respective directions. 
 
+\newpage %so para ajeitar
 
   \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -1059,9 +1064,9 @@ Given \(p = \mathbf{O}\xVec_{END}\) and \(v\) returned by \(NCDV\)~\ref{alg:Natu
 
     $q \gets FI(p, v, h_0, step)$ \Comment*[r]{Algorithm \ref{alg:Find_Intersection}} 
 
-    $(p_l, q_l) \gets (p, q)$ \Comment*[r]{Initializing the left pait of points}
+    $(p_l, q_l) \gets (p, q)$ \Comment*[r]{Initializing the left pair of points}
      
-    $(p_r, q_r) \gets (p, q)$ \Comment*[r]{Initializing the right pait of points} 
+    $(p_r, q_r) \gets (p, q)$ \Comment*[r]{Initializing the right pair of points} 
 
     \While{1}{   
         $ (p, q) \gets FNLIs(p_l, q_l, v, vp, h_0, step, stepP, tI)$ \Comment*[r]{Algorithm \ref{alg:Find_Next_Layer_Intersections}} 
@@ -1087,8 +1092,9 @@ Given \(p = \mathbf{O}\xVec_{END}\) and \(v\) returned by \(NCDV\)~\ref{alg:Natu
     \caption{Find Contour Point (FCP)} \label{alg:Find_Contour_Point}
   \end{algorithm}
 
-Depending how small the steps are and how big is the total number of searching iteration steps along \(v\) and \(vp\) (and their inverses \(-v\) and \(-vp\)), the more robust the algoritm is.\\
-
+This algorithm is generally applied to polytopes, which could have multiple farest points, e.g., an edge. So those points could be approximately two vertices of the polytope of a same edge or considered just one vertice if they are too close. \par
+Depending how small the steps are and how big is the total number of searching iteration steps along \(v\) and \(vp\) (and their inverses \(-v\) and \(-vp\)), the more robust the algoritm is.\par
+The algorithm starts by obtaining \(q\) at the intersection of the boundary with the half-line \(p + v\times b, \quad b \in \mathbb{R}_{>0}\). Following with a iterative search through the layers of each side (pointed by \(\mathbf{vp}\) and its symetric) separated by a distance equal to \(stepP\) until reach the peak of one of the sides indicated by the inexistence of intersections returned by \(FNLIs\).\\
 
 
   \SetKwComment{Comment}{/* }{ */}
@@ -1114,7 +1120,7 @@ Depending how small the steps are and how big is the total number of searching i
     \caption{Find Next Layer Intersections (FNLIs)} \label{alg:Find_Next_Layer_Intersections}
   \end{algorithm}
 
-  From \(FNLIs\) obtains both intersection points between the layer and the unsafe set according to the \glsxtrshort{CBF} \(h0\).\\
+  Through \(FNLIs\) obtains two intersection points between the layer and boundary defined according with the \glsxtrshort{CBF} \(h0\). If the first point isn't found then is assumed inexistence of intersections as it is expected a resultant pair of points from the intersection.\\
 
     \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -1154,7 +1160,7 @@ Depending how small the steps are and how big is the total number of searching i
     \caption{Find Layer Intersection (FLI)} \label{alg:Find_Layer_Intersection}
   \end{algorithm}
 
-  This algorithm is responsible to obtain one of the layer intersection for a chosen side according to the direction stipulated \(v\).\\
+  This algorithm is responsible to obtain one of the layer intersection for a chosen direction \(v\). It starts by searching along the layer, propgated by steps of size \(step\) and with \(-v\) direction. If it isn't capable to found any point it follows the symetric direction \(v\).\\
 
     \SetKwComment{Comment}{/* }{ */}
   \begin{algorithm}
@@ -1167,10 +1173,9 @@ Depending how small the steps are and how big is the total number of searching i
     \caption{Find Intersection (FI)} \label{alg:Find_Intersection}
   \end{algorithm}
 
- It's function is to obtain the intersection point between a layer and boundary. It starts from a point already inside boundary and it is propagated through \(v\) direction. \\
+ The function returns the intersection point between a half line (\(p + v \times b, \quad b\in \mathbb{R}_{>0}\)), contained in the layer, and the boundary. The function is used for cases where \(p\) starts  already inside the boundary so it is expected an approximated intersection point. The intersection point of the given function is more accurate the smaller the \(step\). \\
 
 \newpage %Só para ajeitar
-
 
 \section{Proposed Decision Algorithms}
 \label{sec:Proposed_Decision_Algorithms}
@@ -1182,10 +1187,10 @@ All the proposed algorithms are based on \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf}
 \label{subsec:Just_Optimized_Algorithm}
 
 Optimizing parameters can improve the system behaviour for the scenario is deparing with. And an eventual optimization make its behaviour more suited to actuate in an multi-scenario environment. \par
-Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, the proposed technique is centered on the slope \(\alpha\) of the \glsxtrshort{CBF} constraint function \(\alpha:\mathbb{R} \to \mathbb{R}\) (\glsxtrshort{CLF-CBF} \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed}) as an optimization variable:
+Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, the proposed technique is centered on the slope \(\alpha_d\) of the \glsxtrshort{CBF} constraint function \(\alpha:\mathbb{R} \to \mathbb{R}\) (\glsxtrshort{CLF-CBF} \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed}) as an optimization variable:
 
 \begin{equation}
-    \alpha(h) = \alpha h
+    \alpha(h, \alpha_d) = \alpha_d h
     \label{eq:CBF_Alpha_Formulation_AJO}
 \end{equation}
 
@@ -1193,33 +1198,47 @@ The parameter is optimized using the binary search algorithm \ref{subsec:Binary_
 
 \begin{equation}
     \begin{array}{ll}
-        g_{\xVec_0}(\alpha) &= g(\alpha, \xVec_0 = cte)  \\   
-        &= \sum_{k=0}^{N}\xVec_{k+1}(\xVec_k,\uVec_k)^{\top}\mathbf{Q}\xVec_{k+1}(\xVec_k,\uVec_k) +  \uVec_k(\alpha,\xVec_k)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_k) \\
-        %&= \sum_{k=0}^{N}\xVec_{k+1}(\alpha,\xVec_k)^{\top}\mathbf{Q}\xVec_{k+1}(\alpha,\xVec_k) +  \uVec_k(\alpha,\xVec_k)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_k) \\
-        &= \sum_{k=0}^{N}\xVec_{k+1}(\alpha,\xVec_0)^{\top}\mathbf{Q}\xVec_{k+1}(\alpha,\xVec_0) +  \uVec_k(\alpha,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_0) \\
-        &= \mathbf{X}(\alpha,\xVec_0)^{\top}\tilde{\mathbf{Q}}\mathbf{X}(\alpha,\xVec_0) +  \mathbf{U}(\alpha,\xVec_0)^{\top}\tilde{\mathbf{R}}\mathbf{U}(\alpha,\xVec_0)
+        g_{\xVec_0}(\alpha_d) &= g(\alpha_d, \xVec_0 = cte)  \\   
+        &= \sum_{k=0}^{N}\xVec_{k+1}(\xVec_k,\uVec_k)^{\top}\mathbf{Q}\xVec_{k+1}(\xVec_k,\uVec_k) +  \uVec_k(\alpha_d,\xVec_k)^{\top}\mathbf{R}\uVec_k(\alpha_d,\xVec_k) \\
+        %&= \sum_{k=0}^{N}\xVec_{k+1}(\alpha_d,\xVec_k)^{\top}\mathbf{Q}\xVec_{k+1}(\alpha_d,\xVec_k) +  \uVec_k(\alpha_d,\xVec_k)^{\top}\mathbf{R}\uVec_k(\alpha_d,\xVec_k) \\
+        &= \sum_{k=0}^{N}\xVec_{k+1}(\alpha_d,\xVec_0)^{\top}\mathbf{Q}\xVec_{k+1}(\alpha_d,\xVec_0) +  \uVec_k(\alpha_d,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha_d,\xVec_0) \\
+        &= \mathbf{X}(\alpha_d,\xVec_0)^{\top}\tilde{\mathbf{Q}}\mathbf{X}(\alpha_d,\xVec_0) +  \mathbf{U}(\alpha_d,\xVec_0)^{\top}\tilde{\mathbf{R}}\mathbf{U}(\alpha_d,\xVec_0)
     \end{array}
     \label{eq:Cost_Function_Alpha}
 \end{equation}
 
 Where \(N\) is equivalent to the total of samples, \(\xVec_0\) the present state, \(\mathbf{Q} \in \mathbb{R}^n_{\succ 0}\) is the states cost weight matrix, \(\mathbf{R} \in \mathbb{R}^m_{\succ 0}\) is the inputs cost weight matrix.  \par
 
-Because of the conditioned control input values given by \glsxtrshort{CLF-CBF} controller, the gradient \(\nabla g_{\xVec_0}(\alpha)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\). Meanwhile, \(\xVec_{k+1}\) is given by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\ref{eq:RK4_Tableu}, so given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
+Because of the unknow states and inputs continuos differential solution (\(\xVec(t) and \uVec(t)\)), potentialized by the conditioned control input values given by CLF-CBF closed-form controller~\ref{eq:closed-form_controller}, the gradient \(\nabla g_{\xVec_0}(\alpha_d)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha_d)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly.\par 
+Digitally, through the \(SPS\) algorithm \ref{alg:Discrete_Gradient_Function} is computed the approximated states \(\mathbf{X}(\alpha_d,\xVec_0)\) and inputs \(\mathbf{U}(\alpha_d,\xVec_0)\) along the horizon. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\). Meanwhile, given the control action \(\uVec_k\), \(\xVec_{k+1}\) is propagated by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\ref{eq:RK4_Tableu}, more accurate than the Euler method~\ref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}. So given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
 
 \begin{equation}
-    \begin{bmatrix} \mathbf{X}(\alpha,\xVec_0) & \mathbf{U}(\alpha,\xVec_0) \end{bmatrix} = SPS(f, \xVec_0, N, \Delta t, V, h, \alpha) \hspace{0.2em} \begin{bmatrix*}[l] conditions^* \gets V(\xVec_i) \geq tol\\ decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}
+    \begin{bmatrix} \mathbf{X}(\alpha_d,\xVec_0) & \mathbf{U}(\alpha_d,\xVec_0) \end{bmatrix} = SPS(f, \xVec_0, N, \Delta t, V, h, \alpha_d) \hspace{0.2em} \begin{bmatrix*}[l] conditions^* \gets V(\xVec_i) \geq tol\\ decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}
     \label{eq:CLF-CBF_RK4_Propagation}
 \end{equation}
 
-With \(SPS\) (State Propagation Simulation) as the algorithm \ref{alg:State_Propagation_Simulation}. So, choosing \(nS\) number of samples, \(devS\) referent to the distance between them, \(dev\) the discretization step and with \(g_{\xVec_0}(\alpha)\) given by \ref{eq:CLF-CBF_RK4_Propagation}:
+So, choosing \(nS\) number of samples, \(devS\) referent to the distance between them, \(dev\) the discretization step and with \(g_{\xVec_0}(\alpha_d)\) given by \ref{eq:CLF-CBF_RK4_Propagation}:
 
 \begin{equation}
-    \nabla g_{\xVec_0}(\alpha) = DGF(nS,devS,dev, g_{\xVec_0},\alpha)  
+    \nabla g_{\xVec_0}(\alpha_d) = DGF(nS,devS,dev, g_{\xVec_0},\alpha_d)  
     \label{eq:discrete_gradient_function}
 \end{equation}
 
-With \(DGF\) (Discrete Gradient Function) as the algorithm \ref{alg:Discrete_Gradient_Function}  and therefore enabling \ref{sec:Single_Parameter_Optmization} and the optimization of the slope \(\alpha\).\par  
-Theoretically the CBF should garantee safety, however due to not be a continuos system (or integration errors), having a high \(\alpha\) can lead to unsafe sets and can also provide a demand on a not possible control input values to keep the system safe, but if that happens is expected to reflect on the path taken, control inputs and therefore penalize in the cost function.
+With \(DGF\) (Discrete Gradient Function) as the algorithm \ref{alg:Discrete_Gradient_Function}  and therefore enabling the optimization of the slope \(\alpha_d\) via \ref{sec:Single_Parameter_Optmization}.\par
+Among the presented single parameter optimization techniques there are:
+
+\begin{itemize}
+    \item Gradient Descent \ref{eq:Gradient_Descent_Normal}
+    \item Gradient Descent with Momentum \ref{eq:Gradient_Descent_Momentum}
+    \item Nesterov's Accelerated Gradient Descent \ref{eq:Gradient_Descent_Nesterov}
+    \item Triple Momentum Gradient Descent \ref{eq:Gradient_Triple_Momentum}
+    \item Default: Binary Search Algorithm \ref{alg:Binary_Search_Phase_1}-\ref{alg:Binary_Search_Phase_2}
+\end{itemize}
+
+The Binary Search is preferred due to be suited to quasi-convex specters, which was verified for the given problems.\par 
+Theoretically the CBF should garantee safety, however due to not be a continuos system (or integration errors), having a high \(\alpha_d\) can lead to unsafe sets and can also provide a demand on a not possible control input values to keep the system safe, but if that happens is expected to reflect on the path taken, control inputs and therefore penalize in the cost function as in the gradient, although it could be reflected as noise during the optimization.\\
+
+Afterwards, having the optimized \(\alpha_d\), it is used the typical \glsxtrshort{CLF-CBF} framework, more precisely the closed-form controller \ref{eq:closed-form_controller} as decision algorithm to speed up.
 
 
 
@@ -1230,9 +1249,9 @@ The purposed algorithm follows an optimization based on a cost function given a 
 
 \begin{equation}
     \begin{array}{ll}
-        g_{\xVec_0}(\alpha) &= g(\alpha, \xVec_0 = cte)  \\   
-        &= \xVec_{N+1}(\alpha,\xVec_0)^{\top}\mathbf{Q}\xVec_{N+1}(\alpha,\xVec_0) + \sum_{k=0}^{N}  \uVec_k(\alpha,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_0) \\
-        &= \xVec_{N+1}(\alpha,\xVec_0)^{\top}\mathbf{Q}\xVec_{N+1}(\alpha,\xVec_0) +  \mathbf{U}(\alpha,\xVec_0)^{\top}\tilde{\mathbf{R}}\mathbf{U}(\alpha,\xVec_0)
+        g_{\xVec_0}(\alpha_d) &= g(\alpha_d, \xVec_0 = cte)  \\   
+        &= \xVec_{N+1}(\alpha_d,\xVec_0)^{\top}\mathbf{Q}\xVec_{N+1}(\alpha_d,\xVec_0) + \sum_{k=0}^{N}  \uVec_k(\alpha_d,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha_d,\xVec_0) \\
+        &= \xVec_{N+1}(\alpha_d,\xVec_0)^{\top}\mathbf{Q}\xVec_{N+1}(\alpha_d,\xVec_0) +  \mathbf{U}(\alpha_d,\xVec_0)^{\top}\tilde{\mathbf{R}}\mathbf{U}(\alpha_d,\xVec_0)
     \end{array}
     \label{eq:Cost_Function_Alpha_last_state}
 \end{equation}
@@ -1242,16 +1261,16 @@ This cost function just takes into account the last state from the horizon, i.e.
 
 \begin{equation}
     \begin{array}{ll}
-        g_{\xVec_0}(\alpha) &= g(\alpha, \xVec_0 = cte)  \\   
-        &= \sum_{k=0}^{N} \xVec_{k+1}(\alpha,\xVec_0)^{\top}\mathbf{Q}_i\xVec_{k+1}(\alpha,\xVec_0) +  \uVec_k(\alpha,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha,\xVec_0)
+        g_{\xVec_0}(\alpha_d) &= g(\alpha_d, \xVec_0 = cte)  \\   
+        &= \sum_{k=0}^{N} \xVec_{k+1}(\alpha_d,\xVec_0)^{\top}\mathbf{Q}_i\xVec_{k+1}(\alpha_d,\xVec_0) +  \uVec_k(\alpha_d,\xVec_0)^{\top}\mathbf{R}\uVec_k(\alpha_d,\xVec_0)
     \end{array}
     \label{eq:Cost_Function_Alpha_evol_state}
 \end{equation}
 
 Where \(det(\mathbf{Q}_i) \leq  det(\mathbf{Q}_{i+1})\), in order to keep a similar behaviour to \ref{eq:Cost_Function_Alpha_last_state} without the optimized path simply targeting the last instant.
 
-\subsection{Double \glsxtrshort{CLF}}
-\label{subsec:Double_CLF}
+\subsection{\glsxtrfull{A-CLF-S}}
+\label{subsec:CLFs_Summed_Algorithm}
 
 
 The \glsxtrshort{CLF-CBF} returns control input values based on purely the current state, resulting in global (infinite horizon) suboptimal solutions that could lead to states relatively close to the barrier (given some safety tunable defenitions) and unwanted inputs to deviate from it. So, changing the notion of stability by making the system follow another equilibrium point first could help mitigate the problems. This technique focus on the transition between two \glsxtrshort{CLF} aiming to converge for each of the equilibrium points, the current and next. \par
@@ -1259,16 +1278,23 @@ The \glsxtrshort{CLF-CBF} returns control input values based on purely the curre
 
 With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Algorithm} is obtained the new equilibrium point \(\bar{\xVec_C} \in \mathbb{R}^n\). Given a system, with dynamics \(f:\mathbb{R}^n \times \mathbb{R}^m \rightarrow \mathbb{R}^n \), at the sate \(\xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) that targets \(\bar{\xVec_N} \in \mathbb{R}^n\) and \glsxtrshort{CBF} \(h\), the new equilibrium point could be obtained:
 
+
 \begin{equation}
-    \mathbf{v} = NCDV(f, \xVec_0, N, \Delta t, V, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}
+    \begin{array}{l}
+        [dir, \hspace{0.1em} \xVec_{int}] = NCDV(f, \xVec_0, N, \Delta t, V, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}  \\
+        \mathbf{v} = \mathbf{O}\hspace{0.1em}^.\hspace{0.1em}dir   
+    \end{array}
     \label{eq:New_Equlibrium_Point_DirVec_CLF-CBF_RK4}
 \end{equation}
 
-Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natural_Convergence_Direction_Vector}. Given the direction vector \(\mathbf{v}\), assuming an ellipsoidal fit \ref{eq:Ellipsoidal_fit}, with the constraint tangent point  closed form solution~\ref{subsubsec:Constraint_Tangent_Point} like this obtain \(\bar{\xVec_C}\).\\
 
 
-\subsubsection{\glsxtrfull{A-CLF-S}}
-\label{subsubsec:CLFs_Summed_Algorithm}
+Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natural_Convergence_Direction_Vector}, and \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) the constrained states oberver matrix. Regarding the choice of \glsxtrshort{RK}4 over other methods is because as it was said before, since it is more accurate than the Euler method~\ref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}. \par
+Given the direction vector \(\mathbf{v}\), assuming an ellipsoidal fit \ref{eq:Ellipsoidal_fit}, with the constraint tangent point  closed form solution~\ref{subsubsec:Constraint_Tangent_Point} like this obtain \(\bar{\xVec_C}\). If the system is deparing with a polytope \glsxtrshort{CBF} \(h_0\), then using algorithm \ref{alg:Find_Contour_Point} with \(\mathbf{v}\) and \(\xVec_{int}\) as arguments is obtained the new equilibrium point(s).\\
+
+
+\subsubsection{Baseline Framework}
+\label{subsubsec:CLFs_Summed_Algorithm_Baseline_Framework}
 
 From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_{C_0}\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_{N_0}\) stabilizing in \(\bar{\xVec_N}\). By doing a wheighted mean between both \glsxtrshort{CLF} is defined a new one (a generalization for multiple \glsxtrshort{CLF} can be found in \ref{app:M_CLF_Transition_Formulation}):
 
@@ -1306,9 +1332,9 @@ The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_{0_1}\)
 
 With \(\mu\) as a parameter with default value as \( \frac{V_{N_0}(\xVec)}{V_{C_0}(\xVec)} \). The set \(K_{V_{0_2}}(\xVec)\) is equivalent to \ref{eq:K-CLF}. \\
 
-
-\textbf{\underline{Second-Order Systems}}
-\label{subsubsubsec:CLFs_Summed_Algorithm_2nd_order}\\
+%\textbf{\underline{Second-Order Systems}}
+\subsubsection{Second-Order Systems}
+\label{subsubsubsec:CLFs_Summed_Algorithm_2nd_order}
 
 Given the backstepping formulation~\ref{sub:backstepping}, it is assumed the previous obtained \glsxtrshort{CLF}~\ref{eq:New_2-CLF-S} as the first-order formulation and \ref{eq:2-CLF-S_Constraint} as the condition.\par 
 Now, considering a second-order system \ref{eq:HH-NL-System}, the \glsxtrshort{CLF} that are trying to converge to \(\bar{\xVec}_C\) and  \(\bar{\xVec}_N\) respectively are:
@@ -1325,8 +1351,6 @@ Given \(V_C\) and \(V_N\) it is possible to obtain the new \glsxtrshort{CLF} \(V
     V(\xVec, \xi) = V_0(\xVec) + V_{\xi}(\xVec, \xi)
     \label{eq:HH_New_2-CLF-S}
 \end{equation}\\
-
-\vspace{4em} %só para ajeitar
 
 The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_{1}\) and assuming a high slope \(\zeta\) (\(\dot{\sigma}(\xVec, \xi)\approx 0\)), is approximately:
 
@@ -1347,15 +1371,14 @@ Regarding the stability objective changing condition, it mantains equal to \ref{
 \end{equation}\\
 
 
-Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}, using the cost function \ref{eq:Cost_Function_Alpha_last_state} adapt the \glsxtrshort{CBF} slope \(\alpha\) to the new low and high order \glsxtrshort{CLF}s and improve possibly even more the state convergence to the final equilibrium point.\\
+Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}, using the cost function \ref{eq:Cost_Function_Alpha_last_state} adapt the \glsxtrshort{CBF} slope \(\alpha_d\) to the new low and high order \glsxtrshort{CLF}s and improve possibly even more the state convergence to the final equilibrium point.\\
 
+%\textbf{\underline{Multiple Waypoints}}
+\subsubsection{Multiple Waypoints (Polytope Version)}
+\label{subsubsubsec:CLFs_Summed_Algorithm_multiple_waypoints}
 
-\textbf{\underline{Three Waypoints Version}}
-\label{subsubsubsec:CLFs_Summed_Algorithm_three_waypoints}\\
-
-If the unsafe set is restricted by a polytopic fit~\ref{eq:Polytope_fit} and the contour point obtaining algorithm is \ref{} then it is returned two equilibrium points. Those points are approximately two vertices of the polytope of a same edge or just one vertice if they are too close.  It keeps having a current point a \glsxtrshort{CLF} is trying to converge but the next one don't necessarily is the desired final equilibrium point \(\bar{\xVec}_F\) but the other computed point. 
-
-Then the first \glsxtrshort{CLF} are defined as:
+If the unsafe set is restricted by a polytopic fit~\ref{eq:Polytope_fit} and the contour point obtaining algorithm is \ref{alg:Find_Contour_Point} then it is returned two equilibrium points. Those points are approximately two vertices of the polytope of a same edge or just one vertice if they are too close.  It keeps having a current point a \glsxtrshort{CLF} is trying to converge but the next one don't necessarily is the desired final equilibrium point \(\bar{\xVec}_F\) but the other computed point.\par
+For \(N \in \mathbb{N}\) waypoints, \(i \in \mathcal{I}=\{1,...,N\}\) the first order \glsxtrshort{CLF} is defined as:
 
 \begin{align}
     V_{0_i}(\xVec) = 
@@ -1369,8 +1392,8 @@ Then the first \glsxtrshort{CLF} are defined as:
 \begin{align}
     V_0(\xVec) = 
     \begin{cases}
-        V_{0_i}(\xVec) \quad \xVec \in \mathcal{S}_i \qquad i \in {1,2}\\
-        V_{0_3}(\xVec) = V_{F_0}(\xVec) \quad \xVec \in \bigcup_{i = 1}^2 \bar{\mathcal{S}}_i
+        V_{0_i}(\xVec) \quad \xVec \in \mathcal{S}_i \qquad i \in \mathcal{I}\setminus\{N\}\\
+        V_{0_N}(\xVec) = V_{F_0}(\xVec) \quad \xVec \in \bigcup_{i = 1}^{N-1} \bar{\mathcal{S}}_i
     \end{cases}
     \label{eq:New_2-CLF-S_multiple_waypoints}
 \end{align}
@@ -1393,7 +1416,7 @@ Now considering the second-order \glsxtrshort{CLF}:
 \begin{equation}
     V(\xVec, \xi) = V_0(\xVec) + V_{\xi}(\xVec, \xi)
     \label{eq:HH_New_2-CLF-S_multiple_waypoints}
-\end{equation}\\
+\end{equation}
 
 
 Given the new \glsxtrshort{CLF} \(V_{i}\) and assuming a high slope \(\zeta\) (\(\dot{\sigma_i}(\xVec, \xi)\approx 0\)):
@@ -1414,6 +1437,27 @@ The transitive (\(i = i+1\)) condition is based on the first-order \glsxtrshort{
     \label{eq:HH_New_2-CLF-S_actuationPhaseSet}
 \end{equation}\\
 
+
+
+    \SetKwComment{Comment}{/* }{ */}
+  \begin{algorithm}
+    \KwData{$f$, $\xVec_0$, $N$, $\Delta t$, $V$, $h$, $\mathbf{O}$, $waypoints$, $nIte = 1$}
+    \KwResult{$V$, $waypoints$, $\alpha_d$}
+    $i \gets 0$\;
+    \While{$i < nIte$, $i++$}{ 
+        $[dir, \hspace{0.1em} \xVec_{int}] = NCDV(f, \xVec_0, N, \Delta t, V_{1st-waypoint}, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}$\;
+        $ [\mathbf{v}, \hspace{0.1em} \mathbf{p}] \gets \mathbf{O}\hspace{0.1em}^.\hspace{0.1em}[dir, \hspace{0.1em} \xVec_{int}]$ \;
+        $waypoints \gets [CCP^*(\mathbf{v},\mathbf{p}, h_0), \hspace{0.1em} waypoints]$ \Comment*[r]{Ellipse~\ref{sssec:Constraint_Tangent_Point_Ellipsoidal}, Any~\ref{sssec:Constraint_Tangent_Point_Any}}
+    }
+    $V \gets $ Multiple $waypoints\hspace{0.2em} \begin{Bmatrix*}[l] 1^{st}\text{ order \glsxtrshort{CLF}~\ref{eq:New_2-CLF-S_multiple_waypoints}, condition~\ref{eq:2-CLF-S_Constraint_multiple_waypoints}, transition~\ref{eq:HH_New_2-CLF-S_actuationPhaseSet}} \\ \text{High order \glsxtrshort{CLF}~\ref{eq:HH_New_2-CLF-S_multiple_waypoints}, condition~\ref{eq:HH_2-CLF-S_Constraint_multiple_waypoints}}\end{Bmatrix*}$\;
+    $\alpha_d \gets$ \glsxtrshort{A-JO} $\begin{bmatrix*}[l] g_{\xVec_0}(\alpha_d)^* \gets \text{Last State~\ref{eq:Cost_Function_Alpha_last_state}}\end{bmatrix*}$\;
+    \caption{CLF-Summed (\glsxtrshort{A-CLF-S})} \label{alg:A-CLF-S}
+  \end{algorithm}
+
+ Given the new first and high order \glsxtrshort{CLF}, its conditions and transitions, and the new \(\alpha_d\), the system control action are decided based on the \glsxtrshort{CLF-CBF} closed-form controller~\ref{eq:closed-form_controller}. \\
+
+When sending existing points, finding others helps to draw a path to existing waypoints, and that includes when \(nIte >1\).\par
+The general \glsxtrshort{CLF} \(V_0\) formulation is described as the 2-norm between the current output (\(\mathbf{y} = \mathbf{C}\xVec, \hspace{0.2em}\mathbf{C}\) is the observer matrix) and the respective waypoint (\(||\mathbf{y}-\mathbf{ref}||\)).
 
 
 \subsubsection{\glsxtrfull{A-CLF-I}}
@@ -1447,9 +1491,23 @@ And if \(\mu = \frac{V_{N}(\xVec)}{V_{C}(\xVec)}\) then:
 \end{align}
 
 The set \(K_{V_N}(\xVec)\) is is defined by \ref{eq:K-CLF}. \par
-Like in the previous technique~\ref{subsubsec:CLFs_Summed_Algorithm}, it is possible to apply \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm} and improve the trajectory.\\
 
 
+\newpage %so para ajeitar
+
+\subsubsection{Last Control Phase \(\mathbf{k}_N\)}
+\label{subsubsec:Last_Control_Phase}
+
+Using \glsxtrfull{A-CLF-S} and other \glsxtrfull{CLF-CBF} based controllers, as the system gets closer to the equilibrium point, its speed of convergence slows down, possibly not reaching the point in an acceptible time as can be seen in the results~\ref{sec:experiments}. \par
+The \glsxtrshort{A-CLF-S} last phase control is governed by a typical \glsxtrshort{CLF-CBF}, which its \glsxtrshort{CLF} stability objective is just the final equilibrium point, which can be replaced by other control techniques, preferebly when there is no possible collision on sight.
+
+Aiming low cost resources, there are optimal control techniques such as:
+
+\begin{itemize}
+    \item \underline{\glsxtrfull{LQR}}: Unable to account with constraints. However, by simulating the nominal \glsxtrshort{CLF-CBF} trajectory, if there is no collision detected and separation is small, it can be a fast solution.
+    \item \underline{\glsxtrfull{MPC}}: The solution obtaining can be speed up using as warm start solution the nominal \glsxtrshort{CLF-CBF} solution obtained via \(SPS\) algorithm~\ref{subsub:State_Propagation_Simulation_Algorithm}.
+    \item \underline{Other}: It can lie any control strategy targeting a specific problem.
+\end{itemize}
 
 
 
