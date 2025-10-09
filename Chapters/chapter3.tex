@@ -23,22 +23,22 @@ The algorithms seen in \ref{sec:Proposed_Decision_Algorithms}, namely, \label{su
 \subsubsection{\glsxtrshort{A-JO}}
 \label{subsubsec:A-JO_parameters}
 
-The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{eq:Cost_Function_Alpha}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 0.2\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\par  
+The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\eqref{eq:Cost_Function_Alpha}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 0.2\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\par  
 The gradient module of the cost function \(|\nabla g_{\xVec_0}(\alpha_d)|\) presents high amplitude noisy peaks, so having a neutralizing \(a\) helps mitigating extremes values of \(\alpha_d\) could possibly jump to.\\
 
-The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discrete_gradient_function} parameters used in these experiments are given by:
+The function \(SPS\)~\eqref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\eqref{eq:discrete_gradient_function} parameters used in these experiments are given by:
 
 
  \bgroup
  \rowcolors{1}{}{GhostWhite}
  \begin{xltabular}{\textwidth}{ccccc}
-   \caption{SPS~\ref{eq:CLF-CBF_RK4_Propagation} Parameters}
+   \caption{SPS~\eqref{eq:CLF-CBF_RK4_Propagation} Parameters}
    \label{tab:A-JO:SPS_parameters}\\
    \toprule
    \rowcolor{Gainsboro}
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h, \hspace{0.25em} \alpha_{ini}$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{eq:orbital_dynamics}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
+     \eqref{eq:unicycle_model} or \eqref{eq:orbital_dynamics}          &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}       & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -49,13 +49,13 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
   \bgroup
  \rowcolors{1}{}{GhostWhite}
  \begin{xltabular}{\textwidth}{ccccc}
-   \caption{DGF~\ref{eq:discrete_gradient_function} Parameters}
+   \caption{DGF~\eqref{eq:discrete_gradient_function} Parameters}
    \label{tab:A-JO:DGF_parameters}\\
    \toprule
    \rowcolor{Gainsboro}%
    $nS$ &  $devS$ & $dev$ & $g_{\xVec_0}(\alpha)$  & $\alpha_{ini}$  \\
    \midrule
-     3          &  0.01        & 0.005        &  \ref{eq:Cost_Function_Alpha}   &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
+     3          &  0.01        & 0.005        &  \eqref{eq:Cost_Function_Alpha}   &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -66,20 +66,20 @@ The function \(SPS\)~\ref{eq:CLF-CBF_RK4_Propagation} and \(DGF\)~\ref{eq:discre
  \subsubsection{\glsxtrshort{A-CLF-S}}
 \label{subsubsec:A-CLF-S_parameters}
 
-The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\ref{eq:Cost_Function_Alpha_last_state}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 20\hspace{0.1em}N\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\\
+The parameter \(\alpha\) is optimized based on a cost function \(g_{\xVec_0}(\alpha)\)~\eqref{eq:Cost_Function_Alpha_last_state}, with a normalizing step constant \(a = \frac{0.5}{||\nabla(g_{\xVec_0}(\alpha))||}\), which takes \(N=10000\) samples and has the weight cost matrices \(\mathbf{Q} = 20\hspace{0.1em}N\hspace{0.1em}^.\mathbf{I}_{2\times 2} \) and \(\mathbf{R} = \mathbf{I}_{2\times 2} \).\\
 
 The \glsxtrshort{A-CLF-S} functions parameters are defined by:
 
  \bgroup
  \rowcolors{1}{}{GhostWhite}
  \begin{xltabular}{\textwidth}{ccccc}
-   \caption{NCDV~\ref{eq:New_Equlibrium_Point_DirVec_CLF-CBF_RK4} Parameters}
+   \caption{NCDV~\eqref{eq:New_Equlibrium_Point_DirVec_CLF-CBF_RK4} Parameters}
    \label{tab:Double-CLF:NCDV_parameters}\\
    \toprule
    \rowcolor{Gainsboro}%
    $f$ &  $\xVec_0$ & $N$ & $\Delta t$  & $V, \hspace{0.25em} h$  \\
    \midrule
-     \ref{eq:unicycle_model} or \ref{eq:orbital_dynamics}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
+     \eqref{eq:unicycle_model} or \eqref{eq:orbital_dynamics}   &  \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}        & 10000          & 0.005  &   \ref{subsubsec:Unicyle_CLF-CBF_Experiment_Setup} or \ref{subsubsec:Orbital_CLF-CBF_Experiment_Setup}\\
    \midrule
    \end{xltabular}
  \egroup
@@ -154,7 +154,7 @@ In order to make the vehicle to the wanted position is formulated a \glsxtrshort
 \end{subequations}
 
 
-The safety is defined according to the \glsxtrshort{CBF} \(h_0\) which restricts the obstacles using a ellipsoidal fit~\ref{eq:Ellipsoidal_fit}:
+The safety is defined according to the \glsxtrshort{CBF} \(h_0\) which restricts the obstacles using a ellipsoidal fit~\eqref{eq:Ellipsoidal_fit}:
 
 \begin{subequations}
    \begin{align}
@@ -166,7 +166,7 @@ The safety is defined according to the \glsxtrshort{CBF} \(h_0\) which restricts
 \end{subequations}
 
 
-With \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}\) referent to the ellipse axis and \(\mathbf{p} \in \mathbb{R}^2\) equal to the center of the ellipse, both stipulated in \ref{subsubsec:unicyle_type_of_experiments}. Given the system \ref{eq:second_order_unicycle_model_backstepp}, the solution \(\mathbf{k}_0(\xVec)\), the \glsxtrshort{CLF} \(V\) and \glsxtrshort{CBF} \(V\) are defined (according to \ref{eq:Backstepp_CF}) as:
+With \(\mathbf{A_{xis}} \in \mathbb{R}^{2 \times 2}_{\succeq 0}\) referent to the ellipse axis and \(\mathbf{p} \in \mathbb{R}^2\) equal to the center of the ellipse, both stipulated in \ref{subsubsec:unicyle_type_of_experiments}. Given the system \eqref{eq:second_order_unicycle_model_backstepp}, the solution \(\mathbf{k}_0(\xVec)\), the \glsxtrshort{CLF} \(V\) and \glsxtrshort{CBF} \(V\) are defined (according to \eqref{eq:Backstepp_CF}) as:
 
 
 \begin{subequations}
@@ -267,7 +267,7 @@ With (\( \partial x, \partial y\)) as the position of the chaser relative to the
 \subsubsection{\glsxtrshort{CLF-CBF} Formulation}
 \label{subsubsec:Orbital_CLF-CBF_Experiment_Setup}
 
-The given system is non-linear and in strict-feedback form \ref{eq:HH-NL-System}:
+The given system is non-linear and in strict-feedback form \eqref{eq:HH-NL-System}:
 
 \begin{align}
   & f_0(\xVec) = \mathbf{0}_{2 \times 1}   \notag \\  
@@ -278,7 +278,7 @@ The given system is non-linear and in strict-feedback form \ref{eq:HH-NL-System}
 
 With \(\xVec = \bigl[\begin{smallmatrix} \partial x \\ \partial y \end{smallmatrix} \bigr]\) and \(\xi = \Bigl[\begin{smallmatrix} \partial \dot{x} \\ \partial \dot{y} \end{smallmatrix} \Bigr]\). \\
 
-Following the standart backstepping technique~\ref{sub:backstepping}, to obtain the first-order solution \(\mathbf{k}_0(\xVec)\) is considered the system \ref{eq:NL-CL-System-0Backstep}. The first-order \glsxtrshort{CLF} \(V_0\) stabilizing the system in \(\refVec \in \mathbb{R}^2\) is given by:
+Following the standart backstepping technique~\ref{sub:backstepping}, to obtain the first-order solution \(\mathbf{k}_0(\xVec)\) is considered the system \eqref{eq:NL-CL-System-0Backstep}. The first-order \glsxtrshort{CLF} \(V_0\) stabilizing the system in \(\refVec \in \mathbb{R}^2\) is given by:
 
 \begin{subequations}
   \begin{align}
@@ -290,7 +290,7 @@ Following the standart backstepping technique~\ref{sub:backstepping}, to obtain 
 \end{subequations}
 
 
-The safety is defined by \glsxtrshort{CBF} \(h_0\), restricting the obstacles using a square, obtained by doing a polytopic fit~\ref{eq:Polytope_fit}, a union of four 0-superlevel sets defined according its respective \glsxtrshort{CBF}, combined via \ref{eq:Max_smoothFunc_tighted} with its parameteres \(b = ln(4)\) and \(k = 20\). Each \glsxtrshort{CBF} \(h_{0_i}\) is defined by:
+The safety is defined by \glsxtrshort{CBF} \(h_0\), restricting the obstacles using a square, obtained by doing a polytopic fit~\eqref{eq:Polytope_fit}, a union of four 0-superlevel sets defined according its respective \glsxtrshort{CBF}, combined via \eqref{eq:Max_smoothFunc_tighted} with its parameteres \(b = ln(4)\) and \(k = 20\). Each \glsxtrshort{CBF} \(h_{0_i}\) is defined by:
 
 \begin{subequations}
    \begin{align}
@@ -331,7 +331,7 @@ The safety is defined by \glsxtrshort{CBF} \(h_0\), restricting the obstacles us
 
 
 
-With  \(sqe \in \mathbb{R}_{\geq 0}\) as the square edge size and the center of the square \(\mathbf{p} \in \mathbb{R}^2\), both associated a value in \ref{subsubsec:orbital_type_of_experiments}. Given the high-order system, the solution \(\mathbf{k}_0(\xVec)\), the \glsxtrshort{CLF} \(V\) and \glsxtrshort{CBF} \(h\) are defined (according to \ref{eq:Backstepp_CF}) as:
+With  \(sqe \in \mathbb{R}_{\geq 0}\) as the square edge size and the center of the square \(\mathbf{p} \in \mathbb{R}^2\), both associated a value in \ref{subsubsec:orbital_type_of_experiments}. Given the high-order system, the solution \(\mathbf{k}_0(\xVec)\), the \glsxtrshort{CLF} \(V\) and \glsxtrshort{CBF} \(h\) are defined (according to \eqref{eq:Backstepp_CF}) as:
 
 
 \begin{subequations}
@@ -389,11 +389,11 @@ The computational time for each decision making is given based on a N sample Mon
 \section{Experiments}
 \label{sec:experiments}
 
-The dynamical system propagation with respective decision algorithm~\ref{subsec:decision_algorithms} during the experiments is simulated using the \glsxtrlong{DP} integrative method~\ref{eq:Dormand-Prince_Tableu}. So, given a dynamical system (unicycle~\ref{eq:unicycle_model} or orbital~\ref{eq:orbital_dynamics_augmented}) \(f:\mathbb{R}^n \to \mathbb{R}^n\), at \( \xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\), a sampling time \(\Delta t = 0.005\) seconds (\(\leq\) than \glsxtrshort{CLF-CBF} calling time \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}) and a total of \(6000\) iterations totaling a simulation of \(30\) seconds:
+The dynamical system propagation with respective decision algorithm~\ref{subsec:decision_algorithms} during the experiments is simulated using the \glsxtrlong{DP} integrative method~\eqref{eq:Dormand-Prince_Tableu}. So, given a dynamical system (unicycle~\eqref{eq:unicycle_model} or orbital~\eqref{eq:orbital_dynamics_augmented}) \(f:\mathbb{R}^n \to \mathbb{R}^n\), at \( \xVec_0 \in \mathbb{R}^n\), a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\), a sampling time \(\Delta t = 0.005\) seconds (\(\leq\) than \glsxtrshort{CLF-CBF} calling time \ref{subsubsec:unicyle_type_of_experiments} or \ref{subsubsec:orbital_type_of_experiments}) and a total of \(6000\) iterations totaling a simulation of \(30\) seconds:
 
 
 \begin{equation}
-    \begin{bmatrix} \mathbf{X} & \mathbf{U} \end{bmatrix} = SPS(f, \xVec_0, 6000, 0.005, V, h)\begin{bmatrix*}[l]conditions^* \gets V(\xVec) \geq tol \\ decision^* \gets \text{algorithms~\ref{subsec:decision_algorithms}} \\ integration^* \gets \text{\glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}}\end{bmatrix*}
+    \begin{bmatrix} \mathbf{X} & \mathbf{U} \end{bmatrix} = SPS(f, \xVec_0, 6000, 0.005, V, h)\begin{bmatrix*}[l]conditions^* \gets V(\xVec) \geq tol \\ decision^* \gets \text{algorithms~\ref{subsec:decision_algorithms}} \\ integration^* \gets \text{\glsxtrshort{DP}~\eqref{eq:Dormand-Prince_Tableu}}\end{bmatrix*}
     \label{eq:SPS_Experiments}
 \end{equation}
 
@@ -691,7 +691,7 @@ The cost of the \glsxtrshort{A-CLF-S} showed to be even less than the supposed o
 \subsection{Other}
 \label{subsec:other_experiments}
 
-Following the results obtained previously, it is compared the \glsxtrshort{MPC} using the objective function \ref{eq:Cost_Function_Alpha} (\glsxtrshort{MPC-F}), with a \glsxtrshort{MPC} with the cost defined according to \ref{eq:Cost_Function_Alpha_last_state} (\glsxtrshort{MPC-L}) like \glsxtrshort{A-CLF-S}~\ref{subsubsec:A-CLF-S_parameters}.\\
+Following the results obtained previously, it is compared the \glsxtrshort{MPC} using the objective function \eqref{eq:Cost_Function_Alpha} (\glsxtrshort{MPC-F}), with a \glsxtrshort{MPC} with the cost defined according to \eqref{eq:Cost_Function_Alpha_last_state} (\glsxtrshort{MPC-L}) like \glsxtrshort{A-CLF-S}~\ref{subsubsec:A-CLF-S_parameters}.\\
 
 \underline{UCC}
 \label{UCC_other_experiments} %Unicycle Ellipse Vertical
@@ -715,7 +715,7 @@ Following the results obtained previously, it is compared the \glsxtrshort{MPC} 
 \end{figure}
 
 
-\glsxtrshort{MPC-L} shows the shortest path and less input consumed, however since the optimization is done based just on the last state from the horizon resulting in a reaching time close to the end of the horizon. This \glsxtrshort{MPC} version targets the end of the horizon with minimal consumption, but if the horizon is too short, assuming the same weight on the last state, it can lead to really high control inputs to be as close to \txtref at the end of it. Meanwhile, the \glsxtrshort{A-CLF-S} optimization doesn't suffer from the same problem due to its baseline framework, more precisely, the static behaviour imposed by the \(\gamma\) function, i.e, the total input cost variation is impacted essentially by its the path which is effectively optimized via \(\alpha_d\) optimization by the respective cost function~\ref{eq:Cost_Function_Alpha_last_state}.
+\glsxtrshort{MPC-L} shows the shortest path and less input consumed, however since the optimization is done based just on the last state from the horizon resulting in a reaching time close to the end of the horizon. This \glsxtrshort{MPC} version targets the end of the horizon with minimal consumption, but if the horizon is too short, assuming the same weight on the last state, it can lead to really high control inputs to be as close to \txtref at the end of it. Meanwhile, the \glsxtrshort{A-CLF-S} optimization doesn't suffer from the same problem due to its baseline framework, more precisely, the static behaviour imposed by the \(\gamma\) function, i.e, the total input cost variation is impacted essentially by its the path which is effectively optimized via \(\alpha_d\) optimization by the respective cost function~\eqref{eq:Cost_Function_Alpha_last_state}.
 
   \bgroup
  \rowcolors{1}{}{orange!4}

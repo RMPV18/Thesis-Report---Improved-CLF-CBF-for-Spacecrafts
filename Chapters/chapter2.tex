@@ -14,13 +14,74 @@
 
 \glsresetall %Para em vez de mostrar o acrónimo voltar a mostrar o nome completo para relembrar
 
+In this chapter, it is presented a low-effort \glsxtrlong{CLF-CBF} based decision algorithm, actively imposing safety and convergence to an desired equilibrium point, with its computation speed potentialized by its closed-form solution. Futhermore, to be able to deal with high-order systems the nominal framework of the \glsxtrshort{CLF-CBF} is generalized via Backstepping. Adding to the \glsxtrshort{CLF-CBF} method, in order to better capture the shapes of the unsafe sets, then it is presented a strategy through smooth approximation of logical operations to merge multiple \glsxtrshort{CBF}.   \par
+
+The objective of this thesis is driving a system to follow an trajectory as close as possible to an optimal one with minimal effort through \glsxtrshort{CLF-CBF} based strategies encompassing the optimization of a exclusive single parameter and instructing the system to converge to another equilibrium point.
+
+%defing the circles function of the circles 
+\def\firstcircle{( 90:1.5) circle (2cm)} %(Direção (graus), distancia nessa direção (Coordenadas Polares)) (raio do circulo)
+\def\secondcircle{(210:1.5) circle (2cm)}
+\def\thirdcircle{(330:1.5) circle (2cm)}
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[blend group=screen]
+  \fill[red!90!black]   \firstcircle  node[ white!220] {\textbf{CLF-CBF}}; 
+  \fill[green!80!black] \secondcircle node[ white!220] {\textbf{Optimization \hspace{1em}} };
+  \fill[blue!90!black]  \thirdcircle  node[ white!220] {\hspace{1em}\textbf{Contour Point}};
 
 
+%   \fill[red!90!black]   ( 90:.6) circle (1) node[below, white!220] {\glsxtrshort{CLF-CBF}};
+%   \fill[green!80!black] (210:.6) circle (1) node[above, white!220] {OPtimization};
+%   \fill[blue!90!black] (330:.6) circle (1) {Stability Change};
+\end{tikzpicture}
+\caption{Strategies Domains}
+\label{fig:Strategies_Domains}
+\end{figure}
+
+
+
+
+The scope of this dissertation is not restricted just to the \glsxtrshort{CLF-CBF}. However, the achieved control techniques, in addition to the traditional \glsxtrshort{CLF-CBF} (yellow), are based on it, with the possibility of adopting the optimization (orange) or stability change (green) strategy , even both together (white).
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[blend group=screen]
+  \fill[red!90!black]   \firstcircle  node[ white!220] {\textbf{CLF-CBF}}; 
+  %\fill[green!80!black] \secondcircle node[ white!220] {\textbf{Optimization \hspace{1em}} };
+  \fill[blue!90!black]  \thirdcircle  node[ white!220] {\hspace{1em}\textbf{Contour Point}};
+
+
+\begin{scope}
+        \begin{scope}[even odd rule]% first circle without the second
+            \clip \firstcircle (-4,-4) rectangle (4,4);
+        \fill[white] \secondcircle ;
+        \end{scope}
+        \draw \secondcircle   node {\textbf{Optimization \hspace{1em}} };
+\end{scope}
+\end{tikzpicture}
+\caption{Control Techniques Domains}
+\label{fig:Control_Techniques_Domains}
+\end{figure}
+
+
+
+%tiktx figura cortadas com partes que intersetam as CLF-CBF  ou que o restante em branco... e defenindo cada secção nas respetivas partes resultantes que englobam, se não der para meter la no nome das secçoes sem ficar emcavalitado, meter mais uma figura com duas subfiguras cada uma com a parte da respetiva secção.
+
+
+
+
+\eqref{eq:lagrangian_lambda_gradient_function_CLFactv}
+
+
+\section{Chapter Structure}
+\label{ch1_sec:Chapter_Structure} 
+
+\section{Optimal Control Problem}
+\label{ch1_sec:Chapter_Structure} 
 
 \section{\glsxtrshort{CLF-CBF}}
 \label{sec:clf_cbf}  
-
-\glsxtrshort{CLF-CBF} is a control technique that via \glsxtrshort{CLF} and \glsxtrshort{CBF} conditions impose stability and safety to a system respectively. This framework decision is generally obtained through a \glsxtrshort{QP}, whose objective is to minimize the control inputs. The optimization problem has a closed-form solution that allows faster computational speeds. The baseline \glsxtrshort{CLF} and \glsxtrshort{CBF} time derivatives don't contain the control inputs for high-order systems so its conditions aren't able to affect the system and therefore it needs the Backstepping formulation. It considers a solution if it was a first-order system and the conditions had access to the control inputs, that the new \glsxtrshort{CLF} and \glsxtrshort{CBF} and its conditions try to converge to and like the first-order \glsxtrshort{CLF-CBF} have a closed-form solution. Finally, it is encoded logical operations capable to merge the safe states sets (and unsafe sets, e.g. obstacles) defined by multiple \glsxtrshort{CBF} enabling to achieve more complex shapes and more accurate of the unsafe set.\\  
 
 Considering a nonlinear control-affine system:
 
@@ -46,14 +107,13 @@ For any initial condition \(\xVec_0 \in \mathbb{R}^n\), there is a maximal time 
  \label{eq:Nonlinear-First-Order-Closed-Loop-System-UniqueSol}
 \end{equation}
 
-
 \subsection{Relative Degree One Formulation}
 \label{sub:formulation}
 
 \subsubsection{\glsxtrfull{CLF}}
 \label{subsub:control_lyapunov_function}
 
-Having the objective of global asymptotically stability of the system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, is desired for the system converge to an equilibrium point \( \bar{\mathbf{x}} \). A solution comes by designing a positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0} \) which converges to zero while the system converges to the respective equilibrium point, and for that, designing a control law that acts in order to achieve specifically the convergence of the function. \\
+Having the objective of global asymptotically stability of the system~\eqref{eq:Nonlinear-First-Order-Closed-Loop-System}, is desired for the system converge to an equilibrium point \( \bar{\mathbf{x}} \). A solution comes by designing a positive definite function \( V: \mathbb{R}^n \rightarrow \mathbb{R}_{\geq 0} \) which converges to zero while the system converges to the respective equilibrium point, and for that, designing a control law that acts in order to achieve specifically the convergence of the function. \\
 
 A Lyapunov function is a continuous scalar function \(V:\mathbb{D}^n \to \mathbb{R}\), designed to be positive definite, i.e, strictly positive with the exception of the equilibrium point \(\bar{\xVec}\) where it takes a null value.  
 
@@ -76,10 +136,10 @@ And it is characterized by its time derivative beeing negative and and equal zer
 \end{equation}
 
 %If the states of the system start relatively close to the origin and remains close forerever (\(V(\xVec) \leq \epsilon, \quad \epsilon \in \mathbb{R}_{\geq 0}\)) then it is Lyapunov stable and the origin is considered an equilibrium point. 
-If those conditions, \ref{eq:LF_derivative_condition} are verified it means the Lyapunov function \(V\) converges to zero while the system converges to the equilibrium point, hence the system is asymptotically (lyapunov) stable, which is the notion of stability considered along this thesis.\par
+If those conditions, \eqref{eq:LF_derivative_condition} are verified it means the Lyapunov function \(V\) converges to zero while the system converges to the equilibrium point, hence the system is asymptotically (lyapunov) stable, which is the notion of stability considered along this thesis.\par
 If the Lyapunov function \(V\) domain \(\mathbb{D}^n\) is equivalent to the neighborhood of the equilibrium, where those conditions are just verified, then it is locally asymptotically stable while if it is equal to \(\mathbb{R}^n\) then \(V(\xVec)\) is radially unbounded, \(\lim_{||\mathbf{C}\hspace{0.1em}\xVec - \bar{\xVec}||\to \infty}V(\xVec) = \infty\) with \(\mathbf{C}\) as the observation matrix, and it is considered in the origin a globally asymptotically stable equilibrium. \\
 
-In order to generalize to controllable dinamical systems, it is introduced \glsxtrshort{CLF}, modeled just like the typical the lyapunov functions~\ref{eq:LF_condition} but able through the use of the given control inputs affect its derivative in order to achieve the stability conditions~\ref{eq:LF_derivative_condition}. That beeing said, it is pretended to the \glsxtrshort{CLF} function \( V\mathbf(\mathbf{x}) \) to be continuous and differentiable:
+In order to generalize to controllable dinamical systems, it is introduced \glsxtrshort{CLF}, modeled just like the typical the lyapunov functions~\eqref{eq:LF_condition} but able through the use of the given control inputs affect its derivative in order to achieve the stability conditions~\eqref{eq:LF_derivative_condition}. That beeing said, it is pretended to the \glsxtrshort{CLF} function \( V\mathbf(\mathbf{x}) \) to be continuous and differentiable:
 
 \begin{equation}
 \begin{array}{ll}
@@ -88,8 +148,6 @@ In order to generalize to controllable dinamical systems, it is introduced \glsx
 \end{array}
 \label{eq:CLF_derivative}
 \end{equation}
-
-
 
 where \(L_fV\) and \(L_GV\) are the Lie derivatives of \(V\) and \(\mathbf{u}\) the control input vector responsible for manipulating the function, more precisely, to affect its stabilizing convergence rate \(\dot{V}(\xVec, \uVec)\).\par
 
@@ -107,13 +165,13 @@ From \glsxtrshort{CLF} \(V\) and an adequate tuning of \( \gamma \) parameter re
  \label{eq:K-CLF}
 \end{equation}
 
-The stets generated by \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) refer to the possible control input values necessary to the \glsxtrshort{CLF} \(V(\mathbf{x})\) continuosly converge to zero while the closed-loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} to the equilibrium point, but more slowly as is close to reach the objective and the \(\gamma(V(\xVec))\) function decreases. \\
+The stets generated by \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) refer to the possible control input values necessary to the \glsxtrshort{CLF} \(V(\mathbf{x})\) continuosly converge to zero while the closed-loop system~\eqref{eq:Nonlinear-First-Order-Closed-Loop-System} to the equilibrium point, but more slowly as is close to reach the objective and the \(\gamma(V(\xVec))\) function decreases. \\
 
 
 \subsubsection{\glsxtrfull{CBF}}
 \label{subsub:control_barrier_function}
 
-While the \glsxtrshort{CLF} imposes an "acttracting" behaviour to the system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System}, the \glsxtrshort{CBF} a "repelling" one. Having the objective of guarantee safety to system, is aimed to keep the state inside a safe set \(\mathcal{C}\) (forward invariant\footnote{A set \(\mathcal{S}\) is said forward invariant if the initial system state \( x_0 \in \mathcal{S}\) and so \(x(t) \in \mathcal{S} \hspace{0.25em} \forall t \geq 0\) }) defined accordingly the problem needs (e.g. in the context autonomous vehicles, the outside space occupied by an obstacle).\par 
+While the \glsxtrshort{CLF} imposes an "acttracting" behaviour to the system~\eqref{eq:Nonlinear-First-Order-Closed-Loop-System}, the \glsxtrshort{CBF} a "repelling" one. Having the objective of guarantee safety to system, is aimed to keep the state inside a safe set \(\mathcal{C}\) (forward invariant\footnote{A set \(\mathcal{S}\) is said forward invariant if the initial system state \( x_0 \in \mathcal{S}\) and so \(x(t) \in \mathcal{S} \hspace{0.25em} \forall t \geq 0\) }) defined accordingly the problem needs (e.g. in the context autonomous vehicles, the outside space occupied by an obstacle).\par 
 The notion of safety, i.e., the safe set \(\mathcal{C}\) is defined as the 0-superlevel\footnote{For function \(f: \mathbb{R}^n \to \mathbb{R}\), its superlevel set is given by \(\mathcal{S}(f) = \{(x_1,...,x_n): f(x_1,...,x_n) \geq c\}\), where having \(c = 0\) corresponds to the 0-superlevel set of \(f\)} set of a continuously differentiable function \( h: \mathbb{R}^n \rightarrow \mathbb{R}  \):
 
 \begin{align}
@@ -145,9 +203,9 @@ Similar to the \glsxtrshort{CLF}, from \glsxtrshort{CBF} \(h\) and an adequate t
 \end{equation}
 
 
-The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} safe with respect to the set \(\mathcal{C}\). \par
+The controller \(K_{CLF}(\mathbf{x}) \hspace{0.5em} \forall x \in \mathbb{R}^n \) renders control input sets that keep the closed-loop system~\eqref{eq:Nonlinear-First-Order-Closed-Loop-System} safe with respect to the set \(\mathcal{C}\). \par
 
-By applying the control law to a system, the far from the boundary~\ref{eq:boundary_safe_set} it is (the bigger \(h(\xVec)\) and \(\alpha(h(\xVec))\)) or the bigger the value \(L_fh( \mathbf{x} )\) it takes, the greater the freedom to control the system or approximate to the unsafe set~\ref{eq:unsafe_set}, while the contrary requires a more caution reflecting in a smaller set \(K_{CBF}(\xVec)\). If \(h( \mathbf{x} ) < 0\) it means the system is in the unsafe region~\ref{eq:unsafe_set}, so \(\dot{h}( \mathbf{x}) > 0\), which implies control actions leading the closed-loop system continuously to the safe set \(\mathcal{C}\). Although, safety is a critical factor, having the system in the unsafe set don't necessarily mean collapse as the fit of the region (while defining the \glsxtrshort{CBF}) can be over conservative, already counting with unmodeled perturbations, a discrete behaviour (or integrative periods) as the \glsxtrshort{CBF} conditions just accounts with the given instant,... \\ 
+By applying the control law to a system, the far from the boundary~\eqref{eq:boundary_safe_set} it is (the bigger \(h(\xVec)\) and \(\alpha(h(\xVec))\)) or the bigger the value \(L_fh( \mathbf{x} )\) it takes, the greater the freedom to control the system or approximate to the unsafe set~\eqref{eq:unsafe_set}, while the contrary requires a more caution reflecting in a smaller set \(K_{CBF}(\xVec)\). If \(h( \mathbf{x} ) < 0\) it means the system is in the unsafe region~\eqref{eq:unsafe_set}, so \(\dot{h}( \mathbf{x}) > 0\), which implies control actions leading the closed-loop system continuously to the safe set \(\mathcal{C}\). Although, safety is a critical factor, having the system in the unsafe set don't necessarily mean collapse as the fit of the region (while defining the \glsxtrshort{CBF}) can be over conservative, already counting with unmodeled perturbations, a discrete behaviour (or integrative periods) as the \glsxtrshort{CBF} conditions just accounts with the given instant,... \\ 
 
 % \newpage %Só para ajeitar
 
@@ -173,7 +231,7 @@ Where \(R \in \mathbb{R}^{m \times m}_{0}\) corresponds to the inputs weight mat
 
 The sets of control inputs restricted to the optimization problem are given by \(K_{CLF-CBF}(\xVec) = K_{CLF}(\xVec) \cap  K_{CBF}(\xVec)\) hopefully non-empty which can happen if the conditions are in conflict.  \par
 
-For a given instant if the minimal speed of convergence to the equilibrium point implies a too fast approximation speed towards the unsafe set then there is a conflict between both active constraints and it is prioritized system safety over stability. So, in order to the closed loop system~\ref{eq:Nonlinear-First-Order-Closed-Loop-System} controller have a solution from the \glsxtrshort{QP}, since safety is critical, using a slack variable \(\delta\)  allows to relax the stability condition imposed by the \glsxtrshort{CLF} and highly contribute to obtaining a solution while keeping system safe:
+For a given instant if the minimal speed of convergence to the equilibrium point implies a too fast approximation speed towards the unsafe set then there is a conflict between both active constraints and it is prioritized system safety over stability. So, in order to the closed loop system~\eqref{eq:Nonlinear-First-Order-Closed-Loop-System} controller have a solution from the \glsxtrshort{QP}, since safety is critical, using a slack variable \(\delta\)  allows to relax the stability condition imposed by the \glsxtrshort{CLF} and highly contribute to obtaining a solution while keeping system safe:
 
 \begin{equation}
     \begin{array}{l}
@@ -230,13 +288,13 @@ Given a locally Lipschitz continuous feedback controller \(\mathbf{k}: \mathbb{R
  \label{eq:HH-NL-CL-System}
 \end{equation}
 
-for any initial states \((\xVec_0, \mathbf{\xi}_0) \in \mathbb{R}^n \times \mathbb{R}^p\) exists a maximum time interval \(I(\xVec_0, \mathbf{\xi}_0) \subseteq \mathbb{R}_{\geq 0}  \) and a unique solution \( \varphi = (\varphi_{\mathbf{x}}, \varphi_{\mathbf{\xi}}) \) satisfying \ref{eq:Nonlinear-First-Order-Closed-Loop-System-UniqueSol} \(\forall t \in I(\xVec_0, \mathbf{\xi}_0) \). \\
+for any initial states \((\xVec_0, \mathbf{\xi}_0) \in \mathbb{R}^n \times \mathbb{R}^p\) exists a maximum time interval \(I(\xVec_0, \mathbf{\xi}_0) \subseteq \mathbb{R}_{\geq 0}  \) and a unique solution \( \varphi = (\varphi_{\mathbf{x}}, \varphi_{\mathbf{\xi}}) \) satisfying \eqref{eq:Nonlinear-First-Order-Closed-Loop-System-UniqueSol} \(\forall t \in I(\xVec_0, \mathbf{\xi}_0) \). \\
 
 
 \subsubsection{Purposal Solution Obtaining}
 \label{subsub:quadratic_program_formulation}
 
-Having a second order system~\ref{eq:HH-NL-System} the output dynamic don't have direct access to control \(\uVec\) or even is able to control \(\mathbf{\xi}\). In order to affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\), the strategy passes by obtaining the solution if it was a first order system~\ref{eq:Nonlinear-First-Order-System} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input). \par
+Having a second order system~\eqref{eq:HH-NL-System} the output dynamic don't have direct access to control \(\uVec\) or even is able to control \(\mathbf{\xi}\). In order to affect \(\mathbf{\xi}\) and consequentially control the wanted dynamic \(\dot{\xVec}\), the strategy passes by obtaining the solution if it was a first order system~\eqref{eq:Nonlinear-First-Order-System} and if \(\mathbf{\xi}\) could be directly controlled (i.e. as part of the first order system control input). \par
 
 Given a differentiable and locally Lipschitz continuous \(k_0(\xVec):\mathbb{R}^n \to \mathbb{R}^p\) (that encompasses the "controllable \(\mathbf{\xi}\)" ), the closed-loop system:
 
@@ -257,8 +315,8 @@ That being said, the first order solution could be obtained via \glsxtrshort{QP}
 \end{equation}
 
 
-The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability according to the \glsxtrshort{CBF} and \glsxtrshort{CLF} respectively, not only to the first-order system~\ref{eq:NL-CL-System-0Backstep} but also to the actual second-order system.\par
-Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order system trying to converge to the first order solution, which already targets the desired equilibrium point while maintaining  safety. Now considering the second-order system \ref{eq:HH-NL-System}, supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
+The solution is equivalent to a value of \(\mathbf{\xi}\) closest to an optimal value taken by it that would impose safety and contribute to stability according to the \glsxtrshort{CBF} and \glsxtrshort{CLF} respectively, not only to the first-order system~\eqref{eq:NL-CL-System-0Backstep} but also to the actual second-order system.\par
+Although like it was said is not possible to have direct access to \(\mathbf{\xi}\), the backstepping technique is essentially the second-order system trying to converge to the first order solution, which already targets the desired equilibrium point while maintaining  safety. Now considering the second-order system \eqref{eq:HH-NL-System}, supposing there is \( V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}_{\geq 0} \), the new \glsxtrshort{CLF} \(V(\xVec, \mathbf{\xi})\) and \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\) are:
 
 \begin{subequations}
     \label{eq:Backstepp_CF}
@@ -285,12 +343,12 @@ Finally, via \Glsxtrshort{QP}, given a differentiable and locally Lipschitz cont
  \label{eq:CLF-CBF-QP-relaxed-1Backstep}
 \end{equation}
 
-It's expected that  \( \gamma' >> \gamma >> 0\) or specially to \(\eta >>0\) contributing to a faster convergence of \(\xi\) and more similar behaviour of the system~\ref{eq:HH-NL-CL-System} relative to the first-order system~\ref{eq:NL-CL-System-0Backstep} and mitigate the chances of the system~\ref{eq:HH-NL-CL-System} not be safe in relation to \(\mathcal{C}_0\). \\
+It's expected that  \( \gamma' >> \gamma >> 0\) or specially to \(\eta >>0\) contributing to a faster convergence of \(\xi\) and more similar behaviour of the system~\eqref{eq:HH-NL-CL-System} relative to the first-order system~\eqref{eq:NL-CL-System-0Backstep} and mitigate the chances of the system~\eqref{eq:HH-NL-CL-System} not be safe in relation to \(\mathcal{C}_0\). \\
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
-    \item If it's not pretended to enforce stability or safety, then it is removed from both optimization problem (\ref{eq:CLF-CBF-QP-relaxed-0Backstep} and \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) the respective constraint responsible to it
-    %\item If it's a higher-order (than second) system, then, assuming it's a third-order system, the solution obtained in \ref{eq:CLF-CBF-QP-relaxed-1Backstep} is the "new \(k_0\)" and the third-order solution tries to converge to the second-order one (while this one is converging to the first-order solution)
+    \item If it's not pretended to enforce stability or safety, then it is removed from both optimization problem (\eqref{eq:CLF-CBF-QP-relaxed-0Backstep} and \eqref{eq:CLF-CBF-QP-relaxed-1Backstep}) the respective constraint responsible to it
+    %\item If it's a higher-order (than second) system, then, assuming it's a third-order system, the solution obtained in \eqref{eq:CLF-CBF-QP-relaxed-1Backstep} is the "new \(k_0\)" and the third-order solution tries to converge to the second-order one (while this one is converging to the first-order solution)
 \end{itemize}
 \end{tcolorbox} 
 
@@ -299,7 +357,7 @@ It's expected that  \( \gamma' >> \gamma >> 0\) or specially to \(\eta >>0\) con
 \subsection{Closed Form Solution}
 \label{sub:closed_form}
 
-The objective of this thesis is to purpose a set of low computational effort techniques suitable for spacecrafts. Aiming a faster computation of the optimization problems solutions, any of the previous \glsxtrshort{QP}s (\ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}) have a closed-form\footnote{An closed-form expression is expressed by a limit number and well defined operations (elementary functions)} solution allowing to calculate directly the respective optimal solution and faster than a numerical solver.\par
+The objective of this thesis is to purpose a set of low computational effort techniques suitable for spacecrafts. Aiming a faster computation of the optimization problems solutions, any of the previous \glsxtrshort{QP}s (\eqref{eq:CLF-CBF-QP}, \eqref{eq:CLF-CBF-QP-relaxed}, \eqref{eq:CLF-CBF-QP-relaxed-0Backstep}, \eqref{eq:CLF-CBF-QP-relaxed-1Backstep}) have a closed-form\footnote{An closed-form expression is expressed by a limit number and well defined operations (elementary functions)} solution allowing to calculate directly the respective optimal solution and faster than a numerical solver.\par
 Given the \glsxtrshort{QP} optimization problem and a controller \(k(\xVec, \mathcolor{gray}{\mathbf{\xi}}): \mathbb{R}^n \mathcolor{gray}{\times \mathbb{R}^p} \to \mathbb{R}^m\) \textcolor{gray}{(if it is a second-order system)}:
 
 \begin{equation}
@@ -311,7 +369,7 @@ Given the \glsxtrshort{QP} optimization problem and a controller \(k(\xVec, \mat
  \label{eq:CLF-CBF-QP-relaxed-generic}
 \end{equation}
 
-With a \glsxtrshort{CLF} \(V\), \glsxtrshort{CBF} \(h\), \(\mathbf{x}\in\mathbb{R}^n\), \textcolor{orange}{the first-order system \glsxtrshort{CLF}} \(\mathcolor{orange}{V_0} ( = V\) like in \ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed} and \ref{eq:CLF-CBF-QP-relaxed-0Backstep}) \textcolor{gray}{, and if it is a second-order system with} \(\mathcolor{gray}{\mathbf{\xi}\in\mathbb{R}^p}\) \textcolor{gray}{(equivalent to the \glsxtrshort{QP} seen while doing Backstepping~\ref{eq:CLF-CBF-QP-relaxed-1Backstep})}. \\
+With a \glsxtrshort{CLF} \(V\), \glsxtrshort{CBF} \(h\), \(\mathbf{x}\in\mathbb{R}^n\), \textcolor{orange}{the first-order system \glsxtrshort{CLF}} \(\mathcolor{orange}{V_0} ( = V\) like in \eqref{eq:CLF-CBF-QP}, \eqref{eq:CLF-CBF-QP-relaxed} and \eqref{eq:CLF-CBF-QP-relaxed-0Backstep}) \textcolor{gray}{, and if it is a second-order system with} \(\mathcolor{gray}{\mathbf{\xi}\in\mathbb{R}^p}\) \textcolor{gray}{(equivalent to the \glsxtrshort{QP} seen while doing Backstepping~\eqref{eq:CLF-CBF-QP-relaxed-1Backstep})}. \\
 
 
 Assuming equal control input weights relative to each other (\(R = \mathbf{I}_{m \times m}\)) and just one \glsxtrshort{CLF} and \glsxtrshort{CBF} each, according to the \glsxtrfull{KKT} conditions\footnote{\href{https://en.wikipedia.org/wiki/Karush-Kuhn-Tucker_conditions}{KKT Conditions Wikipedia (Click here to be Redirected)} \label{foot: KKT_Conditions}} (to see the full deduction \ref{app:CL_QP_CLF-CBF}):
@@ -375,7 +433,7 @@ For each activation subdomain, corresponds a closed-form control law \(\mathbf{k
     &\mathbf{k}_3(\xVec \mathcolor{gray}{, \mathbf{\xi}}) = -\lambda_1\sOrderArgB L_GV \sOrderArgB^{\top} + \lambda_2\sOrderArgB L_Gh \sOrderArgB^{\top} \label{eq:closed-form_controller_k3_formula}
 \end{align}
 
-In the \(\mathbf{k}_3(\xVec \mathcolor{gray}{, \mathbf{\xi}})\) control law~\ref{eq:closed-form_controller_k3_formula} \(\lambda_1, \lambda_2 \in \mathbb{R}_{\geq 0}\) are optimal dual solutions and verified strong duality. 
+In the \(\mathbf{k}_3(\xVec \mathcolor{gray}{, \mathbf{\xi}})\) control law~\eqref{eq:closed-form_controller_k3_formula} \(\lambda_1, \lambda_2 \in \mathbb{R}_{\geq 0}\) are optimal dual solutions and verified strong duality. 
 
 \subsection{Unifying \glsxtrshort{CBF}}
 \label{sub:unifying_CBF}
@@ -408,7 +466,7 @@ The more complex safety specifications are defined via boolean logical operation
  \label{eq:CLF-MultipleCBF-QP-relaxed-generic}
 \end{equation}
 
-Where the resultant safe set~\ref{eq:Safe_Set_of_multiple} of the system refers to the intersection of all safe sets~\ref{eq:Multiple_Safe_Sets}. More than be propitious to be not solvable, the formulation itself of the optimization problem~\ref{eq:CLF-MultipleCBF-QP-relaxed-generic} is limitated by no other logical operation than AND. \\
+Where the resultant safe set~\eqref{eq:Safe_Set_of_multiple} of the system refers to the intersection of all safe sets~\eqref{eq:Multiple_Safe_Sets}. More than be propitious to be not solvable, the formulation itself of the optimization problem~\eqref{eq:CLF-MultipleCBF-QP-relaxed-generic} is limitated by no other logical operation than AND. \\
 
 Among the the logical operations that could be applied to \glsxtrshort{CBF}s, there are:
 
@@ -478,7 +536,7 @@ The logical operations identity, complement, intersection and union are represen
     \end{subequations}
 
     With \(\sum_{i \in \mathcal{I}} \lambda_i(\xVec) = 1\) \par
-    Encountering an under-aproximation of \(h\) relative to the \(\min\) function, given the safe set \(\mathcal{C}\) defined based on \ref{eq:safe-set} it verifies:
+    Encountering an under-aproximation of \(h\) relative to the \(\min\) function, given the safe set \(\mathcal{C}\) defined based on \eqref{eq:safe-set} it verifies:
 
     \begin{subequations}
         \begin{align}
@@ -491,7 +549,7 @@ The logical operations identity, complement, intersection and union are represen
 
     But, \(\hspace{0.4em} \lim_{k \to \infty} h(\xVec) = {\min}_{i \in \mathcal{I}} (h_i(\xVec)) \hspace{0.4em}\) and \( \hspace{0.4em} \lim_{k \to \infty} \mathcal{C} = \bigcap_{i \in \mathcal{I}} \mathcal{C}_i\) \par
 
-    On par with that, the new intersected \glsxtrshort{CBF} \(h(\xVec)\) \ref{eq:Min_smoothFunc} could restrict too much the closed-loop system in comparison to theoretical \glsxtrshort{CBF} \( \lim_{k \to \infty} h(\xVec)\). In order to tight the unsafe set \(\bar{\mathcal{C}}\) and potentially the safe set contain \( \bigcap_{i \in \mathcal{I}} \mathcal{C}_i\): 
+    On par with that, the new intersected \glsxtrshort{CBF} \(h(\xVec)\) \eqref{eq:Min_smoothFunc} could restrict too much the closed-loop system in comparison to theoretical \glsxtrshort{CBF} \( \lim_{k \to \infty} h(\xVec)\). In order to tight the unsafe set \(\bar{\mathcal{C}}\) and potentially the safe set contain \( \bigcap_{i \in \mathcal{I}} \mathcal{C}_i\): 
     
     \begin{equation}
         h(\xVec) = \frac{-1}{k}ln(\sum_{i \in \mathcal{I}} e^{-k \hspace{0.2em} h_i(\xVec)}) + \frac{b}{k}
@@ -522,7 +580,7 @@ The logical operations identity, complement, intersection and union are represen
         \notag  
     \end{align}
 
-    Being \(k \in \mathbb{R}_{>0}\) a smoothing parameter and serving the same purposes as \ref{eq:Min_smoothFunc}. The derivative of \(h(\xVec)\) is equal to \ref{eq:Min_smooth_derivative} but:
+    Being \(k \in \mathbb{R}_{>0}\) a smoothing parameter and serving the same purposes as \eqref{eq:Min_smoothFunc}. The derivative of \(h(\xVec)\) is equal to \eqref{eq:Min_smooth_derivative} but:
 
     \begin{equation}
         \lambda_i(\xVec) = e^{k(h_i(\xVec)-h(\xVec))}
@@ -530,7 +588,7 @@ The logical operations identity, complement, intersection and union are represen
     \end{equation}
 
     With also \(\sum_{i \in \mathcal{I}} \lambda_i(\xVec) = 1\). \par
-    Due to an over-approximation of \(h\) relative to the \(\max\) function, given the safe set \(\mathcal{C}\) defined based on \ref{eq:safe-set} it verifies:
+    Due to an over-approximation of \(h\) relative to the \(\max\) function, given the safe set \(\mathcal{C}\) defined based on \eqref{eq:safe-set} it verifies:
 
     \begin{subequations}
         \begin{align}
@@ -561,7 +619,7 @@ The logical operations identity, complement, intersection and union are represen
         \end{align}
     \end{subequations}
 
-    Therefore the higher \(b\), the safer the system~\ref{eq:NL-CL-System-0Backstep} but possibly too constrained by the new \glsxtrshort{CBF} \(h(\xVec)\) \ref{eq:Max_smoothFunc_tighted} (figure 1 from \cite{molnar2023composing}). 
+    Therefore the higher \(b\), the safer the system~\eqref{eq:NL-CL-System-0Backstep} but possibly too constrained by the new \glsxtrshort{CBF} \(h(\xVec)\) \eqref{eq:Max_smoothFunc_tighted} (figure 1 from \cite{molnar2023composing}). 
 \end{description}
 
 
@@ -569,11 +627,11 @@ The logical operations identity, complement, intersection and union are represen
 \subsubsection{Second-Order System}
 \label{subsub:uniCBF_secondOrder_system}
 
-Following the explanations given in the previous subsubsection~\ref{subsub:uniCBF_firstOrder_system}, now applying for a second-order system~\ref{eq:HH-NL-System}, more precisely, for a Backstepping~\ref{sub:backstepping} situation. \\
+Following the explanations given in the previous subsubsection~\ref{subsub:uniCBF_firstOrder_system}, now applying for a second-order system~\eqref{eq:HH-NL-System}, more precisely, for a Backstepping~\ref{sub:backstepping} situation. \\
 
-Given a \glsxtrshort{CLF} \(V_0(\xVec): \) and multiple \glsxtrshort{CBF} \(h0_i(\xVec) \quad \forall i \in \mathcal{I}\) combined into a \glsxtrshort{CBF} \(h_0(\xVec)\) via \ref{eq:Min_smoothFunc_tighted} (intersection) or \ref{eq:Max_smoothFunc_tighted} (union) (they can be combined using both operations), through the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-0Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}) is obtained a differentiable and locally Lipschitz continuous theoretical controller \(k_0(\xVec): \mathbb{R}^n \to \mathbb{R}\). \\
+Given a \glsxtrshort{CLF} \(V_0(\xVec): \) and multiple \glsxtrshort{CBF} \(h0_i(\xVec) \quad \forall i \in \mathcal{I}\) combined into a \glsxtrshort{CBF} \(h_0(\xVec)\) via \eqref{eq:Min_smoothFunc_tighted} (intersection) or \eqref{eq:Max_smoothFunc_tighted} (union) (they can be combined using both operations), through the \glsxtrshort{QP}~\eqref{eq:CLF-CBF-QP-relaxed-0Backstep} (or its closed-form solution~\eqref{eq:closed-form_controller}) is obtained a differentiable and locally Lipschitz continuous theoretical controller \(k_0(\xVec): \mathbb{R}^n \to \mathbb{R}\). \\
 
-In order to the second-order system~\ref{eq:HH-NL-CL-System} dynamic converge to \(k_0(\xVec)\) imposed dynamic, given multiple \glsxtrshort{CBF} \(h_i(\xVec) \quad \forall i \in \mathcal{I} \):
+In order to the second-order system~\eqref{eq:HH-NL-CL-System} dynamic converge to \(k_0(\xVec)\) imposed dynamic, given multiple \glsxtrshort{CBF} \(h_i(\xVec) \quad \forall i \in \mathcal{I} \):
 
 \begin{subequations}
     \label{eq:Backstepp_CF_multipleCBF}
@@ -587,7 +645,7 @@ In order to the second-order system~\ref{eq:HH-NL-CL-System} dynamic converge to
     \end{align}
 \end{subequations}
 
-The resultant \glsxtrshort{CBF} \(h_i(\xVec, \mathbf{\xi}) \quad \forall i \in \mathcal{I}\), one more time can be merged via \ref{eq:Min_smoothFunc_tighted} or \ref{eq:Max_smoothFunc_tighted} (according it is an AND or an OR operation, or even both) into a single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\). However there is another and more direct way in this case to have the new single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\), so, considering the second-order system~\ref{eq:HH-NL-System} and \(lo \in \{\max, \min\}\):
+The resultant \glsxtrshort{CBF} \(h_i(\xVec, \mathbf{\xi}) \quad \forall i \in \mathcal{I}\), one more time can be merged via \eqref{eq:Min_smoothFunc_tighted} or \eqref{eq:Max_smoothFunc_tighted} (according it is an AND or an OR operation, or even both) into a single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\). However there is another and more direct way in this case to have the new single \glsxtrshort{CBF} \(h(\xVec, \mathbf{\xi})\), so, considering the second-order system~\eqref{eq:HH-NL-System} and \(lo \in \{\max, \min\}\):
 
 \begin{align}
         \underset{ i \in \mathcal{I}}{lo}(h0_i(\xVec) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi})) &= \underset{ i \in \mathcal{I}}{lo}(h0_i(\xVec)) - V_{\mathbf{\xi}}(\xVec, \mathbf{\xi}) \approx 
@@ -604,11 +662,11 @@ The resultant \glsxtrshort{CBF} \(h_i(\xVec, \mathbf{\xi}) \quad \forall i \in \
 \end{equation}
 
 
-Having \glsxtrshort{CBF} \(h\), the second-order solution, a differentiable and locally Lipschitz continuous controller \(k(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}\) is obtained using the \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed-1Backstep} (or its closed-form solution~\ref{eq:closed-form_controller}). \\
+Having \glsxtrshort{CBF} \(h\), the second-order solution, a differentiable and locally Lipschitz continuous controller \(k(\xVec, \mathbf{\xi}): \mathbb{R}^n \times \mathbb{R}^p \to \mathbb{R}\) is obtained using the \glsxtrshort{QP}~\eqref{eq:CLF-CBF-QP-relaxed-1Backstep} (or its closed-form solution~\eqref{eq:closed-form_controller}). \\
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!35!white,title=Notes:]
 \begin{itemize}
-    \item There are other possible variations of a second-order system that invalidates \ref{eq:Backstepp_h_multipleCBF_derivatives2} like the unicycle model that will be shown next chapter.
+    \item There are other possible variations of a second-order system that invalidates \eqref{eq:Backstepp_h_multipleCBF_derivatives2} like the unicycle model that will be shown next chapter.
 \end{itemize}
 \end{tcolorbox} 
 
@@ -623,7 +681,7 @@ Having \glsxtrshort{CBF} \(h\), the second-order solution, a differentiable and 
 \label{sec:Single_Parameter_Optmization}
 
 
-%The optimization problems such as \ref{eq:CLF-CBF-QP}, \ref{eq:CLF-CBF-QP-relaxed}, \ref{eq:CLF-CBF-QP-relaxed-0Backstep}, \ref{eq:CLF-CBF-QP-relaxed-1Backstep}, can be processed by making use of solvers able to optimize multiple variables using diffrent methods like the ones presented here, or if it is feasible using the closed-form solution of the optimization problem like \ref{sub:closed_form}. However, the methods shown will just be compreended to one optimization variable, owing to the specifications is pretended to achieve with the  proposed decision algorithms~\ref{sec:Proposed_Propagation_Algorithms}. \par 
+%The optimization problems such as \eqref{eq:CLF-CBF-QP}, \eqref{eq:CLF-CBF-QP-relaxed}, \eqref{eq:CLF-CBF-QP-relaxed-0Backstep}, \eqref{eq:CLF-CBF-QP-relaxed-1Backstep}, can be processed by making use of solvers able to optimize multiple variables using diffrent methods like the ones presented here, or if it is feasible using the closed-form solution of the optimization problem like \ref{sub:closed_form}. However, the methods shown will just be compreended to one optimization variable, owing to the specifications is pretended to achieve with the  proposed decision algorithms~\ref{sec:Proposed_Propagation_Algorithms}. \par 
 The optimization of the respective parameter is based on minimizing a cost function \(g:\mathbb{R} \to \mathbb{R}\), which in the context of this work expected to be quasi-convex~\footnote{ A quasi-convex function \(f:\mathcal{S} \to \mathbb{R}\), beeing \(\mathcal{S}\) a convex set, verifies \(\forall x,y \in \mathcal{S}\) and \(\lambda \in [0;1]\), \(f(\lambda x + (1-\lambda)y) \leq max\{f(x), f(y)\}\)   } along the optimization variable \(x \in \mathbb{R}\), and to do that there are algorithms such as the highly used gradient descent~\ref{subsec:Gradient_Descent}  and binary search~\ref{subsec:Binary_Search} method.
 
 
@@ -656,7 +714,7 @@ If \(g(x)\) has relevant noise could compromise the value obtained of \(\nabla g
     $i\gets 0$\;
     \While{$i \leq nS -1$}{
         $devN_i \gets  \frac{1}{2} \times (i + (i \hspace{0.2em} mod \hspace{0.2em} 2) ) \times devN $ \;
-        $grad_i \gets \nabla g(x + (-1)^{i}  \times devN_i, (-1)^i \times dev)$ \Comment*[r]{Equation \ref{eq:Gradient_Discretization}}
+        $grad_i \gets \nabla g(x + (-1)^{i}  \times devN_i, (-1)^i \times dev)$ \Comment*[r]{Equation \eqref{eq:Gradient_Discretization}}
         $i\gets i + 1$\;    
         }
     \caption{Discrete Gradient Function (DGF)} \label{alg:Discrete_Gradient_Function}
@@ -737,7 +795,7 @@ where \(a, b, c, d\) are the respective steps intensity tuning parameter. \\
 \subsection{Binary Search}
 \label{subsec:Binary_Search}
 
-This method is composed by two phases, being  the first one responsible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Bolzano's theorem says that given the continuous function \(f:[a;b] \subset \mathbb{R} \to \mathbb{R}\) and \(f(a)f(b) < 0\), then \(\exists x \in  ]a; b[\) such that \(f(x) = 0\)} is verified for the continuous gradient function (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used a variation of the gradient descent method~\ref{eq:Gradient_Descent_Normal}:
+This method is composed by two phases, being  the first one responsible to obtain two extreme points \((xI,xS) \in \mathbb{R} \times \mathbb{R}\) such that the Bolzano theorem~\footnote{Bolzano's theorem says that given the continuous function \(f:[a;b] \subset \mathbb{R} \to \mathbb{R}\) and \(f(a)f(b) < 0\), then \(\exists x \in  ]a; b[\) such that \(f(x) = 0\)} is verified for the continuous gradient function (\(  x^*= \{ x \in ]xI; xS[ \hspace{0.1em}  : \hspace{0.25em} \exists x \hspace{0.25em}\nabla g(x) = 0 \} \)). In order to achieve that, is used a variation of the gradient descent method~\eqref{eq:Gradient_Descent_Normal}:
 
 \begin{equation}
     x_{k+1} = x_k + \underbrace{(- a \nabla g(x_{k}))}_{step}
@@ -750,7 +808,7 @@ That being  said, the phase 1 algorithm:
   \begin{algorithm}
     \KwData{$xI$, $a$}
     \KwResult{$sort(xI,xS)$}
-    $xS \gets xI - a \nabla g(x_I)$    \Comment*[r]{Equation \ref{eq:Binary_Search_Phase1_gradDesc}}
+    $xS \gets xI - a \nabla g(x_I)$    \Comment*[r]{Equation \eqref{eq:Binary_Search_Phase1_gradDesc}}
     \While{$\nabla g(x_I) \times \nabla g(xS) > 0$}{
         $xI\gets xS$\;
         $xS \gets xI - a \nabla g(x_I)$\;
@@ -776,7 +834,7 @@ Assuming a quasi-convex function, if there is a tendency to recurrently approxim
         $xMid \gets w \times xI + (1-w) \times xS $ \Comment*[r]{Weighted Mean}
         \eIf{$\nabla g(xMid) > 0$}{
             $xS\gets xMid$\;
-            $w \gets w - sig_{-}(w)$  \Comment*[r]{Sigmoide function \ref{eq:binsea_weight_update_function}}
+            $w \gets w - sig_{-}(w)$  \Comment*[r]{Sigmoide function \eqref{eq:binsea_weight_update_function}}
         }{
             $xI\gets xMid$\;
             $w \gets w + sig_{+}(w)$\;
@@ -793,14 +851,14 @@ Assuming a quasi-convex function, if there is a tendency to recurrently approxim
 \section{Constraint Contour Point}
 \label{sec:Constraint_Contour_Point}
 
-Having the objective of global asymptotically  stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain decision algorithms, such as \ref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to be a better fit for problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\), e.g., following a safer and shorter path.\\
+Having the objective of global asymptotically  stability of a system, the system converges a desired equilibrium point \(\bar{\xVec}_F\) but kept outside a bounded unsafe set \(\mathcal{B} \subset \mathbb{R}^n\). Depending on certain decision algorithms, such as \eqref{eq:CLF-CBF-QP-relaxed} which uses \glsxtrshort{CLF-CBF}, by pursuing another equilibrium point \(\bar{\xVec}_I\) first, the path taken by the system's states \(\xVec \in \mathbb{R}^n\) until \(\bar{\xVec}_F\) could be oriented in order to be a better fit for problem demands, specially to deal more efficiently with the implications of an unsafe set \(\mathcal{B}\), e.g., following a safer and shorter path.\\
 
 \subsection{Constraint Fit}
 \label{subsec:Constraint_Fit}
 
 The program formulated in \ref{subsubsec:Constraint_Tangent_Point} responsible to obtain a new equilibrium point is characterized by the use of \glsxtrshort{CBF}. Since the safe set \(\bar{\mathcal{B}}\) (complement of \(\mathcal{B}\)) corresponds to the 0-superlevel set of an unkown safety function \(h_{unkown}: \mathbb{R}^n \to \mathbb{R}\), then:
 
-By doing a \underline{polytopic fit}, via logical operations~\ref{sub:unifying_CBF} smooth-approximations (AND~\ref{eq:Min_smoothFunc_tighted}, OR~\ref{eq:Max_smoothFunc_tighted}), is combined the different 0-superlevel sets \(\mathcal{C}_i \subset \mathbb{R}^n \quad \forall i \in \mathcal{I} = \{1,...,p\}\) of the functions \(h_i: \mathbb{R}^n \to \mathbb{R}\):
+By doing a \underline{polytopic fit}, via logical operations~\ref{sub:unifying_CBF} smooth-approximations (AND~\eqref{eq:Min_smoothFunc_tighted}, OR~\eqref{eq:Max_smoothFunc_tighted}), is combined the different 0-superlevel sets \(\mathcal{C}_i \subset \mathbb{R}^n \quad \forall i \in \mathcal{I} = \{1,...,p\}\) of the functions \(h_i: \mathbb{R}^n \to \mathbb{R}\):
 
 \begin{equation}
     \begin{array}{l}
@@ -818,7 +876,7 @@ And minimized the size of the set \(\bar{\mathcal{C} }\cap \bar{\mathcal{B}}\). 
         &st. \quad \bar{\mathcal{B}} \subseteq \mathcal{C} \label{eq:Ellipsoidal_fit_Condition}
 \end{align}
 
-With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer, \(\mathbf{A_{xis}} \in \mathbb{R}^{c \times c}_{\succ 0}\) and \(p \in \mathbb{R}^{c}\) susceptible to an optimization that tries to minimize the size of the set \(\bar{\mathcal{C} }\cap \bar{\mathcal{B}}\) or at least choosing them such that is guaranteed \ref{eq:Ellipsoidal_fit_Condition} and accepting a fit potentially more conservative. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
+With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer, \(\mathbf{A_{xis}} \in \mathbb{R}^{c \times c}_{\succ 0}\) and \(p \in \mathbb{R}^{c}\) susceptible to an optimization that tries to minimize the size of the set \(\bar{\mathcal{C} }\cap \bar{\mathcal{B}}\) or at least choosing them such that is guaranteed \eqref{eq:Ellipsoidal_fit_Condition} and accepting a fit potentially more conservative. Even though the ellipsoidal approximation is less accurate as is not able to capture the shapes of other figures than ellipses, it shows sufficient for some problems, it provides less complexity and given its properties, suited for some strategies planning. \\
 
 
 \subsection{State Propagation Simulation}
@@ -866,7 +924,7 @@ Where \(s\) is the number of stages, \(\mathbf{a}\) the \glsxtrfull{RK} matrix, 
 \end{equation}
 
 
-The \underline{\glsxtrshort{RK} 4th order} is defined by \ref{eq:Explicit-RK} and its tableau:
+The \underline{\glsxtrshort{RK} 4th order} is defined by \eqref{eq:Explicit-RK} and its tableau:
 
 \begin{equation}
     \begin{array}{c|cccc}
@@ -880,7 +938,7 @@ The \underline{\glsxtrshort{RK} 4th order} is defined by \ref{eq:Explicit-RK} an
     \label{eq:RK4_Tableu}
 \end{equation}
 
-Although this method solution is slower compared to Euler~\ref{eq:Euler_Method}, its accuracy is higher. \par
+Although this method solution is slower compared to Euler~\eqref{eq:Euler_Method}, its accuracy is higher. \par
 The \textbf{Adaptive \glsxtrlong{RK}} \label{subsubsub:RK_Adaptive} method, with a adaptive step size \(\Delta x\) according to the estimated local truncature error. If its lower than some threshold, the step size increases and the solutions obtained faster since that point, while if it increases is reduced promoting a accurate solution, but with \(\Delta x \in [\Delta x_{min}; \Delta x_{max}]\).  The error estimations are calculated based on two different methods of one order more than the other. For this new \glsxtrlong{RK} variation the Butcher Tableau is:
 %If the error is higher than some defined relative tolerance then the step size is reduced and the solution given the new step recomputed at the point, while if its lower than some treshold, the step size increases and the solutions obtained faster sice that point.
 
@@ -895,7 +953,7 @@ The \textbf{Adaptive \glsxtrlong{RK}} \label{subsubsub:RK_Adaptive} method, with
 \end{equation}
 
 
-The low and high order solution are based equally on \ref{eq:Update_RKbased}:
+The low and high order solution are based equally on \eqref{eq:Update_RKbased}:
 
 \begin{subequations}
     \begin{align}
@@ -905,7 +963,7 @@ The low and high order solution are based equally on \ref{eq:Update_RKbased}:
     \label{eq:Update_Adaptive-RK}  
 \end{subequations}
 
-Where the intermediate derivatives \(k_i\) functions keep the same equation \ref{eq:Derivatives_Explicit-RK} and are equal for both (low and high order methods) reducing some computing time. The local truncature error estimations ig given by:
+Where the intermediate derivatives \(k_i\) functions keep the same equation \eqref{eq:Derivatives_Explicit-RK} and are equal for both (low and high order methods) reducing some computing time. The local truncature error estimations ig given by:
 
 \begin{equation}
     e_{n+1} = |z_{n+1} - y_{n+1}|
@@ -951,7 +1009,7 @@ Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulating state conv
     $i \gets 0$ \;
     \While{$i < tI$ \textbf{AND} Conditions$^*$}{   
         $\uVec_i \gets decision^*(\xVec_i, arg^*)$ \Comment*[r]{Decision Algorithm}
-        $\xVec_{i+1} \gets integration^*(f, \xVec_i, \uVec_i, \Delta t)$ \Comment*[r]{\small Euler~\ref{eq:Euler_Method},  \glsxtrshort{RK} 4~\ref{subsubsub:RK_Explicit} or DP~\ref{subsubsub:RK_Adaptive}...}
+        $\xVec_{i+1} \gets integration^*(f, \xVec_i, \uVec_i, \Delta t)$ \Comment*[r]{\small Euler~\eqref{eq:Euler_Method},  \glsxtrshort{RK} 4~\ref{subsubsub:RK_Explicit} or DP~\ref{subsubsub:RK_Adaptive}...}
         $i \gets i +1$ \;
     }
     \caption{State Propagation Simulation (SPS)} \label{alg:State_Propagation_Simulation}
@@ -1004,7 +1062,7 @@ The distance along \(dir_{\perp}\) between the starting state \(\xVec_0\) and \(
 \label{sssec:Constraint_Tangent_Point_Ellipsoidal} \\
 
 From the vector \(\mathbf{v} = \bigl[\begin{smallmatrix} v_1\\ v_2 \end{smallmatrix} \bigr]\) (\(\mathbf{v} = \mathbf{O} \hspace{0.2em} dir\), with \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) as the observer matrix of the two constrained states) is deduced a tangent point in the respective constraint. This point is the most far from the eminent of colliding unsafe set \(\bar{\mathcal{C}}\) given a perpendicular direction to the obtained vector.%, therefore the new equilibrium point translates as the necessary variation the system states need in that perpendicular direction to pass the unsafe zone.                
-Assuming it's used a ellipsoidal fit~\ref{eq:Ellipsoidal_fit} for the construction of a \glsxtrshort{CBF} \(h_0\), where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{2 \times 2}_{\succ 0}\) is the ellipse axis defining matrix and \(\mathbf{p} \in \mathbb{R}^{2}\) the center of it, the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:CL_Ellipsoide_Tangent_Point}):
+Assuming it's used a ellipsoidal fit~\eqref{eq:Ellipsoidal_fit} for the construction of a \glsxtrshort{CBF} \(h_0\), where \(\mathbf{A_{xis}} = \bigl[\begin{smallmatrix} a_x&a_u \\ a_u&a_y \end{smallmatrix} \bigr] \in \mathbb{R}^{2 \times 2}_{\succ 0}\) is the ellipse axis defining matrix and \(\mathbf{p} \in \mathbb{R}^{2}\) the center of it, the new point could be obtained using a closed-form solution (to see the full deduction \ref{app:CL_Ellipsoide_Tangent_Point}):
 
 
 \begin{align}
@@ -1187,7 +1245,7 @@ All the proposed algorithms are based on \glsxtrshort{CLF-CBF}~\ref{sec:clf_cbf}
 \label{subsec:Just_Optimized_Algorithm}
 
 Optimizing parameters can improve the system behaviour for the scenario it is deparing with. And an eventual optimization makes its behaviour more suited to actuate in an multi-scenario environment. \par
-Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, the proposed technique is centered on the slope \(\alpha_d\) of the \glsxtrshort{CBF} constraint function \(\alpha:\mathbb{R} \to \mathbb{R}\) (\glsxtrshort{CLF-CBF} \glsxtrshort{QP}~\ref{eq:CLF-CBF-QP-relaxed}) as an optimization variable:
+Based on single parameter optimization~\ref{sec:Single_Parameter_Optmization}, the proposed technique is centered on the slope \(\alpha_d\) of the \glsxtrshort{CBF} constraint function \(\alpha:\mathbb{R} \to \mathbb{R}\) (\glsxtrshort{CLF-CBF} \glsxtrshort{QP}~\eqref{eq:CLF-CBF-QP-relaxed}) as an optimization variable:
 
 \begin{equation}
     \alpha(h, \alpha_d) = \alpha_d h
@@ -1209,15 +1267,15 @@ The parameter is optimized using the binary search algorithm \ref{subsec:Binary_
 
 Where \(N\) is equivalent to the total of samples, \(\xVec_0\) the present state, \(\mathbf{Q} \in \mathbb{R}^n_{\succ 0}\) is the states cost weight matrix, \(\mathbf{R} \in \mathbb{R}^m_{\succ 0}\) is the inputs cost weight matrix.  \par
 
-Because of the n states and inputs continuous differential solution (\(\xVec(t) and \uVec(t)\)), potentialized by the conditioned control input values given by CLF-CBF closed-form controller~\ref{eq:closed-form_controller}, the gradient \(\nabla g_{\xVec_0}(\alpha_d)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha_d)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly.\par 
-Digitally, through the \(SPS\) algorithm \ref{alg:Discrete_Gradient_Function} is computed the approximated states \(\mathbf{X}(\alpha_d,\xVec_0)\) and inputs \(\mathbf{U}(\alpha_d,\xVec_0)\) along the horizon. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\). Meanwhile, given the control action \(\uVec_k\), \(\xVec_{k+1}\) is propagated by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\ref{eq:RK4_Tableu}, more accurate than the Euler method~\ref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}. So given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
+Because of the n states and inputs continuous differential solution (\(\xVec(t) and \uVec(t)\)), potentialized by the conditioned control input values given by CLF-CBF closed-form controller~\eqref{eq:closed-form_controller}, the gradient \(\nabla g_{\xVec_0}(\alpha_d)\) exact equation is difficult to have it, hence is required a discretization of it~\ref{subsec:Gradient_Cost_Function_Discretization}. Which leds to the exact function of \(g_{\xVec_0}(\alpha_d)\) which is not known as \(\uVec_k\) and \(\xVec_{k+1}\) could not be obtained directly.\par 
+Digitally, through the \(SPS\) algorithm \ref{alg:Discrete_Gradient_Function} is computed the approximated states \(\mathbf{X}(\alpha_d,\xVec_0)\) and inputs \(\mathbf{U}(\alpha_d,\xVec_0)\) along the horizon. Like it was said, \(\uVec_k\) is obtained based on a closed-form \glsxtrshort{CLF-CBF} controller~\ref{sub:closed_form}, governed by a \glsxtrshort{CLF} \(V\) and a \glsxtrshort{CBF} \(h\). Meanwhile, given the control action \(\uVec_k\), \(\xVec_{k+1}\) is propagated by an explicit \glsxtrshort{RK}\ref{subsubsub:RK_Explicit} in particular defined by the fourth order \glsxtrshort{RK} Butcher Tableau\eqref{eq:RK4_Tableu}, more accurate than the Euler method~\eqref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\eqref{eq:Dormand-Prince_Tableu}. So given the system dynamics equation \(f:\mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n\) and integration time interval \(\Delta t\):
 
 \begin{equation}
-    \begin{bmatrix} \mathbf{X}(\alpha_d,\xVec_0) & \mathbf{U}(\alpha_d,\xVec_0) \end{bmatrix} = SPS(f, \xVec_0, N, \Delta t, V, h, \alpha_d) \hspace{0.2em} \begin{bmatrix*}[l] conditions^* \gets V(\xVec_i) \geq tol\\ decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}
+    \begin{bmatrix} \mathbf{X}(\alpha_d,\xVec_0) & \mathbf{U}(\alpha_d,\xVec_0) \end{bmatrix} = SPS(f, \xVec_0, N, \Delta t, V, h, \alpha_d) \hspace{0.2em} \begin{bmatrix*}[l] conditions^* \gets V(\xVec_i) \geq tol\\ decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\eqref{eq:RK4_Tableu}} \end{bmatrix*}
     \label{eq:CLF-CBF_RK4_Propagation}
 \end{equation}
 
-So, choosing \(nS\) number of samples, \(devS\) referent to the distance between them, \(dev\) the discretization step and with \(g_{\xVec_0}(\alpha_d)\) given by \ref{eq:CLF-CBF_RK4_Propagation}:
+So, choosing \(nS\) number of samples, \(devS\) referent to the distance between them, \(dev\) the discretization step and with \(g_{\xVec_0}(\alpha_d)\) given by \eqref{eq:CLF-CBF_RK4_Propagation}:
 
 \begin{equation}
     \nabla g_{\xVec_0}(\alpha_d) = DGF(nS,devS,dev, g_{\xVec_0},\alpha_d)  
@@ -1228,17 +1286,17 @@ With \(DGF\) (Discrete Gradient Function) as the algorithm \ref{alg:Discrete_Gra
 Among the presented single parameter optimization techniques there are:
 
 \begin{itemize}
-    \item Gradient Descent \ref{eq:Gradient_Descent_Normal}
-    \item Gradient Descent with Momentum \ref{eq:Gradient_Descent_Momentum}
-    \item Nesterov's Accelerated Gradient Descent \ref{eq:Gradient_Descent_Nesterov}
-    \item Triple Momentum Gradient Descent \ref{eq:Gradient_Triple_Momentum}
+    \item Gradient Descent \eqref{eq:Gradient_Descent_Normal}
+    \item Gradient Descent with Momentum \eqref{eq:Gradient_Descent_Momentum}
+    \item Nesterov's Accelerated Gradient Descent \eqref{eq:Gradient_Descent_Nesterov}
+    \item Triple Momentum Gradient Descent \eqref{eq:Gradient_Triple_Momentum}
     \item Default: Binary Search Algorithm \ref{alg:Binary_Search_Phase_1}-\ref{alg:Binary_Search_Phase_2}
 \end{itemize}
 
 The Binary Search is preferred due to be suited to quasi-convex specters, which was verified for the given problems.\par 
 Theoretically the CBF should guarantee safety, however due to not be a continuous system (or integration errors), having a high \(\alpha_d\) can lead to unsafe sets and can also provide a demand on a not possible control input values to keep the system safe, but if that happens is expected to reflect on the path taken, control inputs and therefore penalize in the cost function as in the gradient, although it could be reflected as noise during the optimization.\\
 
-Afterwards, having the optimized \(\alpha_d\), it is used the typical \glsxtrshort{CLF-CBF} framework, more precisely the closed-form controller \ref{eq:closed-form_controller} as decision algorithm to speed up.
+Afterwards, having the optimized \(\alpha_d\), it is used the typical \glsxtrshort{CLF-CBF} framework, more precisely the closed-form controller \eqref{eq:closed-form_controller} as decision algorithm to speed up.
 
 
 
@@ -1256,7 +1314,7 @@ The proposed algorithm follows an optimization based on a cost function given a 
     \label{eq:Cost_Function_Alpha_last_state}
 \end{equation}
 
-This cost function just takes into account the last state from the horizon, i.e., paths where the last system state is as close as possible to the desired state at the end of the horizon, or even reached it return lower costs, and between those paths the less input consuming and generally the shortest paths are the optimal ones. Compared to \ref{eq:Cost_Function_Alpha} it demands a higher \(\mathbf{Q}\), so the cost value returned could be relatively high according to how far from the stability objective the system is.
+This cost function just takes into account the last state from the horizon, i.e., paths where the last system state is as close as possible to the desired state at the end of the horizon, or even reached it return lower costs, and between those paths the less input consuming and generally the shortest paths are the optimal ones. Compared to \eqref{eq:Cost_Function_Alpha} it demands a higher \(\mathbf{Q}\), so the cost value returned could be relatively high according to how far from the stability objective the system is.
 
 
 \begin{equation}
@@ -1267,7 +1325,7 @@ This cost function just takes into account the last state from the horizon, i.e.
     \label{eq:Cost_Function_Alpha_evol_state}
 \end{equation}
 
-Where \(det(\mathbf{Q}_i) \leq  det(\mathbf{Q}_{i+1})\), in order to keep a similar behaviour to \ref{eq:Cost_Function_Alpha_last_state} without the optimized path simply targeting the last instant.
+Where \(det(\mathbf{Q}_i) \leq  det(\mathbf{Q}_{i+1})\), in order to keep a similar behaviour to \eqref{eq:Cost_Function_Alpha_last_state} without the optimized path simply targeting the last instant.
 
 \subsection{\glsxtrfull{A-CLF-S}}
 \label{subsec:CLFs_Summed_Algorithm}
@@ -1281,7 +1339,7 @@ With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Alg
 
 \begin{equation}
     \begin{array}{l}
-        [dir, \hspace{0.1em} \xVec_{int}] = NCDV(f, \xVec_0, N, \Delta t, V, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}  \\
+        [dir, \hspace{0.1em} \xVec_{int}] = NCDV(f, \xVec_0, N, \Delta t, V, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\eqref{eq:RK4_Tableu}} \end{bmatrix*}  \\
         \mathbf{v} = \mathbf{O}\hspace{0.1em}^.\hspace{0.1em}dir   
     \end{array}
     \label{eq:New_Equlibrium_Point_DirVec_CLF-CBF_RK4}
@@ -1289,8 +1347,8 @@ With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Alg
 
 
 
-Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natural_Convergence_Direction_Vector}, and \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) the constrained states observer matrix. Regarding the choice of \glsxtrshort{RK}4 over other methods is because as it was said before, since it is more accurate than the Euler method~\ref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\ref{eq:Dormand-Prince_Tableu}. \par
-Given the direction vector \(\mathbf{v}\), assuming an ellipsoidal fit \ref{eq:Ellipsoidal_fit}, with the constraint tangent point  closed form solution~\ref{subsubsec:Constraint_Tangent_Point} like this obtain \(\bar{\xVec_C}\). If the system is deparing with a polytope \glsxtrshort{CBF} \(h_0\), then using algorithm \ref{alg:Find_Contour_Point} with \(\mathbf{v}\) and \(\xVec_{int}\) as arguments is obtained the new equilibrium point(s).\\
+Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natural_Convergence_Direction_Vector}, and \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) the constrained states observer matrix. Regarding the choice of \glsxtrshort{RK}4 over other methods is because as it was said before, since it is more accurate than the Euler method~\eqref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\eqref{eq:Dormand-Prince_Tableu}. \par
+Given the direction vector \(\mathbf{v}\), assuming an ellipsoidal fit \eqref{eq:Ellipsoidal_fit}, with the constraint tangent point  closed form solution~\ref{subsubsec:Constraint_Tangent_Point} like this obtain \(\bar{\xVec_C}\). If the system is deparing with a polytope \glsxtrshort{CBF} \(h_0\), then using algorithm \ref{alg:Find_Contour_Point} with \(\mathbf{v}\) and \(\xVec_{int}\) as arguments is obtained the new equilibrium point(s).\\
 
 
 \subsubsection{Baseline Framework}
@@ -1330,14 +1388,14 @@ The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_{0_1}\)
     \label{eq:2-CLF-S_Constraint}
 \end{align}
 
-With \(\mu\) as a parameter with default value as \( \frac{V_{N_0}(\xVec)}{V_{C_0}(\xVec)} \). The set \(K_{V_{0_2}}(\xVec)\) is equivalent to \ref{eq:K-CLF}. \\
+With \(\mu\) as a parameter with default value as \( \frac{V_{N_0}(\xVec)}{V_{C_0}(\xVec)} \). The set \(K_{V_{0_2}}(\xVec)\) is equivalent to \eqref{eq:K-CLF}. \\
 
 %\textbf{\underline{Second-Order Systems}}
 \subsubsection{Second-Order Systems}
 \label{subsubsubsec:CLFs_Summed_Algorithm_2nd_order}
 
-Given the backstepping formulation~\ref{sub:backstepping}, it is assumed the previous obtained \glsxtrshort{CLF}~\ref{eq:New_2-CLF-S} as the first-order formulation and \ref{eq:2-CLF-S_Constraint} as the condition.\par 
-Now, considering a second-order system \ref{eq:HH-NL-System}, the \glsxtrshort{CLF} that are trying to converge to \(\bar{\xVec}_C\) and  \(\bar{\xVec}_N\) respectively are:
+Given the backstepping formulation~\ref{sub:backstepping}, it is assumed the previous obtained \glsxtrshort{CLF}~\eqref{eq:New_2-CLF-S} as the first-order formulation and \eqref{eq:2-CLF-S_Constraint} as the condition.\par 
+Now, considering a second-order system \eqref{eq:HH-NL-System}, the \glsxtrshort{CLF} that are trying to converge to \(\bar{\xVec}_C\) and  \(\bar{\xVec}_N\) respectively are:
 
 
 \begin{align}
@@ -1345,7 +1403,7 @@ Now, considering a second-order system \ref{eq:HH-NL-System}, the \glsxtrshort{C
     &V_N(\xVec, \xi) = V_{N_0}(\xVec) + V_{\xi}(\xVec, \xi) \label{eq:hh_next_clf}
 \end{align}
 
-Given \(V_C\) and \(V_N\) it is possible to obtain the new \glsxtrshort{CLF} \(V\) equally as \ref{eq:1stPhase_2-CLF-S}-\ref{eq:New_2-CLF-S} but keeping the first-order sigmoide function \(\sigma(\xVec)\) from \ref{eq:sig_CLF_Vc0}. That beeing said, it is possible to reduce the \glsxtrshort{CLF} \(V\) equation to:
+Given \(V_C\) and \(V_N\) it is possible to obtain the new \glsxtrshort{CLF} \(V\) equally as \eqref{eq:1stPhase_2-CLF-S}-\eqref{eq:New_2-CLF-S} but keeping the first-order sigmoide function \(\sigma(\xVec)\) from \eqref{eq:sig_CLF_Vc0}. That beeing said, it is possible to reduce the \glsxtrshort{CLF} \(V\) equation to:
 
 \begin{equation}
     V(\xVec, \xi) = V_0(\xVec) + V_{\xi}(\xVec, \xi)
@@ -1361,9 +1419,9 @@ The sets of possible control inputs, given the new \glsxtrshort{CLF} \(V_{1}\) a
     \label{eq:HH_2-CLF-S_Constraint}
 \end{align}
 
-Keeping \(\mu\) as a parameter with default value as \( \frac{V_{N_0}(\xVec)}{V_{C_0}(\xVec)} \) and the set \(K_{V_{2}}(\xVec)\) equivalent to \ref{eq:K-CLF}. \textcolor{gray}{If it is a mixed-relative-degree-two system like the unicycle model used in \ref{eq:unicycle_model}.} \\
+Keeping \(\mu\) as a parameter with default value as \( \frac{V_{N_0}(\xVec)}{V_{C_0}(\xVec)} \) and the set \(K_{V_{2}}(\xVec)\) equivalent to \eqref{eq:K-CLF}. \textcolor{gray}{If it is a mixed-relative-degree-two system like the unicycle model used in \eqref{eq:unicycle_model}.} \\
 
-Regarding the stability objective changing condition, it maintains equal to \ref{eq:New_2-CLF-S_actuationPhaseSet} using the first-order \glsxtrshort{CLF} and control input \(\mathbf{k}_0\):
+Regarding the stability objective changing condition, it maintains equal to \eqref{eq:New_2-CLF-S_actuationPhaseSet} using the first-order \glsxtrshort{CLF} and control input \(\mathbf{k}_0\):
 
 \begin{equation}
     \mathcal{S} = \{\xVec \in \mathbb{R}^n: V_{C_0}(\xVec) \geq tol \cap \dot{V}_{C_0}(\xVec, \mathbf{k}_0) \leq 0 \cap \delta \leq tol_2 \}
@@ -1371,13 +1429,13 @@ Regarding the stability objective changing condition, it maintains equal to \ref
 \end{equation}\\
 
 
-Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}, using the cost function \ref{eq:Cost_Function_Alpha_last_state} adapt the \glsxtrshort{CBF} slope \(\alpha_d\) to the new low and high order \glsxtrshort{CLF}s and improve possibly even more the state convergence to the final equilibrium point.\\
+Finally, with \glsxtrshort{A-JO}~\ref{subsec:Just_Optimized_Algorithm}, using the cost function \eqref{eq:Cost_Function_Alpha_last_state} adapt the \glsxtrshort{CBF} slope \(\alpha_d\) to the new low and high order \glsxtrshort{CLF}s and improve possibly even more the state convergence to the final equilibrium point.\\
 
 %\textbf{\underline{Multiple Waypoints}}
 \subsubsection{Multiple Waypoints (Polytope Version)}
 \label{subsubsubsec:CLFs_Summed_Algorithm_multiple_waypoints}
 
-If the unsafe set is restricted by a polytopic fit~\ref{eq:Polytope_fit} and the contour point obtaining algorithm is \ref{alg:Find_Contour_Point} then it is returned two equilibrium points. Those points are approximately two vertices of the polytope of a same edge or just one vertice if they are too close.  It keeps having a current point a \glsxtrshort{CLF} is trying to converge but the next one don't necessarily is the desired final equilibrium point \(\bar{\xVec}_F\) but the other computed point.\par
+If the unsafe set is restricted by a polytopic fit~\eqref{eq:Polytope_fit} and the contour point obtaining algorithm is \ref{alg:Find_Contour_Point} then it is returned two equilibrium points. Those points are approximately two vertices of the polytope of a same edge or just one vertice if they are too close.  It keeps having a current point a \glsxtrshort{CLF} is trying to converge but the next one don't necessarily is the desired final equilibrium point \(\bar{\xVec}_F\) but the other computed point.\par
 For \(N \in \mathbb{N}\) waypoints, \(i \in \mathcal{I}=\{1,...,N\}\) the first order \glsxtrshort{CLF} is defined as:
 
 \begin{align}
@@ -1430,7 +1488,7 @@ Given the new \glsxtrshort{CLF} \(V_{i}\) and assuming a high slope \(\zeta\) (\
 Beeing the default value of \(\mu =\frac{V_{F_{0}}(\xVec)- V_{N_{0_i}}(\xVec)(1 -\sigma_i(\xVec))}{\sigma_i(\xVec) V_{C_{0_i}}(\xVec)} \) .\\
 
 
-The transitive (\(i = i+1\)) condition is based on the first-order \glsxtrshort{CLF} \(V_{C_i}\) as it was already seen~\ref{eq:HH_New_2-CLF-S_actuationPhaseSet} given by:
+The transitive (\(i = i+1\)) condition is based on the first-order \glsxtrshort{CLF} \(V_{C_i}\) as it was already seen~\eqref{eq:HH_New_2-CLF-S_actuationPhaseSet} given by:
 
 \begin{equation}
     \mathcal{S}_i = \{\xVec \in \mathbb{R}^n: V_{C_{0_i}}(\xVec) \geq tol \cap \dot{V}_{C_{0_i}}(\xVec, \mathbf{k}_0) \leq 0 \cap \delta \leq tol_2 \}
@@ -1445,16 +1503,16 @@ The transitive (\(i = i+1\)) condition is based on the first-order \glsxtrshort{
     \KwResult{$V$, $waypoints$, $\alpha_d$}
     $i \gets 0$\;
     \While{$i < nIte$, $i++$}{ 
-        $[dir, \hspace{0.1em} \xVec_{int}] = NCDV(f, \xVec_0, N, \Delta t, V_{1st-waypoint}, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\ref{eq:RK4_Tableu}} \end{bmatrix*}$\;
+        $[dir, \hspace{0.1em} \xVec_{int}] = NCDV(f, \xVec_0, N, \Delta t, V_{1st-waypoint}, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\eqref{eq:RK4_Tableu}} \end{bmatrix*}$\;
         $ [\mathbf{v}, \hspace{0.1em} \mathbf{p}] \gets \mathbf{O}\hspace{0.1em}^.\hspace{0.1em}[dir, \hspace{0.1em} \xVec_{int}]$ \;
         $waypoints \gets [CCP^*(\mathbf{v},\mathbf{p}, h_0), \hspace{0.1em} waypoints]$ \Comment*[r]{Ellipse~\ref{sssec:Constraint_Tangent_Point_Ellipsoidal}, Any~\ref{sssec:Constraint_Tangent_Point_Any}}
     }
-    $V \gets $ Multiple $waypoints\hspace{0.2em} \begin{Bmatrix*}[l] 1^{st}\text{ order \glsxtrshort{CLF}~\ref{eq:New_2-CLF-S_multiple_waypoints}, condition~\ref{eq:2-CLF-S_Constraint_multiple_waypoints}, transition~\ref{eq:HH_New_2-CLF-S_actuationPhaseSet}} \\ \text{High order \glsxtrshort{CLF}~\ref{eq:HH_New_2-CLF-S_multiple_waypoints}, condition~\ref{eq:HH_2-CLF-S_Constraint_multiple_waypoints}}\end{Bmatrix*}$\;
-    $\alpha_d \gets$ \glsxtrshort{A-JO} $\begin{bmatrix*}[l] g_{\xVec_0}(\alpha_d)^* \gets \text{Last State~\ref{eq:Cost_Function_Alpha_last_state}}\end{bmatrix*}$\;
+    $V \gets $ Multiple $waypoints\hspace{0.2em} \begin{Bmatrix*}[l] 1^{st}\text{ order \glsxtrshort{CLF}~\eqref{eq:New_2-CLF-S_multiple_waypoints}, condition~\eqref{eq:2-CLF-S_Constraint_multiple_waypoints}, transition~\eqref{eq:HH_New_2-CLF-S_actuationPhaseSet}} \\ \text{High order \glsxtrshort{CLF}~\eqref{eq:HH_New_2-CLF-S_multiple_waypoints}, condition~\eqref{eq:HH_2-CLF-S_Constraint_multiple_waypoints}}\end{Bmatrix*}$\;
+    $\alpha_d \gets$ \glsxtrshort{A-JO} $\begin{bmatrix*}[l] g_{\xVec_0}(\alpha_d)^* \gets \text{Last State~\eqref{eq:Cost_Function_Alpha_last_state}}\end{bmatrix*}$\;
     \caption{CLF-Summed (\glsxtrshort{A-CLF-S})} \label{alg:A-CLF-S}
   \end{algorithm}
 
- Given the new first and high order \glsxtrshort{CLF}, its conditions and transitions, and the new \(\alpha_d\), the system control action are decided based on the \glsxtrshort{CLF-CBF} closed-form controller~\ref{eq:closed-form_controller}. \\
+ Given the new first and high order \glsxtrshort{CLF}, its conditions and transitions, and the new \(\alpha_d\), the system control action are decided based on the \glsxtrshort{CLF-CBF} closed-form controller~\eqref{eq:closed-form_controller}. \\
 
 When sending existing points, finding others helps to draw a path to existing waypoints, and that includes when \(nIte >1\).\par
 The general \glsxtrshort{CLF} \(V_0\) formulation is described as the 2-norm between the current output (\(\mathbf{y} = \mathbf{C}\xVec, \hspace{0.2em}\mathbf{C}\) is the observer matrix) and the respective waypoint (\(||\mathbf{y}-\mathbf{ref}||\)).
@@ -1463,7 +1521,7 @@ The general \glsxtrshort{CLF} \(V_0\) formulation is described as the 2-norm bet
 \subsubsection{\glsxtrfull{A-CLF-I}}
 \label{subsubsec:CLFs_Independent_Algorithm}
 
-From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_N\) stabilizing in \(\bar{\xVec_N}\). If \(\zeta \to \infty\), according to equations \ref{eq:1stPhase_2-CLF-S} and \ref{eq:New_2-CLF-S}:
+From both equilibrium points is defined two \glsxtrshort{CLF}, \(V_C\) following the current equilibrium point \(\bar{\xVec_C}\) and \(V_N\) stabilizing in \(\bar{\xVec_N}\). If \(\zeta \to \infty\), according to equations \eqref{eq:1stPhase_2-CLF-S} and \eqref{eq:New_2-CLF-S}:
 
 
 \begin{align}
@@ -1490,7 +1548,7 @@ And if \(\mu = \frac{V_{N}(\xVec)}{V_{C}(\xVec)}\) then:
     \label{eq:2-CLF-I_Constraint}
 \end{align}
 
-The set \(K_{V_N}(\xVec)\) is is defined by \ref{eq:K-CLF}. \par
+The set \(K_{V_N}(\xVec)\) is is defined by \eqref{eq:K-CLF}. \par
 
 
 \newpage %so para ajeitar
