@@ -16,7 +16,7 @@
 
 In this chapter, it is presented a low-effort \glsxtrlong{CLF-CBF} based decision algorithm, actively imposing safety and convergence to an desired equilibrium point, with its computation speed potentialized by its closed-form solution. Futhermore, to be able to deal with high-order systems the nominal framework of the \glsxtrshort{CLF-CBF} is generalized via Backstepping. Adding to the \glsxtrshort{CLF-CBF} method, in order to better capture the shapes of the unsafe sets, then it is presented a strategy through smooth approximation of logical operations to merge multiple \glsxtrshort{CBF}.   \par
 
-The objective of this thesis is driving a system to follow an trajectory as close as possible to an optimal one with minimal effort through \glsxtrshort{CLF-CBF} based strategies encompassing the optimization of a exclusive single parameter and instructing the system to converge to another equilibrium point.
+The objective of this thesis is driving a system to follow an trajectory as close as possible to an optimal one with minimal effort through \glsxtrshort{CLF-CBF} based strategies encompassing the optimization of a exclusive single parameter and instructing the system to converge to another equilibrium point on the boundary of the safe set.
 
 %defing the circles function of the circles 
 \def\firstcircle{( 90:1.5) circle (2cm)} %(Direção (graus), distancia nessa direção (Coordenadas Polares)) (raio do circulo)
@@ -28,7 +28,8 @@ The objective of this thesis is driving a system to follow an trajectory as clos
 \begin{tikzpicture}[blend group=screen]
   \fill[red!90!black]   \firstcircle  node[ white!220] {\textbf{CLF-CBF}}; 
   \fill[green!80!black] \secondcircle node[ white!220] {\textbf{Optimization \hspace{1em}} };
-  \fill[blue!90!black]  \thirdcircle  node[ white!220] {\hspace{1em}\textbf{Contour Point}};
+  \fill[blue!90!black]  \thirdcircle  node[ white!220] {\hspace{1em}\textbf{Stability Change}};
+  \draw (330:1.5) circle (1pt) node[below, white!220]  {\hspace{1em}\textbf{to a Contour Point}}; 
 
 
 %   \fill[red!90!black]   ( 90:.6) circle (1) node[below, white!220] {\glsxtrshort{CLF-CBF}};
@@ -42,40 +43,86 @@ The objective of this thesis is driving a system to follow an trajectory as clos
 
 
 
-The scope of this dissertation is not restricted just to the \glsxtrshort{CLF-CBF}. However, the achieved control techniques, in addition to the traditional \glsxtrshort{CLF-CBF} (yellow), are based on it, with the possibility of adopting the optimization (orange) or stability change (green) strategy , even both together (white).
+The scope of this dissertation is not restricted just to the \glsxtrshort{CLF-CBF}. However, the achieved control techniques, in addition to the traditional \glsxtrshort{CLF-CBF} (red), are based on it, with the possibility of adopting the optimization (yellow) or stability change to a computed point (pink) strategy , even both together (gray).
+
+% \begin{figure}[!h]
+% \centering
+% \begin{tikzpicture}[blend group=screen]
+%   \fill[red!90!black]   \firstcircle  node[ white!220] {\textbf{CLF-CBF}}; 
+%   \fill[green!80!black] \secondcircle;% node[ white!220] {\textbf{Optimization \hspace{1em}} };
+%   \fill[blue!90!black]  \thirdcircle;%  node[ white!220] {\hspace{1em}\textbf{Contour Point}};
+
+
+% \begin{scope}
+%         \begin{scope}[even odd rule]% first circle without the second
+%             \clip \firstcircle (-4,-4) rectangle (4,4);
+%         \fill[white!100] \secondcircle  ;
+%         \end{scope}
+        
+% \end{scope}
+
+% \begin{scope}
+%         \begin{scope}[even odd rule]% first circle without the second
+%             \clip \firstcircle (-4,-4) rectangle (4,4);
+%         \fill[white] \thirdcircle  node[blue!90!black] {\hspace{1em}\textbf{Contour Point}};
+%         \end{scope}
+        
+% \end{scope}
+
+% \draw[green!80!black] \secondcircle   node[green!80!black] {\textbf{Optimization \hspace{1em}} };
+% \draw[blue!90!black] \thirdcircle   node[blue!90!black] {\hspace{1em}\textbf{Contour Point}};
+
+% \end{tikzpicture}
+% \caption{Control Techniques Domains}
+% \label{fig:Control_Techniques_Domains}
+% \end{figure}
 
 \begin{figure}[!h]
 \centering
 \begin{tikzpicture}[blend group=screen]
   \fill[red!90!black]   \firstcircle  node[ white!220] {\textbf{CLF-CBF}}; 
-  %\fill[green!80!black] \secondcircle node[ white!220] {\textbf{Optimization \hspace{1em}} };
-  \fill[blue!90!black]  \thirdcircle  node[ white!220] {\hspace{1em}\textbf{Contour Point}};
-
 
 \begin{scope}
-        \begin{scope}[even odd rule]% first circle without the second
-            \clip \firstcircle (-4,-4) rectangle (4,4);
-        \fill[white] \secondcircle ;
+        \begin{scope}
+            \clip \firstcircle;
+        \fill[green!80!black] \secondcircle  ;%Esse verde mistura com o vermelho das CLF-CBF
         \end{scope}
-        \draw \secondcircle   node {\textbf{Optimization \hspace{1em}} };
+        
 \end{scope}
+
+\begin{scope}
+        \begin{scope}
+            \clip \firstcircle;
+        \fill[blue!90!black] \thirdcircle  ;
+        \end{scope}
+        
+\end{scope}
+
+\draw[green!80!black] \secondcircle   node[green!80!black] {\textbf{Optimization \hspace{1em}} };
+\draw[blue!90!black] \thirdcircle   node[blue!90!black] {\hspace{1em}\textbf{Stability Change}};
+\draw (330:1.5) circle (1pt) node[below, blue!90!black]  {\hspace{1em}\textbf{to a Contour Point}}; 
+
 \end{tikzpicture}
 \caption{Control Techniques Domains}
 \label{fig:Control_Techniques_Domains}
 \end{figure}
 
-
-
 %tiktx figura cortadas com partes que intersetam as CLF-CBF  ou que o restante em branco... e defenindo cada secção nas respetivas partes resultantes que englobam, se não der para meter la no nome das secçoes sem ficar emcavalitado, meter mais uma figura com duas subfiguras cada uma com a parte da respetiva secção.
-
-
-
-
-\eqref{eq:lagrangian_lambda_gradient_function_CLFactv}
 
 
 \section{Chapter Structure}
 \label{ch1_sec:Chapter_Structure} 
+
+This chapter starts presenting the mathematical formulation of the \textbf{Optimal Control Problem} (section \ref{ch1_sec:Chapter_Structure}) which results are pretended to approximate with the developed techniques presented in this chapter. \par 
+The proposed methods methodology starts with the \textbf{\glsxtrshort{CLF-CBF}} (section \ref{ch1_sec:clf_cbf}) which they are based on. This section is structured in the following manner: starts introducing the \glsxtrshort{CLF-CBF} nominal formulation, the Relative Degree One Formulation (subsection \ref{sub:formulation}), more specifically, presenting a \glsxtrshort{CLF} (subsubsection \ref{subsub:control_lyapunov_function}), a \glsxtrshort{CBF} (subsubsection \ref{subsub:control_barrier_function}) and finally the \glsxtrshort{QP}  formulation (subsubsection \ref{subsub:quadratic_program_formulation}). Followed by the Backstepping (subsection \ref{sub:backstepping}), described as the high-order formulation, then by the Closed-Form solution of the previous problems from the section (subsection \ref{sub:closed_form}) and finally by the \glsxtrshort{CBF} Unifying Method (subsection \ref{sub:unifying_CBF}), for the first (subsubsection \ref{subsub:uniCBF_firstOrder_system})  and high order (subsubsection \ref{subsub:uniCBF_secondOrder_system}) formulation of the \glsxtrshort{CBF}.\par
+The first proposed technique it follows the \textbf{Single Parameter Optimization} strategy (section \ref{sec:Single_Parameter_Optmization}) which stands on a cost function and its gradient, discretized (subsection \ref{subsec:Gradient_Cost_Function_Discretization}) if it is not possible to obtain the exact equation. In that section it is presented two optimization techniques, namely, Gradient Descent (subsection \ref{subsec:Gradient_Descent}) and a Binary Search variation (subsection \ref{subsec:Binary_Search}).\par 
+The other strategy depends on the \textbf{Contour Point} (section \ref{sec:Constraint_Contour_Point}), which proposed obtaining method, is composed by two pahses. The first one responsible to find a Line of Intersection with the constrained set (subsection \ref{subsec:}) adopting a tatic based on the system evolution simulation, making use of Runge-Kutta methods (subsubsection \ref{subsub:Runge-Kutta_Methods}) in the State Propagation Simulation Algorithm (subsubsection \ref{subsub:State_Propagation_Simulation_Algorithm}). The first phase is consummated by the Natural Convergence Line Algorithm (subsubsection \ref{subsubsec:Intersection_Line}). The second phase corresponds to bring to completion the obtaing method by the Farest Boundary Point from the Intersection Line (subsection \ref{subsec:Constraint_Contour_Point_Algorithm}).\par
+This chapter concludes with the formulation of the \glsxtrshort{CLF-CBF} based \textbf{Proposed Decision Algorithms} (section \ref{sec:Proposed_Decision_Algorithms}), given the Single Parameter Optmization Strategy (subsection \ref{subsec:Just_Optimized_Algorithm}) and the Stability Change to a Contour Point (subsection \ref{subsec:CLFs_Summed_Algorithm}), both encompassing a variety of techniques given the respective srategies and \glsxtrshort{CLF-CBF} formulations.
+
+
+%A_JO vai passar a secção das other cost functions para o single parameter optimization, para passar a referir a uma tecnica que usa otimização como A_O, e se usar todo o horizonte na cost function então A_{O_F}, e se for só o útimo estado então A_{O_L} (depois dizer que no caso de usar a CLF o ultimo estado não importa, basta o input embora os resultados sejam parecidos especialmente quanto..., enquanto se for a CLF-CBF dá igual eu acho)
+%Deixar a regra clara para os nomes para quem ler ser capaz de destinguir.
+
 
 \section{Optimal Control Problem}
 \label{ch1_sec:Chapter_Structure} 
@@ -880,7 +927,7 @@ With \(\mathbf{O} \in \mathbb{R}^{c \times n}\) as constrained states observer, 
 
 
 \subsection{State Propagation Simulation}
-\label{subsub:State_Propagation_Simulation_Algorithm}
+\label{sub:State_Propagation_Simulation}
 
 \subsubsection{\glsxtrfull{RK} Methods}
 \label{subsub:Runge-Kutta_Methods}
@@ -1021,8 +1068,8 @@ Finding a new equilibrium point \(\bar{\xVec_I}\) requires simulating state conv
 \subsection{Constraint Contour Point Algorithm}
 \label{subsec:Constraint_Contour_Point_Algorithm}
 
-\subsubsection{Natural Convergence Direction}
-\label{subsubsec:Intersection_Vector}
+\subsubsection{Natural Convergence Line}
+\label{subsubsec:Intersection_Line}
 
 The new point is obtained accounting with the natural movement direction of those states when they would reach the unsafe zone, which is provided approximately by the propagation algorithm~\ref{alg:State_Propagation_Simulation} if the \glsxtrshort{CBF} was inactive. 
 
@@ -1046,7 +1093,7 @@ The new point is obtained accounting with the natural movement direction of thos
     \KwResult{$dir$, $\xVec_{END}$}
     $(\xVec, \uVec) \gets \text{SPS}\hspace{0.1em}(f, \xVec_0, tI, \Delta t, args^*) \hspace{0.25em} \begin{bmatrix*}[c]  conditions^* \gets h(\xVec) > 0 \\ decision^* \\ integration^* \end{bmatrix*}$ \Comment*[r]{Algorithm \ref{alg:State_Propagation_Simulation}} 
     $dir \gets \frac{f(\xVec_{END}, \uVec_{END})}{||f(\xVec_{END}, \uVec_{END})||}$ \Comment*[r]{System Dynamic at (\(\xVec_{END}, \uVec_{END}\)) Normalized}
-    \caption{Natural Convergence Direction Vector (\(NCDV\))} \label{alg:Natural_Convergence_Direction_Vector}
+    \caption{Natural Convergence Line (\(NCDL\))} \label{alg:Natural_Convergence_Direction_Line}
   \end{algorithm}
 
 \(\xVec_{END}\) is approximately the intersection point with the boundary. The vector \(dir\) points the system evolution direction at \(\xVec_{END}\), where the system can aproximate more of \(\bar{\xVec}_F\) given some decision algorithm and assuming always safety. 
@@ -1054,7 +1101,7 @@ The new point is obtained accounting with the natural movement direction of thos
 \subsubsection{Constraint Tangent Point}
 \label{subsubsec:Constraint_Tangent_Point}
 
-Both algorithms are responsible to obtain the farest point (or points \ref{sssec:Constraint_Tangent_Point_Any}), restricted to the two-dimensional Euclidean Space, given the perpendicular direction of \(dir\), obtained using algorithm \ref{alg:Natural_Convergence_Direction_Vector}.\par
+Both algorithms are responsible to obtain the farest point (or points \ref{sssec:Constraint_Tangent_Point_Any}), restricted to the two-dimensional Euclidean Space, given the perpendicular direction of \(dir\), obtained using algorithm \ref{alg:Natural_Convergence_Direction_Line}.\par
 The distance along \(dir_{\perp}\) between the starting state \(\xVec_0\) and \(\bar{\xVec_I}\) (\(dp_{min} = v_{\perp}^{\top}(\xVec_0 - \bar{\xVec_I})\)) corresponds to the minimal distance along \(dir_{\perp}\) necessary to contour the unsafe set towards the desired equilibrium point. And the distance along \(dir\) between \(\xVec_0\) and \(\bar{\xVec_I}\) (\(d = v^{\top}(\xVec_0 - \bar{\xVec_I})\))  proportional to the urgency to move along \(dir_{\perp}\), i.e, \(\frac{dp_{min}}{d}\) is equivalent to the rate of change of \(dp\) along \(dir\), imposed by the new equilibrium point \(\bar{\xVec_I}\). %the slope of the rect containing \(\xVec_0\) and \(\xVec_I\), given the change of basis \([v, \hspace{0.1em}v_{\perp}]\), is equivalent to the imposed turning rate by the new equilibrium point \(\xVec_I\).\\
  
 
@@ -1109,7 +1156,7 @@ The closest-point to the current state is chosen as the intermediate equilibrium
 
 The previous obtaining strategy is exclusive to ellipsoidal figures, while the proposed  technique aims to be able to find the wanted point for any two dimensional shape. \par 
 It is characterized to a discrete behaviour as the search for the point is through steps along \(\mathbf{v} = \bigl[\begin{smallmatrix} \mathbf{v}_1 \\ \mathbf{v}_2 \end{smallmatrix}\bigr]\) and its perpendicular direction \(\mathbf{vp} = \bigl[\begin{smallmatrix} -\mathbf{v}_2 \\ \mathbf{v}_1 \end{smallmatrix}\bigr]\).  \par
-Given \(\mathbf{p} = \mathbf{O}\xVec_{END}\) and \(\mathbf{v}\) returned by \(NCDV\)~\ref{alg:Natural_Convergence_Direction_Vector}, the first order \glsxtrshort{CBF} \(h0\), arbitrary  steps sizes, \(step\) and \(stepP\) along \(\mathbf{v}\) and \(\mathbf{vp}\) respectively and a maximum of iterations while searching through the respective directions. 
+Given \(\mathbf{p} = \mathbf{O}\xVec_{END}\) and \(\mathbf{v}\) returned by \(NCDL\)~\ref{alg:Natural_Convergence_Direction_Line}, the first order \glsxtrshort{CBF} \(h0\), arbitrary  steps sizes, \(step\) and \(stepP\) along \(\mathbf{v}\) and \(\mathbf{vp}\) respectively and a maximum of iterations while searching through the respective directions. 
 
 \newpage %so para ajeitar
 
@@ -1339,7 +1386,7 @@ With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Alg
 
 \begin{equation}
     \begin{array}{l}
-        [dir, \hspace{0.1em} \xVec_{int}] = NCDV(f, \xVec_0, N, \Delta t, V, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\eqref{eq:RK4_Tableu}} \end{bmatrix*}  \\
+        [dir, \hspace{0.1em} \xVec_{int}] = NCDL(f, \xVec_0, N, \Delta t, V, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\eqref{eq:RK4_Tableu}} \end{bmatrix*}  \\
         \mathbf{v} = \mathbf{O}\hspace{0.1em}^.\hspace{0.1em}dir   
     \end{array}
     \label{eq:New_Equlibrium_Point_DirVec_CLF-CBF_RK4}
@@ -1347,7 +1394,7 @@ With constraint contour point algorithm~\ref{subsec:Constraint_Contour_Point_Alg
 
 
 
-Where \(NCDV\) (Natural Convergence Direction Vector) is algorithm~\ref{alg:Natural_Convergence_Direction_Vector}, and \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) the constrained states observer matrix. Regarding the choice of \glsxtrshort{RK}4 over other methods is because as it was said before, since it is more accurate than the Euler method~\eqref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\eqref{eq:Dormand-Prince_Tableu}. \par
+Where \(NCDL\) (Natural Convergence Line) is algorithm~\ref{alg:Natural_Convergence_Direction_Line}, and \(\mathbf{O} \in \mathbb{R}^{2 \times n}\) the constrained states observer matrix. Regarding the choice of \glsxtrshort{RK}4 over other methods is because as it was said before, since it is more accurate than the Euler method~\eqref{eq:Euler_Method} and faster than the \glsxtrshort{DP}~\eqref{eq:Dormand-Prince_Tableu}. \par
 Given the direction vector \(\mathbf{v}\), assuming an ellipsoidal fit \eqref{eq:Ellipsoidal_fit}, with the constraint tangent point  closed form solution~\ref{subsubsec:Constraint_Tangent_Point} like this obtain \(\bar{\xVec_C}\). If the system is deparing with a polytope \glsxtrshort{CBF} \(h_0\), then using algorithm \ref{alg:Find_Contour_Point} with \(\mathbf{v}\) and \(\xVec_{int}\) as arguments is obtained the new equilibrium point(s).\\
 
 
@@ -1503,7 +1550,7 @@ The transitive (\(i = i+1\)) condition is based on the first-order \glsxtrshort{
     \KwResult{$V$, $waypoints$, $\alpha_d$}
     $i \gets 0$\;
     \While{$i < nIte$, $i++$}{ 
-        $[dir, \hspace{0.1em} \xVec_{int}] = NCDV(f, \xVec_0, N, \Delta t, V_{1st-waypoint}, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\eqref{eq:RK4_Tableu}} \end{bmatrix*}$\;
+        $[dir, \hspace{0.1em} \xVec_{int}] = NCDL(f, \xVec_0, N, \Delta t, V_{1st-waypoint}, h) \hspace{0.2em} \begin{bmatrix*}[l] decision^* \gets \text{\glsxtrshort{CLF-CBF}~\ref{sub:closed_form} } \\ integration^* \gets \text{\glsxtrshort{RK}4~\eqref{eq:RK4_Tableu}} \end{bmatrix*}$\;
         $ [\mathbf{v}, \hspace{0.1em} \mathbf{p}] \gets \mathbf{O}\hspace{0.1em}^.\hspace{0.1em}[dir, \hspace{0.1em} \xVec_{int}]$ \;
         $waypoints \gets [CCP^*(\mathbf{v},\mathbf{p}, h_0), \hspace{0.1em} waypoints]$ \Comment*[r]{Ellipse~\ref{sssec:Constraint_Tangent_Point_Ellipsoidal}, Any~\ref{sssec:Constraint_Tangent_Point_Any}}
     }
